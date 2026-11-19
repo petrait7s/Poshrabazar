@@ -13,7 +13,6 @@ export function Footer() {
   return (
     <footer className="relative mt-12 overflow-hidden bg-gradient-to-b from-navy via-navy-800 to-navy-900 pb-20 text-white lg:pb-0">
       <div className="kantha" />
-      <div className="alpona-corner pointer-events-none absolute -right-10 top-6 h-[320px] w-[320px] opacity-[.09] invert" />
       <div className="container-x relative grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
         <div>
           <Logo tone="white" />

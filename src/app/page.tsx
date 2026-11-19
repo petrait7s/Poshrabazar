@@ -64,8 +64,6 @@ export default function Home() {
       </section>
 
       <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy-800 to-[#0f4a49] py-14 text-white sm:py-20">
-        <div className="alpona-corner pointer-events-none absolute -left-16 -top-16 h-80 w-80 opacity-[.10] invert" />
-        <div className="alpona-corner pointer-events-none absolute -bottom-20 right-0 h-96 w-96 opacity-[.08] invert" />
         <div className="container-x relative grid gap-10 lg:grid-cols-[.9fr_1.4fr]">
           <div>
             <p className="eyebrow !text-gold">WHOLESALE · পাইকারি</p>
@@ -147,7 +145,6 @@ export default function Home() {
       </section>
 
       <section className="relative overflow-hidden bg-gradient-to-b from-navy-800 to-navy-900 py-14 text-white sm:py-20">
-        <div className="alpona-corner pointer-events-none absolute -right-20 -top-10 h-96 w-96 opacity-[.08] invert" />
         <div className="container-x relative">
           <p className="eyebrow !text-gold">04 · GROW · PETRA BUSINESS SOLUTIONS</p>
           <h2 className="mt-2 max-w-2xl font-bn text-3xl font-normal !text-white sm:text-4xl">ব্যবসা চালানোর সফটওয়্যার, সাশ্রয়ী দামে</h2>

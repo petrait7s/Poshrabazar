@@ -20,7 +20,6 @@ export function Hero() {
       <div className="absolute -left-24 top-10 -z-10 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,#C6A15B66_0%,transparent_68%)]" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-1/3 bg-[linear-gradient(0deg,#167C7826,transparent)]" />
       <div className="absolute inset-y-0 left-0 -z-[4] w-full bg-gradient-to-r from-paper from-30% via-paper/85 via-50% to-transparent max-lg:from-paper/80 max-lg:via-paper/70 max-lg:to-paper/40 lg:w-[68%]" />
-      <div className="alpona-corner pointer-events-none absolute -left-20 -top-20 -z-[3] h-[380px] w-[380px] opacity-[.16]" />
       <div className="absolute inset-y-0 right-0 -z-[5] w-full [mask-image:linear-gradient(90deg,transparent_0%,transparent_34%,#000_60%)] lg:w-[72%] max-lg:opacity-25">
         <Image src="/hero-line.webp" alt="" fill priority sizes="(min-width:1024px) 72vw, 100vw" className="-scale-x-100 object-cover object-right-bottom mix-blend-multiply" />
       </div>

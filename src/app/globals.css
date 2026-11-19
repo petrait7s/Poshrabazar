@@ -14,11 +14,6 @@
       radial-gradient(1000px 760px at 72% 104%, rgba(22,124,120,.15), transparent 62%),
       radial-gradient(720px 520px at -4% 88%, rgba(185,68,47,.09), transparent 62%);
   }
-  body::after {
-    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
-    background: url(/alpona.svg) 0 0 / 220px 220px; mix-blend-mode: multiply;
-    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.55), transparent 55%); mask-image: linear-gradient(180deg, rgba(0,0,0,.55), transparent 55%);
-  }
   h1, h2, h3, h4 { @apply font-bn text-navy; line-height: 1.25; letter-spacing: -0.005em; }
   :focus-visible { outline: 2px solid #167C78; outline-offset: 2px; }
   ::selection { background: #cde5e3; }
@@ -64,7 +59,6 @@
 
   /* ── Bangla ornament ── */
   .kantha { height: 8px; background: url(/kantha.svg) repeat-x center / 36px 8px; }
-  .alpona-corner { background: url(/alpona.svg) center / 200px 200px; }
 
   .skeleton { @apply relative overflow-hidden bg-mist; }
   .skeleton::after { content: ""; @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent; animation: shimmer 1.4s infinite; }
