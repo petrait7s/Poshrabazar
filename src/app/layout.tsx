@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Montserrat, Tiro_Bangla } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { SocialProvider } from "@/components/social";
 import { Header, BottomNav } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
@@ -19,10 +20,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="bn" className={`${montserrat.variable} ${bangla.variable}`}>
       <body>
         <Providers>
-          <Header />
-          <main id="main" className="min-h-[60vh]">{children}</main>
-          <Footer />
-          <BottomNav />
+          <SocialProvider>
+            <Header />
+            <main id="main" className="min-h-[60vh]">{children}</main>
+            <Footer />
+            <BottomNav />
+          </SocialProvider>
         </Providers>
       </body>
     </html>

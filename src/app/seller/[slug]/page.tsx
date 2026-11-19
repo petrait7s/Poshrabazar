@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { MapPin, CalendarDays, ShoppingBag, MessageCircle } from "lucide-react";
 import { ProductCard, VerifiedBadge } from "@/components/Commerce";
+import { FollowButton } from "@/components/FollowButton";
 import { Breadcrumb, Stars } from "@/components/ui/misc";
 import { getSeller, products, sellers, offersFor, bn } from "@/data/catalog";
 
@@ -27,7 +28,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 <span>{s.kind}</span><Stars value={s.rating} />
               </div>
             </div>
-            <button className="inline-flex h-11 items-center gap-2 rounded-md border border-navy/25 px-5 font-bn text-sm text-navy hover:bg-mist"><MessageCircle className="h-4 w-4" />মেসেজ (শীঘ্রই)</button>
+            <div className="flex flex-wrap gap-2"><FollowButton slug={s.slug} /><a href={`/u/${s.slug}`} className="inline-flex h-10 items-center rounded-md border border-navy/25 bg-white/70 px-4 font-bn text-sm text-navy hover:bg-white">পোস্ট দেখুন</a><button className="inline-flex h-10 items-center gap-2 rounded-md border border-navy/25 bg-white/70 px-4 font-bn text-sm text-navy hover:bg-white"><MessageCircle className="h-4 w-4" />মেসেজ (শীঘ্রই)</button></div>
           </div>
         </div>
       </section>

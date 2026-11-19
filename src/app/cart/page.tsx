@@ -8,6 +8,7 @@ import { LinkButton } from "@/components/ui/button";
 import { useApp } from "@/components/providers";
 import { resolve, totals } from "@/components/cartUtil";
 import { taka } from "@/data/catalog";
+import { FeeRow } from "@/components/FeeNote";
 
 export default function CartPage() {
   const { cart, setQty, removeLine, hydrated, toast } = useApp();
@@ -42,6 +43,7 @@ export default function CartPage() {
               <div className="flex justify-between"><dt className="text-ink/70">ডেলিভারি (আনুমানিক)</dt><dd className="tabular-nums">{taka(t.delivery)}</dd></div>
               <div className="flex justify-between border-t border-mist pt-3 text-lg font-bold text-navy"><dt>মোট</dt><dd className="tabular-nums">{taka(t.total)}</dd></div>
             </dl>
+            <div className="mt-4"><FeeRow fee={t.fee} buyerPays={t.buyerFee} /></div>
             <LinkButton href="/checkout" size="lg" className="mt-5 w-full">চেকআউটে যান</LinkButton>
             <p className="mt-3 flex gap-2 font-bn text-xs text-mist-500"><ShieldAlert className="h-4 w-4 shrink-0 text-gold-700" />প্রিভিউ সংস্করণ: কোনো বাস্তব অর্ডার বা পেমেন্ট হবে না।</p>
           </aside>
