@@ -134,4 +134,4 @@ export function summary(p: Product) {
   };
 }
 export const bn = (n: number | string) => String(n).replace(/\d/g, (d) => "০১২৩৪৫৬৭৮৯"[+d]);
-export const taka = (n: number) => `৳${n.toLocaleString("en-US")}`;
+export const taka = (n: number) => `৳${n.toLocaleString("en-US", { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 })}`;

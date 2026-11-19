@@ -20,7 +20,7 @@ export function Footer() {
           <p className="mt-5 text-xs text-white/50">Powered by Petra Software Solutions</p>
         </div>
         {col("Marketplace", [["সব ক্যাটাগরি", "/categories"], ["বিখ্যাত পণ্য", "/famous"], ["পাইকারি বাজার", "/wholesale"], ["বিক্রেতা নিবন্ধন", "/seller/register"], ...categories.slice(0, 3).map((c) => [c.bn, `/category/${c.slug}`] as [string, string])])}
-        {col("Learn & Understand", [["নলেজ হাব", "/knowledge"], ["আজকের বাজারদর", "/market-prices"], ["মার্কেট ইন্টেলিজেন্স", "/market-intelligence"]])}
+        {col("Learn & Understand", [["কমিউনিটি", "/community"], ["নলেজ হাব", "/knowledge"], ["আজকের বাজারদর", "/market-prices"], ["মার্কেট ইন্টেলিজেন্স", "/market-intelligence"]])}
         {col("Business Solutions", [["PetraPOS", "/business-solutions/petrapos"], ["PetraPMS", "/business-solutions/petrapms"], ["PetraDMS", "/business-solutions/petradms"], ["Khata Lite (বিনামূল্যে)", "/business-solutions"]])}
         {col("Account", [["লগইন", "/login"], ["নিবন্ধন", "/register"], ["কার্ট", "/cart"], ["আমার অর্ডার", "/account/orders"], ["বিক্রেতা ড্যাশবোর্ড", "/seller/dashboard"], ["অ্যাডমিন", "/admin"]])}
       </div>

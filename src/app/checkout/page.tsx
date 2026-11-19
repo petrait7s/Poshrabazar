@@ -9,6 +9,8 @@ import { EmptyState } from "@/components/ui/misc";
 import { useApp } from "@/components/providers";
 import { resolve, totals } from "@/components/cartUtil";
 import { taka } from "@/data/catalog";
+import { FeeRow } from "@/components/FeeNote";
+import { Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Errs = Partial<Record<"name" | "phone" | "address" | "district", string>>;
@@ -66,8 +68,8 @@ export default function Checkout() {
           </section>
           <section className="glass rounded-md p-5">
             <h2 className="mb-4 font-bn text-xl">পেমেন্ট পদ্ধতি</h2>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {[["cod", "ক্যাশ অন ডেলিভারি", Banknote, false], ["bkash", "bKash", Smartphone, true], ["nagad", "Nagad", Smartphone, true]].map(([id, label, I, off]) => { const Icon = I as typeof Banknote; return (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {[["cod", "ক্যাশ অন ডেলিভারি", Banknote, false], ["wallet", "ওয়ালেট", Wallet, true], ["bkash", "bKash", Smartphone, true], ["nagad", "Nagad", Smartphone, true]].map(([id, label, I, off]) => { const Icon = I as typeof Banknote; return (
                 <label key={id as string} className={cn("flex items-center gap-3 rounded-md border p-3 font-bn", off ? "cursor-not-allowed opacity-50" : "cursor-pointer", pay === id ? "border-teal bg-teal-50" : "border-mist-300")}>
                   <input type="radio" name="pay" disabled={off as boolean} checked={pay === id} onChange={() => setPay(id as string)} className="accent-teal" />
                   <Icon className="h-4 w-4 text-teal" /><span className="text-sm">{label as string}{off ? <span className="block text-[10px] text-mist-500">শীঘ্রই (গেটওয়ে যুক্ত হয়নি)</span> : null}</span>
@@ -78,6 +80,7 @@ export default function Checkout() {
         <aside className="h-fit glass rounded-md p-5 lg:sticky lg:top-32">
           <h2 className="font-bn text-xl">আপনার অর্ডার</h2>
           <ul className="mt-3 divide-y divide-mist text-sm">{cart.map((l) => { const r = resolve(l); return <li key={l.productSlug + l.sellerSlug + l.mode} className="flex justify-between gap-3 py-2 font-bn"><span>{r.p.bn} × {l.qty}<span className="block text-xs text-mist-500">{r.s.bn}</span></span><b className="tabular-nums">{taka(r.total)}</b></li>; })}</ul>
+          <div className="mt-3"><FeeRow fee={t.fee} buyerPays={t.buyerFee} /></div>
           <dl className="mt-3 space-y-1.5 border-t border-mist pt-3 font-bn text-sm"><div className="flex justify-between"><dt>ডেলিভারি</dt><dd>{taka(t.delivery)}</dd></div><div className="flex justify-between text-lg font-bold text-navy"><dt>মোট</dt><dd>{taka(t.total)}</dd></div></dl>
           <Button type="submit" size="lg" className="mt-5 w-full">তথ্য যাচাই করুন (ডেমো)</Button>
           <p className="mt-3 font-bn text-xs text-mist-500">এই বোতাম কোনো অর্ডার বা পেমেন্ট সম্পন্ন করে না। <Link href="/cart" className="text-teal underline">কার্টে ফিরুন</Link></p>

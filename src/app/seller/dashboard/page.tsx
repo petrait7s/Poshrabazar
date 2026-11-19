@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
-import { BarChart3, Boxes, LayoutDashboard, ListChecks, PackageSearch, Tag, Plus } from "lucide-react";
+import { BarChart3, Boxes, LayoutDashboard, ListChecks, PackageSearch, Tag, Plus, Wallet } from "lucide-react";
+import { saleRows } from "@/data/wallet";
+import { FEE, feeRateLabel, payerLabel } from "@/data/fees";
 import { DashboardShell, Panel, Stat, StatusPill } from "@/components/DashboardShell";
 import { BarChart } from "@/components/Viz";
 import { Button } from "@/components/ui/button";
@@ -21,7 +23,7 @@ export default function Page() {
   const [tab, setTab] = useState("overview");
   const [list, setList] = useState(initial);
   const [orders, setOrders] = useState(initOrders);
-  const nav = [{ id: "overview", label: "ওভারভিউ", icon: LayoutDashboard }, { id: "listings", label: "পণ্য তালিকা", icon: ListChecks }, { id: "prices", label: "দাম হালনাগাদ", icon: Tag }, { id: "inventory", label: "ইনভেন্টরি", icon: Boxes }, { id: "orders", label: "অর্ডার", icon: PackageSearch, badge: orders.filter((o) => o.st === "নতুন").length }, { id: "sales", label: "বিক্রয় সারসংক্ষেপ", icon: BarChart3 }];
+  const nav = [{ id: "overview", label: "ওভারভিউ", icon: LayoutDashboard }, { id: "listings", label: "পণ্য তালিকা", icon: ListChecks }, { id: "prices", label: "দাম হালনাগাদ", icon: Tag }, { id: "inventory", label: "ইনভেন্টরি", icon: Boxes }, { id: "orders", label: "অর্ডার", icon: PackageSearch, badge: orders.filter((o) => o.st === "নতুন").length }, { id: "sales", label: "বিক্রয় সারসংক্ষেপ", icon: BarChart3 }, { id: "wallet", label: "ওয়ালেট ও ফি", icon: Wallet }];
   const upd = (slug: string, patch: Partial<(typeof initial)[0]>) => setList((l) => l.map((x) => (x.slug === slug ? { ...x, ...patch } : x)));
   const num = (v: string) => Math.max(0, parseInt(v.replace(/\D/g, ""), 10) || 0);
 
@@ -56,6 +58,15 @@ export default function Page() {
       {tab === "sales" && (
         <div className="space-y-5"><div className="grid grid-cols-2 gap-3 lg:grid-cols-4"><Stat label="আজকের বিক্রি" value="৳৬১,২০০" /><Stat label="সাপ্তাহিক" value="৳৪,৪০,০০০" /><Stat label="গড় অর্ডার মূল্য" value="৳১,৩৮০" /><Stat label="ফেরত হার" value="১.৮%" /></div>
           <Panel title="মাসিক বিক্রি (লাখ ৳)"><BarChart height={200} data={[2.1, 2.6, 3.0, 2.8, 3.6, 4.3]} labels={["জুন", "জুলাই", "আগস্ট", "সেপ্টে", "অক্টো", "নভে"]} /></Panel></div>
+      )}
+      {tab === "wallet" && (
+        <div className="space-y-5">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4"><Stat label="মোট বিক্রয়" value={taka(saleRows.reduce((a, r) => a + r.gross, 0))} /><Stat label="প্ল্যাটফর্ম ফি" value={taka(Math.round(saleRows.reduce((a, r) => a + r.sellerFee, 0) * 100) / 100)} hint={feeRateLabel} /><Stat label="নিট আয়" value={taka(Math.round(saleRows.reduce((a, r) => a + r.net, 0) * 100) / 100)} /><Stat label="উত্তোলন" value="গেটওয়ের পর" /></div>
+          <Panel title="ফি নীতি"><p className="font-bn text-sm text-ink/80">একই বিক্রেতার অর্ডার <b>৳{bn(FEE.threshold)}</b>-এর বেশি হলে <b>{feeRateLabel}</b> প্ল্যাটফর্ম ফি পেট্রা সফটওয়্যার সলিউশনস পায় ({payerLabel})। ৳{bn(FEE.threshold)} বা কমে কোনো ফি নেই।</p></Panel>
+          <Panel title="অর্ডারভিত্তিক হিসাব" action={<button onClick={() => toast("টাকা তোলা — পেমেন্ট গেটওয়ে যুক্ত হলে চালু হবে", "info")} className="font-bn text-sm text-teal">টাকা তুলুন</button>}>
+            <div className="overflow-x-auto"><table className="tbl w-full min-w-[520px]"><thead><tr><th>অর্ডার</th><th className="text-right">মোট</th><th className="text-right">ফি</th><th className="text-right">নিট</th></tr></thead><tbody>{saleRows.map((r) => <tr key={r.id}><td className="text-xs">{r.id}<span className="block font-bn text-mist-500">{r.who}</span></td><td className="text-right tabular-nums">{taka(r.gross)}</td><td className="text-right tabular-nums">{r.sellerFee ? <span className="text-gold-700">−{taka(r.sellerFee)}</span> : <span className="text-mist-500">—</span>}</td><td className="text-right font-bold tabular-nums">{taka(r.net)}</td></tr>)}</tbody></table></div>
+          </Panel>
+        </div>
       )}
     </DashboardShell>
   );
