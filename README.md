@@ -13,6 +13,9 @@ npm run build && npm start
 - `src/components/` — Header, Footer, SearchBar, ProductCard, Price, VerifiedBadge, ProductExplorer (filters), dashboard shell, charts.
 - `src/app/` — routes: marketplace, category, product, seller, wholesale, search, knowledge, market-intelligence, market-prices, business-solutions, login/register, cart, checkout, account, seller/register, seller/dashboard, admin.
 
+## Database
+Supabase schema, RLS and seed live in `supabase/` — see `supabase/README.md`. The frontend still reads `src/data` until it is wired to Supabase.
+
 ## Demo vs production
 Everything is frontend-only. Prices, sellers, stock, reviews, orders, articles and dashboard numbers are **demo values**.
 Cart, wishlist, language and demo login live in `localStorage`. Checkout, seller registration, price alerts and demo requests
