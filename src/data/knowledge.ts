@@ -1,0 +1,18 @@
+// Original demo editorial content.
+export const kCategories = [
+  { slug: "farming", bn: "কৃষি", en: "Agriculture" },
+  { slug: "livestock-fisheries", bn: "প্রাণিসম্পদ ও মৎস্য", en: "Livestock & Fisheries" },
+  { slug: "storage", bn: "সংরক্ষণ ও পরিবহন", en: "Storage & Transport" },
+  { slug: "selling", bn: "বিক্রয় ও দাম", en: "Selling & Pricing" },
+  { slug: "business", bn: "ক্ষুদ্র ব্যবসা ও উদ্যোক্তা", en: "Small Business & Entrepreneurship" },
+  { slug: "digital", bn: "ডিজিটাল টুলস", en: "Digital Tools" },
+];
+export type Article = { slug: string; cat: string; bn: string; en: string; excerpt: string; minutes: number; date: string; author: string; body: string[]; color: string };
+export const articles: Article[] = [
+  { slug: "potato-storage-basics", cat: "storage", bn: "আলু সংরক্ষণের মৌলিক নিয়ম", en: "Potato storage basics", excerpt: "আলু পচন ও অঙ্কুরোদগম কমাতে সংরক্ষণের সহজ ধাপগুলো।", minutes: 5, date: "২০২৬-১১-০৮", author: "পসরাবাজার সম্পাদকীয়", color: "#e9dcc0", body: ["আলু তোলার পর কয়েক দিন ছায়াযুক্ত জায়গায় রেখে শুকিয়ে নিলে খোসা শক্ত হয় এবং সংরক্ষণক্ষমতা বাড়ে।", "ক্ষতিগ্রস্ত বা কাটা আলু আলাদা করুন। একটি পচা আলু পুরো স্তূপ নষ্ট করতে পারে।", "সংরক্ষণস্থান ঠান্ডা, অন্ধকার ও বাতাস চলাচলযুক্ত হওয়া উচিত। সরাসরি আলো পড়লে আলু সবুজ হয়ে যায়।", "বস্তায় নয়, বাতাস চলাচলের সুযোগ রেখে ঝুড়ি বা কাঠের ট্রেতে রাখা ভালো।"] },
+  { slug: "pricing-your-produce", cat: "selling", bn: "পণ্যের ন্যায্য দাম কীভাবে ঠিক করবেন", en: "Pricing your produce fairly", excerpt: "খরচ, বাজারদর ও পরিমাণভেদে দাম নির্ধারণের একটি সহজ কাঠামো।", minutes: 6, date: "২০২৬-১১-০৫", author: "পসরাবাজার সম্পাদকীয়", color: "#f3e5b0", body: ["প্রথমে উৎপাদন, পরিবহন, মজুরি ও ক্ষতির মোট খরচ হিসাব করুন।", "এরপর আজকের বাজারদর দেখুন। মার্কেট প্রাইস পাতায় বিভিন্ন বাজারের দরের তুলনা পাবেন।", "খুচরা ও পাইকারি দাম আলাদা রাখুন। বেশি পরিমাণে কিনলে কম দাম দেওয়া স্বাভাবিক।"] },
+  { slug: "safe-vegetable-farming", cat: "farming", bn: "নিরাপদ সবজি চাষের পাঁচটি ধাপ", en: "Five steps to safe vegetable farming", excerpt: "মাটি পরীক্ষা থেকে সংগ্রহ পর্যন্ত নিরাপদ চাষের চেকলিস্ট।", minutes: 7, date: "২০২৬-১০-৩০", author: "পসরাবাজার সম্পাদকীয়", color: "#cfe5d2", body: ["জমি প্রস্তুতের আগে মাটির অবস্থা বুঝে নিন।", "ভালো বীজ ও সঠিক দূরত্বে রোপণ করুন।", "সার ও কীটনাশক প্রয়োগে নির্দেশিত মাত্রা মানুন এবং সংগ্রহের আগে অপেক্ষার সময় মেনে চলুন।"] },
+  { slug: "start-wholesale-business", cat: "business", bn: "পাইকারি ব্যবসা শুরুর আগে যা জানা দরকার", en: "Before you start a wholesale business", excerpt: "মূলধন, সরবরাহ শৃঙ্খল ও ক্রেতা খুঁজে পাওয়ার প্রাথমিক ধারণা।", minutes: 8, date: "২০২৬-১০-২৬", author: "পসরাবাজার সম্পাদকীয়", color: "#d3e3ee", body: ["পণ্য নির্বাচন করুন যেখানে আপনার সরবরাহের নির্ভরযোগ্য উৎস আছে।", "ন্যূনতম অর্ডার পরিমাণ ও পেমেন্টের শর্ত পরিষ্কার রাখুন।", "নিয়মিত হিসাব রাখার জন্য ডিজিটাল টুল ব্যবহার করুন।"] },
+  { slug: "digital-bookkeeping", cat: "digital", bn: "দোকানের হিসাব ডিজিটালভাবে রাখুন", en: "Keep shop accounts digitally", excerpt: "খাতা থেকে সফটওয়্যারে যাওয়ার সহজ পথ।", minutes: 4, date: "২০২৬-১০-২০", author: "পেট্রা সফটওয়্যার সলিউশনস", color: "#e1d9ec", body: ["প্রতিদিনের বিক্রি ও ক্রয় একটি জায়গায় লিখে রাখুন।", "স্টক কমে গেলে সতর্কতা পেতে ইনভেন্টরি টুল ব্যবহার করুন।", "মাসের শেষে লাভ-ক্ষতির সারসংক্ষেপ দেখুন।"] },
+  { slug: "reading-market-trends", cat: "selling", bn: "বাজারের দামের ওঠানামা বুঝবেন যেভাবে", en: "How to read market price trends", excerpt: "মৌসুম, সরবরাহ ও চাহিদা কীভাবে দামকে প্রভাবিত করে।", minutes: 5, date: "২০২৬-১০-১৫", author: "পসরাবাজার সম্পাদকীয়", color: "#f4e2b8", body: ["সরবরাহ বাড়লে সাধারণত দাম কমে, চাহিদা বাড়লে বাড়ে।", "সাত দিনের গড়ের সঙ্গে আজকের দাম তুলনা করলে প্রবণতা বোঝা যায়।"] },
+];

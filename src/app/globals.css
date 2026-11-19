@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { @apply bg-paper font-sans text-ink antialiased; line-height: 1.6; }
+  h1, h2, h3, h4 { @apply font-bn text-navy; line-height: 1.25; letter-spacing: -0.005em; }
+  :focus-visible { outline: 2px solid #167C78; outline-offset: 2px; }
+  ::selection { background: #cde5e3; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8; }
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-teal; }
+  .section { @apply py-12 sm:py-16; }
+  .h-section { @apply font-bn text-2xl font-normal text-navy sm:text-3xl; }
+  .skeleton { @apply relative overflow-hidden bg-mist; }
+  .skeleton::after { content: ""; @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent; animation: shimmer 1.4s infinite; }
+  .tbl th { @apply bg-navy px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-white; }
+  .tbl td { @apply border-b border-mist px-3 py-3 text-sm; }
+  .tbl tbody tr:nth-child(even) td { @apply bg-paper; }
+  .no-scrollbar { scrollbar-width: none; } .no-scrollbar::-webkit-scrollbar { display: none; }
+}
