@@ -19,7 +19,7 @@ export function AreaSection() {
   const go = () => { setArea(picked); router.push(mode === "buy" ? "/marketplace" : "/seller/register"); };
 
   return (
-    <section className="border-y border-mist-300 bg-white py-14 sm:py-16">
+    <section className="glass-band py-14 sm:py-16">
       <div className="container-x">
         <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
           <div>

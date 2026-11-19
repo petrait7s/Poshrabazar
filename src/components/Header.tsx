@@ -39,7 +39,7 @@ export function Header() {
 
   return (
     <>
-      <div className="bg-navy text-[12px] text-white/85">
+      <div className="relative bg-gradient-to-r from-navy-900 via-navy to-[#0f4a49] text-[12px] text-white/90">
         <div className="container-x flex h-8 items-center justify-between gap-3">
           <p className="truncate font-bn"><span className="text-gold">●</span> <T bn="বাংলার উন্মুক্ত ডিজিটাল বাজার — প্রদর্শনী সংস্করণ, সব তথ্য ডেমো" en="Bangladesh's open digital marketplace — preview edition, all data is demo" /></p>
           <div className="flex items-center gap-4">
@@ -54,9 +54,10 @@ export function Header() {
             </div>
           </div>
         </div>
+        <div className="kantha opacity-70" />
       </div>
 
-      <header className="sticky top-0 z-40 border-b border-mist-300 bg-paper/95 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-white/70 bg-paper/65 shadow-[0_8px_30px_-18px_rgba(20,43,69,.35)] backdrop-blur-xl">
         <div className="container-x flex h-16 items-center gap-3 lg:gap-6">
           <button aria-label="Menu" onClick={() => setMenu(true)} className="grid h-10 w-10 place-items-center rounded-md hover:bg-mist lg:hidden"><Menu className="h-5 w-5" /></button>
           <Link href="/" aria-label="PosraBazar home" className="shrink-0"><Logo /></Link>
@@ -69,7 +70,7 @@ export function Header() {
                 <User className="h-5 w-5" /><span className="max-w-[110px] truncate">{hydrated && user ? user.name : <T bn="অ্যাকাউন্ট" en="Account" />}</span><ChevronDown className="h-3.5 w-3.5" />
               </button>
               {acct && (
-                <div className="absolute right-0 top-full mt-1 w-60 overflow-hidden rounded-md border border-mist-300 bg-white py-1 shadow-lift">
+                <div className="absolute right-0 top-full mt-1 w-60 overflow-hidden glass rounded-md py-1 shadow-lift">
                   {user ? (
                     <>
                       <p className="border-b border-mist px-4 py-2 font-bn text-xs text-mist-500">{user.phone} · {user.role}</p>
@@ -99,12 +100,12 @@ export function Header() {
         </div>
         <div className="container-x space-y-2 pb-3 lg:hidden"><AreaButton className="w-full !py-1.5" /><SearchBar /></div>
 
-        <nav className="hidden border-t border-mist-300/70 bg-white lg:block" aria-label="Primary">
+        <nav className="hidden border-t border-white/70 bg-white/55 backdrop-blur-xl lg:block" aria-label="Primary">
           <div className="container-x flex h-11 items-center gap-1">
             <div ref={catRef} className="relative">
               <button onClick={() => setCats((v) => !v)} className="mr-2 flex h-8 items-center gap-2 rounded bg-navy px-3 font-bn text-sm text-white hover:bg-navy-700" aria-expanded={cats}><Grid2x2 className="h-4 w-4" /><T bn="সব ক্যাটাগরি" en="All categories" /><ChevronDown className="h-3.5 w-3.5" /></button>
               {cats && (
-                <div className="absolute left-0 top-full z-50 mt-1.5 w-72 overflow-hidden rounded-md border border-mist-300 bg-white py-1 shadow-lift">
+                <div className="absolute left-0 top-full z-50 mt-1.5 w-72 overflow-hidden glass rounded-md py-1 shadow-lift">
                   {categories.map((c) => <Link key={c.slug} href={`/category/${c.slug}`} className="flex items-center justify-between px-4 py-2.5 hover:bg-paper"><span className="font-bn text-[15px] text-navy">{c.bn}</span><span className="text-xs text-mist-500">{c.en}</span></Link>)}
                   <Link href="/categories" className="block border-t border-mist px-4 py-2.5 font-bn text-sm font-medium text-teal hover:bg-paper"><T bn="সব ক্যাটাগরি দেখুন →" en="View all categories →" /></Link>
                 </div>
@@ -162,7 +163,7 @@ export function BottomNav() {
   ];
   void wishlist; void Heart;
   return (
-    <nav aria-label="Bottom" className="fixed inset-x-0 bottom-0 z-40 border-t border-mist-300 bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
+    <nav aria-label="Bottom" className="fixed inset-x-0 bottom-0 z-40 border-t border-white/70 bg-white/80 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] lg:hidden">
       <ul className="grid grid-cols-5">
         {items.map((it) => {
           const active = it.href === "/" ? path === "/" : path.startsWith(it.href);

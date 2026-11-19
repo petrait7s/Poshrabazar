@@ -39,7 +39,7 @@ export default function Page() {
             <div className="mt-5 flex gap-3"><LinkButton href="/seller/dashboard">ডেমো ড্যাশবোর্ড দেখুন</LinkButton><Button variant="outline" onClick={() => { setDone(false); setStep(0); }}>আবার শুরু</Button></div>
           </div>
         ) : (
-          <form onSubmit={(ev) => { ev.preventDefault(); next(); }} noValidate className="rounded-md border border-mist-300 bg-white p-5 sm:p-7">
+          <form onSubmit={(ev) => { ev.preventDefault(); next(); }} noValidate className="glass rounded-md p-5 sm:p-7">
             <ol className="mb-7 grid grid-cols-3 gap-2">{steps.map((s, i) => <li key={s} className={cn("border-t-4 pt-2 font-bn text-xs sm:text-sm", i <= step ? "border-teal text-navy" : "border-mist text-mist-500")}><span className="text-[10px] font-semibold">ধাপ {i + 1}</span><br />{s}</li>)}</ol>
             {step === 0 && <div className="space-y-4">
               <Field label="আপনি কে?" error={e.kind}><div className="flex flex-wrap gap-2">{kinds.map((k) => <button type="button" key={k} onClick={() => setF({ ...f, kind: k })} aria-pressed={f.kind === k} className={cn("rounded-md border px-4 py-2 font-bn text-sm", f.kind === k ? "border-teal bg-teal-50 text-teal-700" : "border-mist-300 hover:border-navy")}>{k}</button>)}</div></Field>
@@ -61,7 +61,7 @@ export default function Page() {
           </form>
         )}
         <aside className="space-y-3">
-          {[["বিনামূল্যে Khata Lite", "প্রতিটি বিক্রেতার জন্য সহজ হিসাব-খাতা।"], ["কমিশন", "খুচরা ২–৫%, পাইকারি ১–২%।"], ["সাথী এজেন্ট", "ক্রেতা আসার আগে বিক্রেতা যাচাই ও অনবোর্ডিং।"], ["র‍্যাংক", "একই পণ্যের বিক্রেতাদের মধ্যে আপনার অবস্থান দেখুন।"]].map(([t, d]) => <div key={t} className="rounded-md border border-mist-300 bg-white p-4"><h3 className="font-bn text-lg">{t}</h3><p className="mt-1 font-bn text-sm text-ink/65">{d}</p></div>)}
+          {[["বিনামূল্যে Khata Lite", "প্রতিটি বিক্রেতার জন্য সহজ হিসাব-খাতা।"], ["কমিশন", "খুচরা ২–৫%, পাইকারি ১–২%।"], ["সাথী এজেন্ট", "ক্রেতা আসার আগে বিক্রেতা যাচাই ও অনবোর্ডিং।"], ["র‍্যাংক", "একই পণ্যের বিক্রেতাদের মধ্যে আপনার অবস্থান দেখুন।"]].map(([t, d]) => <div key={t} className="glass rounded-md p-4"><h3 className="font-bn text-lg">{t}</h3><p className="mt-1 font-bn text-sm text-ink/65">{d}</p></div>)}
         </aside>
       </div>
     </>

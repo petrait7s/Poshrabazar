@@ -14,6 +14,7 @@ import { priceRows } from "@/data/prices";
 import { articles } from "@/data/knowledge";
 import { software } from "@/data/software";
 
+const tints = ["bg-teal/12 text-teal", "bg-gold/20 text-gold-700", "bg-navy/10 text-navy", "bg-[#B9442F]/12 text-[#B9442F]"];
 const pillars = [
   { n: "01", tag: "Buy & Sell", bn: "মার্কেটপ্লেস", en: "Marketplace", d: "এক পণ্য, বহু বিক্রেতা — পাশাপাশি তুলনা করুন।", href: "/marketplace", icon: Handshake },
   { n: "02", tag: "Learn", bn: "নলেজ হাব", en: "Knowledge Hub", d: "কৃষি, প্রাণিসম্পদ, মৎস্য ও ব্যবসার বাংলা গাইড।", href: "/knowledge", icon: BookOpen },
@@ -29,11 +30,11 @@ export default function Home() {
     <>
       <Hero />
 
-      <section className="border-b border-mist-300 bg-white">
+      <section className="glass-band">
         <div className="container-x grid divide-mist-300 sm:grid-cols-2 sm:divide-x lg:grid-cols-4">
-          {pillars.map((p) => (
-            <Link key={p.n} href={p.href} className="group relative flex gap-4 p-5 transition-colors hover:bg-paper sm:p-6">
-              <p.icon className="mt-1 h-6 w-6 shrink-0 text-teal" strokeWidth={1.5} />
+          {pillars.map((p, i) => (
+            <Link key={p.n} href={p.href} className="group relative flex gap-4 p-5 transition-colors hover:bg-white/60 sm:p-6">
+              <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-md transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${tints[i]}`}><p.icon className="h-5 w-5" strokeWidth={1.6} /></span>
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gold-700">{p.n} · {p.tag}</p>
                 <h3 className="mt-1 font-bn text-lg text-navy group-hover:text-teal"><T bn={p.bn} en={p.en} /></h3>
@@ -62,8 +63,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-navy py-14 text-white sm:py-20">
-        <div className="container-x grid gap-10 lg:grid-cols-[.9fr_1.4fr]">
+      <section className="relative overflow-hidden bg-gradient-to-br from-navy via-navy-800 to-[#0f4a49] py-14 text-white sm:py-20">
+        <div className="alpona-corner pointer-events-none absolute -left-16 -top-16 h-80 w-80 opacity-[.10] invert" />
+        <div className="alpona-corner pointer-events-none absolute -bottom-20 right-0 h-96 w-96 opacity-[.08] invert" />
+        <div className="container-x relative grid gap-10 lg:grid-cols-[.9fr_1.4fr]">
           <div>
             <p className="eyebrow !text-gold">WHOLESALE · পাইকারি</p>
             <h2 className="mt-2 font-bn text-3xl font-normal !text-white sm:text-4xl">বড় পরিমাণে কিনুন,<br />সরাসরি উৎস থেকে</h2>
@@ -73,7 +76,7 @@ export default function Home() {
             </ul>
             <LinkButton href="/wholesale" variant="gold" size="lg" className="mt-8">পাইকারি বাজার দেখুন <ArrowRight className="h-4 w-4" /></LinkButton>
           </div>
-          <div className="min-w-0 overflow-x-auto rounded-md bg-white text-ink">
+          <div className="glass min-w-0 overflow-x-auto rounded-md text-ink">
             <table className="tbl w-full min-w-[560px]">
               <thead><tr><th>পণ্য</th><th>সর্বনিম্ন পাইকারি</th><th>MOQ</th><th>সেরা বিক্রেতা</th><th /></tr></thead>
               <tbody>
@@ -99,7 +102,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-y border-mist-300 bg-white py-14 sm:py-16">
+      <section className="glass-band py-14 sm:py-16">
         <div className="container-x">
           <SectionHead eyebrow="TRUST" title={<T bn="যাচাইকৃত বিক্রেতা" en="Verified sellers" />} sub="রেটিং শুধু ডেলিভারি-সম্পন্ন অর্ডার থেকে — একটি পণ্য × একজন বিক্রেতা।" href="/search?type=sellers" cta="সব বিক্রেতা" />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{verified.map((s) => <SellerCard key={s.slug} slug={s.slug} />)}</div>
@@ -115,7 +118,7 @@ export default function Home() {
             <div className="mt-5 flex flex-wrap items-center gap-3"><LinkButton href="/market-prices" variant="navy">সব বাজারদর</LinkButton><LinkButton href="/market-intelligence" variant="outline">ক্যালকুলেটর ও অ্যালার্ট</LinkButton></div>
             <p className="mt-4"><DemoBadge /> <span className="font-bn text-xs text-mist-500">এগুলো প্রদর্শনী মান; বাস্তব বাজারদর নয়।</span></p>
           </div>
-          <div className="overflow-hidden rounded-md border border-mist-300 bg-white">
+          <div className="overflow-hidden glass rounded-md">
             <table className="tbl w-full">
               <thead><tr><th>পণ্য</th><th className="text-right">আজ</th><th className="hidden text-right sm:table-cell">গতকাল</th><th>৭ দিন</th></tr></thead>
               <tbody>
@@ -133,7 +136,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-t border-mist-300 bg-white py-14 sm:py-16">
+      <section className="glass-band py-14 sm:py-16">
         <div className="container-x">
           <SectionHead eyebrow="02 · LEARN" title={<T bn="নলেজ হাব" en="Knowledge Hub" />} sub="কৃষি, প্রাণিসম্পদ, মৎস্য ও ক্ষুদ্র ব্যবসার ব্যবহারিক জ্ঞান — বাংলায়।" href="/knowledge" cta="সব লেখা" />
           <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
@@ -143,8 +146,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-navy-900 py-14 text-white sm:py-20">
-        <div className="container-x">
+      <section className="relative overflow-hidden bg-gradient-to-b from-navy-800 to-navy-900 py-14 text-white sm:py-20">
+        <div className="alpona-corner pointer-events-none absolute -right-20 -top-10 h-96 w-96 opacity-[.08] invert" />
+        <div className="container-x relative">
           <p className="eyebrow !text-gold">04 · GROW · PETRA BUSINESS SOLUTIONS</p>
           <h2 className="mt-2 max-w-2xl font-bn text-3xl font-normal !text-white sm:text-4xl">ব্যবসা চালানোর সফটওয়্যার, সাশ্রয়ী দামে</h2>
           <p className="mt-3 max-w-xl font-bn text-white/70">পেট্রা সফটওয়্যার সলিউশনসের তৈরি। প্রতিটি বিক্রেতার জন্য বিনামূল্যে Khata Lite।</p>
@@ -163,7 +167,7 @@ export default function Home() {
       </section>
 
       <section className="section">
-        <div className="container-x grid overflow-hidden rounded-md border border-mist-300 bg-white lg:grid-cols-2">
+        <div className="container-x grid overflow-hidden glass rounded-md lg:grid-cols-2">
           <div className="p-7 sm:p-10">
             <p className="eyebrow">SELLER · বিক্রেতা</p>
             <h2 className="h-section mt-1.5">আপনার পণ্য হাজারো ক্রেতার সামনে</h2>
@@ -180,7 +184,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-t border-mist-300 bg-white py-12">
+      <section className="glass-band py-12">
         <div className="container-x grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {[[BadgeCheck, "ট্রাস্ট, শুধু দাম নয়", "রেটিং আসে শুধু ডেলিভারি-সম্পন্ন অর্ডার থেকে।"], [Scale, "পাশাপাশি তুলনা", "একই পণ্যের সব বিক্রেতা, গ্রেড ও উৎসসহ।"], [Wallet, "সহজ পেমেন্ট", "COD, bKash ও Nagad — লাইসেন্সপ্রাপ্ত গেটওয়ে (পরিকল্পিত)।"], [Smartphone, "বাংলা-প্রথম, মোবাইল-প্রথম", "কম দামি অ্যান্ড্রয়েডেও দ্রুত চলে।"]].map(([I, t, d], i) => { const Icon = I as typeof Scale; return (
             <div key={i}><Icon className="h-6 w-6 text-teal" strokeWidth={1.5} /><h3 className="mt-3 font-bn text-lg text-navy">{t as string}</h3><p className="mt-1 font-bn text-sm text-ink/65">{d as string}</p></div>); })}

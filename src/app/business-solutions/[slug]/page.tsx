@@ -18,9 +18,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <div className="rounded-md bg-navy p-5 sm:p-8"><SoftwareMock kind={s.slug as "petrapos"} /></div>
           <p className="mt-2 font-bn text-xs text-mist-500">দৃষ্টান্তমূলক ইন্টারফেস — প্রকৃত সফটওয়্যারের স্ক্রিনশট নয়।</p>
           <h2 className="h-section mt-8">{s.desc}</h2>
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2 font-bn text-[15px]">{s.features.map((f) => <li key={f} className="flex items-start gap-2 rounded-md border border-mist-300 bg-white p-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-teal" />{f}</li>)}</ul>
+          <ul className="mt-5 grid gap-3 sm:grid-cols-2 font-bn text-[15px]">{s.features.map((f) => <li key={f} className="flex items-start gap-2 glass rounded-md p-3"><Check className="mt-0.5 h-4 w-4 shrink-0 text-teal" />{f}</li>)}</ul>
         </div>
-        <div id="demo" className="h-fit scroll-mt-36 rounded-md border border-mist-300 bg-white p-6 shadow-card lg:sticky lg:top-32"><h2 className="font-bn text-xl">ডেমো অনুরোধ করুন</h2><p className="mb-4 mt-1 font-bn text-sm text-ink/60">আমাদের টিম আপনার সঙ্গে যোগাযোগ করবে। (প্রিভিউ: ফর্ম জমা হয় না)</p><DemoForm product={s.name} /></div>
+        <div id="demo" className="h-fit scroll-mt-36 glass rounded-md p-6 shadow-card lg:sticky lg:top-32"><h2 className="font-bn text-xl">ডেমো অনুরোধ করুন</h2><p className="mb-4 mt-1 font-bn text-sm text-ink/60">আমাদের টিম আপনার সঙ্গে যোগাযোগ করবে। (প্রিভিউ: ফর্ম জমা হয় না)</p><DemoForm product={s.name} /></div>
       </div>
     </>
   );

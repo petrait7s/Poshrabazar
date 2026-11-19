@@ -20,6 +20,7 @@ export function Hero() {
       <div className="absolute -left-24 top-10 -z-10 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,#C6A15B66_0%,transparent_68%)]" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-1/3 bg-[linear-gradient(0deg,#167C7826,transparent)]" />
       <div className="absolute inset-y-0 left-0 -z-[4] w-full bg-gradient-to-r from-paper from-30% via-paper/85 via-50% to-transparent max-lg:from-paper/80 max-lg:via-paper/70 max-lg:to-paper/40 lg:w-[68%]" />
+      <div className="alpona-corner pointer-events-none absolute -left-20 -top-20 -z-[3] h-[380px] w-[380px] opacity-[.16]" />
       <div className="absolute inset-y-0 right-0 -z-[5] w-full [mask-image:linear-gradient(90deg,transparent_0%,transparent_34%,#000_60%)] lg:w-[72%] max-lg:opacity-25">
         <Image src="/hero-line.webp" alt="" fill priority sizes="(min-width:1024px) 72vw, 100vw" className="-scale-x-100 object-cover object-right-bottom mix-blend-multiply" />
       </div>
@@ -34,17 +35,17 @@ export function Hero() {
             <LinkButton href="/marketplace" variant="navy" size="lg">পণ্য খুঁজুন <ArrowRight className="h-4 w-4" /></LinkButton>
             <LinkButton href="/seller/register" variant="outline" size="lg">বিক্রেতা হিসেবে যোগ দিন</LinkButton>
           </div>
-          <dl className="mt-9 grid max-w-xl grid-cols-3 gap-4 border-t border-navy/15 pt-5">
+          <dl className="mt-9 grid max-w-xl grid-cols-3 gap-2.5 sm:gap-3">
             {[["এক পণ্য, বহু বিক্রেতা", "One product, many sellers"], ["খুচরা + পাইকারি", "Retail + wholesale"], ["COD · bKash · Nagad", "Payment options"]].map(([a, b]) => (
-              <div key={a}><dt className="font-bn text-[13px] text-navy">{a}</dt><dd className="mt-0.5 text-[11px] text-navy/70">{b}</dd></div>
+              <div key={a} className="glass rounded-md px-3 py-2.5"><dt className="font-bn text-[13px] text-navy">{a}</dt><dd className="mt-0.5 text-[11px] text-navy/70">{b}</dd></div>
             ))}
           </dl>
         </div>
 
         <div className="relative hidden min-h-[420px] lg:block">
-          <div className="absolute bottom-0 right-0 w-56 rounded-md border border-white/15 bg-navy/95 text-white p-3.5 shadow-lift backdrop-blur">
+          <div className="glass-dark absolute bottom-0 right-0 w-56 rounded-md text-white p-3.5 shadow-lift backdrop-blur">
             <p className="flex items-center gap-1.5 font-bn text-xs text-white/70"><TrendingDown className="h-3.5 w-3.5 text-gold" />আজকের দর</p>
-            {tick.map((r) => <div key={r.slug} className="mt-1.5 flex items-center justify-between text-sm"><span className="font-bn">{r.bn}</span><span className="flex items-center gap-2 tabular-nums"><b>{taka(r.today)}</b><Delta now={r.today} prev={r.yesterday} /></span></div>)}
+            {tick.map((r) => <div key={r.slug} className="mt-1.5 flex items-center justify-between text-sm"><span className="font-bn">{r.bn}</span><span className="flex items-center gap-2 tabular-nums"><b>{taka(r.today)}</b><Delta dark now={r.today} prev={r.yesterday} /></span></div>)}
           </div>
         </div>
       </div>

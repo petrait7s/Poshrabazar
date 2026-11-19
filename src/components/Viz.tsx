@@ -14,11 +14,11 @@ export function Sparkline({ data, className, color = "#167C78", fill = true }: {
   );
 }
 
-export function Delta({ now, prev }: { now: number; prev: number }) {
+export function Delta({ now, prev, dark }: { now: number; prev: number; dark?: boolean }) {
   const d = now - prev, pct = prev ? Math.abs((d / prev) * 100).toFixed(1) : "0";
   if (!d) return <span className="inline-flex items-center gap-0.5 text-xs text-mist-500"><Minus className="h-3 w-3" />0%</span>;
   const up = d > 0;
-  return <span className={cn("inline-flex items-center gap-0.5 text-xs font-semibold tabular-nums", up ? "text-red-600" : "text-teal")}>{up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}{pct}%</span>;
+  return <span className={cn("inline-flex items-center gap-0.5 text-xs font-semibold tabular-nums", up ? (dark ? "text-red-300" : "text-red-600") : (dark ? "text-teal-100" : "text-teal"))}>{up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}{pct}%</span>;
 }
 
 export function BarChart({ data, labels, className, height = 160 }: { data: number[]; labels: string[]; className?: string; height?: number }) {

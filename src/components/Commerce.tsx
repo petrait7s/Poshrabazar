@@ -41,7 +41,7 @@ export function ProductCard({ p, className }: { p: Product; className?: string }
   const { addToCart, toast } = useApp();
   const best = s.offers[0];
   return (
-    <article className={cn("group relative flex flex-col overflow-hidden rounded-md border border-mist-300/70 bg-white transition-shadow hover:shadow-lift", className)}>
+    <article className={cn("glass-card group flex flex-col", className)}>
       <Link href={`/product/${p.slug}`} className="relative block aspect-[4/3] overflow-hidden" aria-label={p.bn}>
         <ProductArt motif={p.motif} bg={p.color} accent={p.accent} seed={p.slug} className="h-full w-full transition-transform duration-500 group-hover:scale-[1.04]" />
         <span className="absolute left-2 top-2 rounded-sm bg-navy/90 px-1.5 py-0.5 font-bn text-[11px] text-white">{bn(s.sellerCount)} জন বিক্রেতা</span>
@@ -78,7 +78,7 @@ export function ProductCard({ p, className }: { p: Product; className?: string }
 
 export function ProductCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-md border border-mist-300/70 bg-white">
+    <div className="overflow-hidden glass rounded-md">
       <div className="skeleton aspect-[4/3]" />
       <div className="space-y-2 p-3.5"><div className="skeleton h-4 w-2/3 rounded" /><div className="skeleton h-3 w-1/3 rounded" /><div className="skeleton mt-3 h-6 w-1/2 rounded" /><div className="skeleton h-9 rounded" /></div>
     </div>
@@ -87,7 +87,7 @@ export function ProductCardSkeleton() {
 
 export function CategoryTile({ c, count }: { c: Category; count?: number }) {
   return (
-    <Link href={`/category/${c.slug}`} className="group relative flex items-center gap-3 overflow-hidden rounded-md border border-mist-300/70 bg-white p-2.5 transition-shadow hover:shadow-lift">
+    <Link href={`/category/${c.slug}`} style={{ background: `linear-gradient(135deg, ${c.color}d0, rgba(255,255,255,.55) 72%)` }} className="glass-card group flex items-center gap-3 p-2.5">
       <div className="h-14 w-14 shrink-0 overflow-hidden rounded">
         <ProductArt motif={c.motif} bg={c.color} accent="#167C78" seed={c.slug} className="h-full w-full scale-150" />
       </div>
@@ -102,7 +102,7 @@ export function CategoryTile({ c, count }: { c: Category; count?: number }) {
 export function SellerCard({ slug }: { slug: string }) {
   const s = getSeller(slug)!;
   return (
-    <Link href={`/seller/${s.slug}`} className="group flex flex-col rounded-md border border-mist-300/70 bg-white p-4 transition-shadow hover:shadow-lift">
+    <Link href={`/seller/${s.slug}`} className="glass-card group flex flex-col p-4">
       <div className="flex items-start gap-3">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded bg-navy font-bn text-lg text-white">{s.bn[0]}</div>
         <div className="min-w-0">

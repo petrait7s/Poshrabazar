@@ -38,7 +38,7 @@ export function Breadcrumb({ items }: { items: { label: string; href?: string }[
 
 export function EmptyState({ title, text, action }: { title: string; text?: string; action?: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-center rounded-md border border-dashed border-mist-300 bg-white px-6 py-14 text-center">
+    <div className="flex flex-col items-center rounded-md border border-dashed border-teal/30 bg-white/55 px-6 py-14 text-center">
       <PackageOpen className="h-10 w-10 text-mist-500" strokeWidth={1.25} />
       <h3 className="mt-3 font-bn text-lg text-navy">{title}</h3>
       {text && <p className="mt-1 max-w-sm font-bn text-sm text-mist-500">{text}</p>}

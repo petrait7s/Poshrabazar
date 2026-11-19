@@ -14,7 +14,7 @@ export default function Page() {
         <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]"><ArticleCard a={articles[0]} featured /><div className="space-y-6">{articles.slice(1, 4).map((a) => <ArticleCard key={a.slug} a={a} row />)}</div></div>
         <SectionHead className="mt-14" eyebrow="LATEST" title="সাম্প্রতিক লেখা" />
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">{articles.map((a) => <ArticleCard key={a.slug} a={a} />)}</div>
-        <p className="mt-12 rounded-md border border-mist-300 bg-white p-4 font-bn text-sm text-ink/70">বিশেষজ্ঞ-পর্যালোচিত কনটেন্ট। স্পনসরড কনটেন্ট স্পষ্টভাবে চিহ্নিত থাকবে। এখানকার লেখাগুলো ডেমো নমুনা।</p>
+        <p className="mt-12 glass rounded-md p-4 font-bn text-sm text-ink/70">বিশেষজ্ঞ-পর্যালোচিত কনটেন্ট। স্পনসরড কনটেন্ট স্পষ্টভাবে চিহ্নিত থাকবে। এখানকার লেখাগুলো ডেমো নমুনা।</p>
       </div>
     </>
   );

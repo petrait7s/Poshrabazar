@@ -30,7 +30,7 @@ export function ProfileView() {
   return (
     <>
       <h1 className="font-bn text-3xl font-normal">আমার অ্যাকাউন্ট</h1>
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-md border border-mist-300 bg-white p-5">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 glass rounded-md p-5">
         <div className="flex items-center gap-4"><div className="grid h-14 w-14 place-items-center rounded-full bg-navy font-bn text-2xl text-white">{user?.name[0]}</div><div><p className="font-bn text-lg text-navy">{user?.name}</p><p className="text-sm text-ink/60">{user?.phone} · {user?.role}</p></div></div>
         <Button variant="outline" onClick={() => { logout(); toast("লগআউট হয়েছে", "info"); router.push("/"); }}><LogOut className="h-4 w-4" />লগআউট</Button>
       </div>

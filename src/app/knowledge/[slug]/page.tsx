@@ -13,7 +13,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const more = articles.filter((x) => x.slug !== a.slug).slice(0, 3);
   return (
     <article>
-      <header className="border-b border-mist-300 bg-white"><div className="container-x max-w-4xl py-10">
+      <header className="glass-band"><div className="container-x max-w-4xl py-10">
         <Breadcrumb items={[{ label: "হোম", href: "/" }, { label: "নলেজ হাব", href: "/knowledge" }, { label: cat.bn, href: `/knowledge/category/${cat.slug}` }]} />
         <h1 className="mt-5 font-bn text-3xl font-normal sm:text-5xl">{a.bn}</h1>
         <p className="mt-2 text-mist-500">{a.en}</p>

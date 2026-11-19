@@ -33,7 +33,7 @@ export function SearchBar({ className, size = "md", defaultValue = "", placehold
         <button type="submit" className="flex items-center gap-2 bg-navy px-4 font-bn text-sm font-medium text-white transition-colors hover:bg-teal sm:px-6"><Search className="h-4 w-4" /><span className="hidden sm:inline">খুঁজুন</span></button>
       </form>
       {open && q.trim() && (
-        <div className="absolute inset-x-0 top-full z-50 mt-1 overflow-hidden rounded-md border border-mist-300 bg-white shadow-lift">
+        <div className="absolute inset-x-0 top-full z-50 mt-1 overflow-hidden glass rounded-md shadow-lift">
           {hits.length ? hits.map((p) => (
             <button key={p.slug} onClick={() => { setOpen(false); router.push(`/product/${p.slug}`); }} className="flex w-full items-center justify-between px-4 py-2.5 text-left hover:bg-paper">
               <span className="font-bn text-[15px] text-navy">{p.bn} <span className="text-xs text-mist-500">{p.en}</span></span><ArrowUpRight className="h-4 w-4 text-mist-500" />
