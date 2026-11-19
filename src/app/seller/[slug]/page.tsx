@@ -12,7 +12,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const list = products.filter((p) => offersFor(p).some((o) => o.sellerSlug === s.slug));
   return (
     <>
-      <section className="border-b border-mist-300 bg-white">
+      <section className="glass-band">
         <div className="container-x py-8">
           <Breadcrumb items={[{ label: "হোম", href: "/" }, { label: "বিক্রেতা" }, { label: s.bn }]} />
           <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">

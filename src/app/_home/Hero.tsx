@@ -34,17 +34,17 @@ export function Hero() {
             <LinkButton href="/marketplace" variant="navy" size="lg">পণ্য খুঁজুন <ArrowRight className="h-4 w-4" /></LinkButton>
             <LinkButton href="/seller/register" variant="outline" size="lg">বিক্রেতা হিসেবে যোগ দিন</LinkButton>
           </div>
-          <dl className="mt-9 grid max-w-xl grid-cols-3 gap-4 border-t border-navy/15 pt-5">
+          <dl className="mt-9 grid max-w-xl grid-cols-3 gap-2.5 sm:gap-3">
             {[["এক পণ্য, বহু বিক্রেতা", "One product, many sellers"], ["খুচরা + পাইকারি", "Retail + wholesale"], ["COD · bKash · Nagad", "Payment options"]].map(([a, b]) => (
-              <div key={a}><dt className="font-bn text-[13px] text-navy">{a}</dt><dd className="mt-0.5 text-[11px] text-navy/70">{b}</dd></div>
+              <div key={a} className="glass rounded-md px-3 py-2.5"><dt className="font-bn text-[13px] text-navy">{a}</dt><dd className="mt-0.5 text-[11px] text-navy/70">{b}</dd></div>
             ))}
           </dl>
         </div>
 
         <div className="relative hidden min-h-[420px] lg:block">
-          <div className="absolute bottom-0 right-0 w-56 rounded-md border border-white/15 bg-navy/95 text-white p-3.5 shadow-lift backdrop-blur">
+          <div className="glass-dark absolute bottom-0 right-0 w-56 rounded-md text-white p-3.5 shadow-lift backdrop-blur">
             <p className="flex items-center gap-1.5 font-bn text-xs text-white/70"><TrendingDown className="h-3.5 w-3.5 text-gold" />আজকের দর</p>
-            {tick.map((r) => <div key={r.slug} className="mt-1.5 flex items-center justify-between text-sm"><span className="font-bn">{r.bn}</span><span className="flex items-center gap-2 tabular-nums"><b>{taka(r.today)}</b><Delta now={r.today} prev={r.yesterday} /></span></div>)}
+            {tick.map((r) => <div key={r.slug} className="mt-1.5 flex items-center justify-between text-sm"><span className="font-bn">{r.bn}</span><span className="flex items-center gap-2 tabular-nums"><b>{taka(r.today)}</b><Delta dark now={r.today} prev={r.yesterday} /></span></div>)}
           </div>
         </div>
       </div>

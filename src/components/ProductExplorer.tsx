@@ -71,7 +71,7 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
   return (
     <div className="grid gap-8 lg:grid-cols-[250px_1fr]">
       <aside className="hidden lg:block">
-        <div className="sticky top-32 rounded-md border border-mist-300 bg-white p-5">
+        <div className="sticky top-32 glass rounded-md p-5">
           <div className="mb-4 flex items-center justify-between"><h2 className="font-bn text-lg text-navy">ফিল্টার</h2>{active > 0 && <button onClick={reset} className="font-bn text-xs text-teal hover:underline">রিসেট</button>}</div>
           {Filters}
         </div>

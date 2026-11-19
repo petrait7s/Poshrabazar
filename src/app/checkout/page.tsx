@@ -40,7 +40,7 @@ export default function Checkout() {
         <p className="flex items-center gap-2 font-bn text-lg text-gold-700"><ShieldAlert className="h-5 w-5" />ডেমো পর্যালোচনা — কোনো অর্ডার দেওয়া হয়নি</p>
         <p className="mt-2 font-bn text-[15px] text-ink/80">এটি প্রিভিউ সংস্করণ। কোনো অর্ডার তৈরি হয়নি, কোনো টাকা কাটা হয়নি এবং বিক্রেতাকে কিছু পাঠানো হয়নি। ব্যাকএন্ড সংযুক্ত হলে এই ধাপে বাস্তব অর্ডার তৈরি হবে।</p>
       </div>
-      <div className="mt-6 rounded-md border border-mist-300 bg-white p-5 font-bn">
+      <div className="mt-6 glass rounded-md p-5 font-bn">
         <h2 className="text-lg">আপনার দেওয়া তথ্য</h2>
         <p className="mt-2 text-sm text-ink/75">{f.name} · {f.phone}<br />{f.address}, {loc.district}, {loc.division}<br />পেমেন্ট: ক্যাশ অন ডেলিভারি · মোট {taka(t.total)}</p>
       </div>
@@ -54,7 +54,7 @@ export default function Checkout() {
       <h1 className="font-bn text-3xl font-normal">চেকআউট</h1>
       <form onSubmit={submit} noValidate className="mt-6 grid gap-8 lg:grid-cols-[1fr_380px]">
         <div className="space-y-6">
-          <section className="rounded-md border border-mist-300 bg-white p-5">
+          <section className="glass rounded-md p-5">
             <h2 className="mb-4 font-bn text-xl">ডেলিভারি তথ্য</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="পূর্ণ নাম" error={err.name}><Input invalid={!!err.name} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} autoComplete="name" /></Field>
@@ -64,7 +64,7 @@ export default function Checkout() {
               <Field label="বিক্রেতার জন্য নোট (ঐচ্ছিক)" className="sm:col-span-2"><Input value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} /></Field>
             </div>
           </section>
-          <section className="rounded-md border border-mist-300 bg-white p-5">
+          <section className="glass rounded-md p-5">
             <h2 className="mb-4 font-bn text-xl">পেমেন্ট পদ্ধতি</h2>
             <div className="grid gap-3 sm:grid-cols-3">
               {[["cod", "ক্যাশ অন ডেলিভারি", Banknote, false], ["bkash", "bKash", Smartphone, true], ["nagad", "Nagad", Smartphone, true]].map(([id, label, I, off]) => { const Icon = I as typeof Banknote; return (
@@ -75,7 +75,7 @@ export default function Checkout() {
             </div>
           </section>
         </div>
-        <aside className="h-fit rounded-md border border-mist-300 bg-white p-5 lg:sticky lg:top-32">
+        <aside className="h-fit glass rounded-md p-5 lg:sticky lg:top-32">
           <h2 className="font-bn text-xl">আপনার অর্ডার</h2>
           <ul className="mt-3 divide-y divide-mist text-sm">{cart.map((l) => { const r = resolve(l); return <li key={l.productSlug + l.sellerSlug + l.mode} className="flex justify-between gap-3 py-2 font-bn"><span>{r.p.bn} × {l.qty}<span className="block text-xs text-mist-500">{r.s.bn}</span></span><b className="tabular-nums">{taka(r.total)}</b></li>; })}</ul>
           <dl className="mt-3 space-y-1.5 border-t border-mist pt-3 font-bn text-sm"><div className="flex justify-between"><dt>ডেলিভারি</dt><dd>{taka(t.delivery)}</dd></div><div className="flex justify-between text-lg font-bold text-navy"><dt>মোট</dt><dd>{taka(t.total)}</dd></div></dl>

@@ -5,7 +5,7 @@ export const Input = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTML
   return <input ref={ref} className={cn("h-11 w-full rounded-md border bg-white px-3 text-[15px] placeholder:text-mist-500 transition-colors focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20", invalid ? "border-red-500" : "border-mist-300", className)} {...p} />;
 });
 export function Select({ className, ...p }: React.SelectHTMLAttributes<HTMLSelectElement>) {
-  return <select className={cn("h-10 rounded-md border border-mist-300 bg-white px-2.5 text-sm font-bn focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20", className)} {...p} />;
+  return <select className={cn("h-10 glass rounded-md px-2.5 text-sm font-bn focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/20", className)} {...p} />;
 }
 export function Field({ label, error, hint, children, className }: { label: string; error?: string; hint?: string; children: React.ReactNode; className?: string }) {
   return (

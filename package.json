@@ -2,13 +2,29 @@
   "name": "posrabazar",
   "version": "0.1.0",
   "private": true,
-  "scripts": { "dev": "next dev", "build": "next build", "start": "next start" },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:seed:generate": "tsx scripts/generate-seed.ts"
+  },
   "dependencies": {
-    "next": "^16.4.6", "react": "^19", "react-dom": "^19", "lucide-react": "^0.468.0",
-    "clsx": "^2.1.1", "tailwind-merge": "^2.5.5", "class-variance-authority": "^0.7.1"
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "next": "^16.4.6",
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
-    "typescript": "^5", "@types/node": "^22", "@types/react": "^19", "@types/react-dom": "^19",
-    "tailwindcss": "^3.4.17", "postcss": "^8", "autoprefixer": "^10"
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
   }
 }

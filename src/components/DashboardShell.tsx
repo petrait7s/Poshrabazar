@@ -36,7 +36,7 @@ export function DashboardShell({ title, sub, nav, active, onChange, children, ac
 
 export function Stat({ label, value, delta, hint }: { label: string; value: string; delta?: string; hint?: string }) {
   return (
-    <div className="rounded-md border border-mist-300 bg-white p-4">
+    <div className="glass rounded-md p-4">
       <p className="font-bn text-xs text-ink/60">{label}</p>
       <p className="mt-1 text-2xl font-bold tabular-nums text-navy">{value}</p>
       {(delta || hint) && <p className="mt-1 font-bn text-xs"><span className="font-semibold text-teal">{delta}</span> <span className="text-mist-500">{hint}</span></p>}
@@ -46,7 +46,7 @@ export function Stat({ label, value, delta, hint }: { label: string; value: stri
 
 export function Panel({ title, action, children, className }: { title?: string; action?: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
-    <section className={cn("rounded-md border border-mist-300 bg-white", className)}>
+    <section className={cn("glass rounded-md", className)}>
       {title && <header className="flex items-center justify-between border-b border-mist px-4 py-3"><h2 className="font-bn text-lg">{title}</h2>{action}</header>}
       <div className="p-4">{children}</div>
     </section>

@@ -26,7 +26,7 @@ export default function Page() {
           <div className="inline-flex overflow-hidden rounded-md border border-navy/25 bg-white">{(["retail", "wholesale"] as const).map((k) => <button key={k} onClick={() => setKind(k)} aria-pressed={kind === k} className={cn("px-3.5 py-2 font-bn text-sm", kind === k ? "bg-navy text-white" : "text-navy hover:bg-mist")}>{k === "retail" ? "খুচরা" : "পাইকারি"}</button>)}</div>
           <DemoBadge className="ml-auto" /><span className="font-bn text-xs text-mist-500">প্রদর্শনী মান, বাস্তব বাজারদর নয়</span>
         </div>
-        <div className="overflow-x-auto rounded-md border border-mist-300 bg-white">
+        <div className="overflow-x-auto glass rounded-md">
           <table className="tbl w-full min-w-[620px]">
             <thead><tr><th>পণ্য</th><th className="text-right">আজ</th><th className="text-right">গতকাল</th><th className="text-right">পরিবর্তন</th><th className="text-right">সর্বনিম্ন–সর্বোচ্চ</th><th>৭ দিনের প্রবণতা</th></tr></thead>
             <tbody>{rows.map((r) => <tr key={r.slug}><td><Link href={`/market-prices/${r.slug}`} className="font-bn text-[15px] text-navy hover:text-teal">{r.bn}</Link><span className="ml-1 text-xs text-mist-500">/{r.unit}</span></td><td className="text-right font-bold tabular-nums">{taka(price(r, r.today))}</td><td className="text-right tabular-nums text-mist-500">{taka(price(r, r.yesterday))}</td><td className="text-right"><Delta now={r.today} prev={r.yesterday} /></td><td className="text-right text-xs tabular-nums text-ink/70">{taka(price(r, r.low))} – {taka(price(r, r.high))}</td><td><Sparkline data={r.trend} /></td></tr>)}</tbody>

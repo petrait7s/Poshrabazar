@@ -75,5 +75,5 @@ function Result({ rows, total, good, note }: { rows: string[][]; total: string[]
   );
 }
 export function Tools() {
-  return <div className="rounded-md border border-mist-300 bg-white p-5"><Tabs tabs={[{ id: "p", label: "ফসল-মুনাফা", content: <Profit /> }, { id: "m", label: "ব্যবসার মার্জিন", content: <Margin /> }, { id: "a", label: "প্রাইস অ্যালার্ট", content: <Alert /> }, { id: "c", label: "ফসল ক্যালেন্ডার", content: <Calendar /> }]} /></div>;
+  return <div className="glass rounded-md p-5"><Tabs tabs={[{ id: "p", label: "ফসল-মুনাফা", content: <Profit /> }, { id: "m", label: "ব্যবসার মার্জিন", content: <Margin /> }, { id: "a", label: "প্রাইস অ্যালার্ট", content: <Alert /> }, { id: "c", label: "ফসল ক্যালেন্ডার", content: <Calendar /> }]} /></div>;
 }

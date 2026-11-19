@@ -19,7 +19,7 @@ export default function CartPage() {
         <div className="mt-6"><EmptyState title="আপনার কার্ট খালি" text="মার্কেটপ্লেস থেকে পণ্য যোগ করুন।" action={<LinkButton href="/marketplace">মার্কেটপ্লেসে যান</LinkButton>} /></div>
       ) : (
         <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_360px]">
-          <ul className="divide-y divide-mist-300 rounded-md border border-mist-300 bg-white">
+          <ul className="divide-y divide-mist-300 glass rounded-md">
             {cart.map((l, i) => { const r = resolve(l); return (
               <li key={`${l.productSlug}-${l.sellerSlug}-${l.mode}`} className="flex gap-3 p-3 sm:gap-4 sm:p-4">
                 <Link href={`/product/${r.p.slug}`} className="h-20 w-24 shrink-0 overflow-hidden rounded sm:h-24 sm:w-28"><ProductArt motif={r.p.motif} bg={r.p.color} accent={r.p.accent} seed={r.p.slug} className="h-full w-full" /></Link>
@@ -35,7 +35,7 @@ export default function CartPage() {
                 </div>
               </li>); })}
           </ul>
-          <aside className="h-fit rounded-md border border-mist-300 bg-white p-5 lg:sticky lg:top-32">
+          <aside className="h-fit glass rounded-md p-5 lg:sticky lg:top-32">
             <h2 className="font-bn text-xl">অর্ডার সারসংক্ষেপ</h2>
             <dl className="mt-4 space-y-2 font-bn text-[15px]">
               <div className="flex justify-between"><dt className="text-ink/70">সাবটোটাল</dt><dd className="tabular-nums">{taka(t.sub)}</dd></div>

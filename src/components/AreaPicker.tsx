@@ -37,7 +37,7 @@ export function AreaModal({ open, onClose, title = "আপনার এলাক
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center" role="dialog" aria-modal aria-label={title}>
       <div className="absolute inset-0 bg-navy/55" onClick={onClose} />
-      <div className="relative flex max-h-[88vh] w-full max-w-xl animate-rise flex-col overflow-hidden rounded-t-lg bg-white shadow-lift sm:rounded-lg">
+      <div className="relative flex max-h-[88vh] w-full max-w-xl animate-rise flex-col overflow-hidden rounded-t-lg bg-paper/95 shadow-lift backdrop-blur-xl sm:rounded-lg">
         <header className="flex items-center gap-2 border-b border-mist-300 px-5 py-4">
           {d && <button onClick={() => setDiv("")} aria-label="Back" className="grid h-8 w-8 place-items-center rounded hover:bg-mist"><ArrowLeft className="h-4 w-4" /></button>}
           <div className="flex-1"><h2 className="font-bn text-lg text-navy">{d ? `${d.bn} বিভাগ — জেলা বাছুন` : title}</h2><p className="font-bn text-xs text-ink/60">{d ? "জেলা বা পুরো বিভাগ" : "প্রথমে বিভাগ, তারপর জেলা"}</p></div>
@@ -72,7 +72,7 @@ export function AreaButton({ className, label }: { className?: string; label?: s
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button onClick={() => setOpen(true)} className={cn("flex items-center gap-2 rounded-md border border-mist-300 bg-white px-3 py-2 text-left hover:border-navy", className)} aria-haspopup="dialog">
+      <button onClick={() => setOpen(true)} className={cn("flex items-center gap-2 glass rounded-md px-3 py-2 text-left hover:border-navy", className)} aria-haspopup="dialog">
         <MapPin className="h-4 w-4 shrink-0 text-teal" />
         <span className="min-w-0 leading-tight"><span className="block font-bn text-[10px] text-mist-500">{label ?? "এলাকা"}</span><span className="block truncate font-bn text-sm text-navy">{hydrated ? areaLabel(area) : "সারা বাংলাদেশ"}</span></span>
         <ChevronDown className="ml-auto h-3.5 w-3.5 shrink-0 text-mist-500" />

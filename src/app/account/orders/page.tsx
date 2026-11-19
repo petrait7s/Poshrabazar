@@ -19,7 +19,7 @@ export default function Page() {
       <p className="mt-1 font-bn text-sm text-gold-700">নিচের অর্ডারগুলো নমুনা (ডেমো) — প্রকৃত অর্ডার নয়।</p>
       <ul className="mt-5 space-y-3">
         {orders.map((o) => (
-          <li key={o.id} className="rounded-md border border-mist-300 bg-white">
+          <li key={o.id} className="glass rounded-md">
             <button onClick={() => setOpen(open === o.id ? "" : o.id)} className="flex w-full items-center justify-between gap-3 p-4 text-left" aria-expanded={open === o.id}>
               <div><p className="font-semibold text-navy">{o.id}</p><p className="font-bn text-xs text-ink/60">{o.date} · {o.seller}</p></div>
               <div className="flex items-center gap-4"><StatusPill s={o.status} /><b className="tabular-nums">{taka(o.total)}</b></div>

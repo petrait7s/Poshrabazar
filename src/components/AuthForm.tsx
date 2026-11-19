@@ -26,7 +26,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   };
   return (
     <div className="container-x grid min-h-[70vh] place-items-center py-10">
-      <form onSubmit={submit} noValidate className="w-full max-w-md rounded-md border border-mist-300 bg-white p-6 shadow-card sm:p-8">
+      <form onSubmit={submit} noValidate className="w-full max-w-md glass rounded-md p-6 shadow-card sm:p-8">
         <Logo />
         <h1 className="mt-6 font-bn text-2xl font-normal">{mode === "login" ? "লগইন করুন" : "নতুন অ্যাকাউন্ট খুলুন"}</h1>
         <p className="mt-1 font-bn text-sm text-ink/60">{mode === "login" ? "মোবাইল নম্বর ও পাসওয়ার্ড দিন।" : "ক্রেতা বা বিক্রেতা হিসেবে যোগ দিন।"}</p>

@@ -16,7 +16,7 @@ export default function Page() {
       </PillarHero>
       <div className="container-x py-12">
         <SectionHead eyebrow="TODAY" title="আজকের বড় পরিবর্তন" href="/market-prices" cta="সব দর" />
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{movers.map((r) => <Link key={r.slug} href={`/market-prices/${r.slug}`} className="rounded-md border border-mist-300 bg-white p-4 hover:shadow-lift"><p className="font-bn text-navy">{r.bn}</p><p className="mt-1 text-2xl font-bold tabular-nums">{taka(r.today)}</p><div className="mt-1 flex items-center justify-between"><Delta now={r.today} prev={r.yesterday} /><Sparkline data={r.trend} className="w-16" /></div></Link>)}</div>
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{movers.map((r) => <Link key={r.slug} href={`/market-prices/${r.slug}`} className="glass rounded-md p-4 hover:shadow-lift"><p className="font-bn text-navy">{r.bn}</p><p className="mt-1 text-2xl font-bold tabular-nums">{taka(r.today)}</p><div className="mt-1 flex items-center justify-between"><Delta now={r.today} prev={r.yesterday} /><Sparkline data={r.trend} className="w-16" /></div></Link>)}</div>
         <SectionHead className="mt-14" eyebrow="TOOLS" title="ক্যালকুলেটর ও অ্যালার্ট" sub="সব হিসাব আপনার ব্রাউজারেই হয়; কিছু সংরক্ষিত হয় না।" />
         <Tools />
       </div>

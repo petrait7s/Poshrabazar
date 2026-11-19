@@ -68,7 +68,7 @@ export function Providers({ children }: { children: ReactNode }) {
       {children}
       <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-20 z-[100] flex flex-col items-center gap-2 px-4 lg:bottom-6 lg:items-end lg:pr-6">
         {toasts.map((t) => (
-          <div key={t.id} className="pointer-events-auto flex max-w-sm animate-rise items-start gap-2.5 rounded-md border border-mist-300 bg-white px-4 py-3 text-sm shadow-lift">
+          <div key={t.id} className="pointer-events-auto flex max-w-sm animate-rise items-start gap-2.5 glass rounded-md px-4 py-3 text-sm">
             {t.kind === "ok" ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal" /> : t.kind === "err" ? <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" /> : <Info className="mt-0.5 h-4 w-4 shrink-0 text-gold-700" />}
             <span className="font-bn">{t.msg}</span>
             <button aria-label="Close" onClick={() => setToasts((x) => x.filter((y) => y.id !== t.id))} className="ml-1 text-mist-500 hover:text-navy"><X className="h-4 w-4" /></button>

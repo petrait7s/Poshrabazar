@@ -63,7 +63,7 @@ export function ProductDetail({ p }: { p: Product }) {
             <div><dt className="text-xs text-mist-500">পাইকারি MOQ</dt><dd className="text-navy">{bn(p.minWholesale)} {p.unit}</dd></div>
           </dl>
 
-          <div className="mt-5 rounded-md bg-navy p-5 text-white">
+          <div className="glass-dark mt-5 rounded-md bg-[radial-gradient(420px_220px_at_100%_0%,rgba(198,161,91,.28),transparent_70%)] p-5 text-white">
             <div role="group" className="mb-4 inline-flex overflow-hidden rounded-md border border-white/25">
               {(["retail", "wholesale"] as const).map((m) => <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)} className={cn("px-4 py-1.5 font-bn text-sm", mode === m ? "bg-white text-navy" : "text-white/80 hover:bg-white/10")}>{m === "retail" ? "খুচরা" : "পাইকারি"}</button>)}
             </div>
@@ -76,7 +76,7 @@ export function ProductDetail({ p }: { p: Product }) {
             </div>
           </div>
           <ul className="mt-4 grid grid-cols-3 gap-2 text-center font-bn text-xs text-ink/70">
-            {[[Truck, "জেলাভিত্তিক ডেলিভারি"], [Wallet, "COD · bKash · Nagad"], [BadgeCheck, "যাচাইকৃত রিভিউ"]].map(([I, t], i) => { const Icon = I as typeof Truck; return <li key={i} className="rounded-md border border-mist-300 bg-white px-2 py-3"><Icon className="mx-auto mb-1 h-5 w-5 text-teal" strokeWidth={1.5} />{t as string}</li>; })}
+            {[[Truck, "জেলাভিত্তিক ডেলিভারি"], [Wallet, "COD · bKash · Nagad"], [BadgeCheck, "যাচাইকৃত রিভিউ"]].map(([I, t], i) => { const Icon = I as typeof Truck; return <li key={i} className="glass rounded-md px-2 py-3"><Icon className="mx-auto mb-1 h-5 w-5 text-teal" strokeWidth={1.5} />{t as string}</li>; })}
           </ul>
         </div>
       </div>
@@ -88,11 +88,11 @@ export function ProductDetail({ p }: { p: Product }) {
             <div role="group" className="inline-flex overflow-hidden rounded-md border border-navy/25 bg-white">
               {(["retail", "wholesale"] as const).map((m) => <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)} className={cn("px-3.5 py-1.5 font-bn text-sm", mode === m ? "bg-navy text-white" : "text-navy hover:bg-mist")}>{m === "retail" ? "খুচরা" : "পাইকারি"}</button>)}
             </div>
-            <select aria-label="Sort" value={sortBy} onChange={(e) => setSortBy(e.target.value as "price" | "rating")} className="h-9 rounded-md border border-mist-300 bg-white px-2 font-bn text-sm"><option value="price">দাম অনুযায়ী</option><option value="rating">রেটিং অনুযায়ী</option></select>
+            <select aria-label="Sort" value={sortBy} onChange={(e) => setSortBy(e.target.value as "price" | "rating")} className="h-9 glass rounded-md px-2 font-bn text-sm"><option value="price">দাম অনুযায়ী</option><option value="rating">রেটিং অনুযায়ী</option></select>
           </div>
         </div>
 
-        <div className="hidden overflow-x-auto rounded-md border border-mist-300 bg-white md:block">
+        <div className="hidden overflow-x-auto glass rounded-md md:block">
           <table className="tbl w-full">
             <thead><tr><th>বিক্রেতা</th><th>অবস্থান</th><th>গ্রেড</th><th className={cn("text-right", mode === "retail" && "!bg-teal")}>খুচরা</th><th className={cn("text-right", mode === "wholesale" && "!bg-teal")}>পাইকারি</th><th>স্টক</th><th>পরিমাণ</th><th /></tr></thead>
             <tbody>
@@ -134,7 +134,7 @@ export function ProductDetail({ p }: { p: Product }) {
       <section className="mt-14">
         <Tabs tabs={[
           { id: "d", label: "বিবরণ", content: <div className="max-w-2xl space-y-3 font-bn text-[15px] text-ink/80"><p>{p.desc}</p><p className="flex items-center gap-2 text-sm"><Sprout className="h-4 w-4 text-teal" />উৎস: {p.origin}{p.season && ` · মৌসুম: ${p.season}`}</p></div> },
-          { id: "r", label: `রিভিউ (${bn(base.reduce((a, o) => a + o.reviews, 0))})`, content: <div className="grid gap-3 md:grid-cols-2">{base.slice(0, 4).map((o) => <div key={o.sellerSlug} className="rounded-md border border-mist-300 bg-white p-4"><div className="flex justify-between"><b className="font-bn text-navy">{getSeller(o.sellerSlug)!.bn}</b><Stars value={o.rating} count={o.reviews} /></div><p className="mt-2 font-bn text-sm text-ink/70">এই বিক্রেতার {p.bn} নিয়ে যাচাইকৃত ক্রেতাদের গড় রেটিং। (ডেমো)</p></div>)}</div> },
+          { id: "r", label: `রিভিউ (${bn(base.reduce((a, o) => a + o.reviews, 0))})`, content: <div className="grid gap-3 md:grid-cols-2">{base.slice(0, 4).map((o) => <div key={o.sellerSlug} className="glass rounded-md p-4"><div className="flex justify-between"><b className="font-bn text-navy">{getSeller(o.sellerSlug)!.bn}</b><Stars value={o.rating} count={o.reviews} /></div><p className="mt-2 font-bn text-sm text-ink/70">এই বিক্রেতার {p.bn} নিয়ে যাচাইকৃত ক্রেতাদের গড় রেটিং। (ডেমো)</p></div>)}</div> },
           { id: "s", label: "ডেলিভারি ও পেমেন্ট", content: <ul className="max-w-2xl list-disc space-y-2 pl-5 font-bn text-[15px] text-ink/80"><li>ক্যাশ অন ডেলিভারি (COD) প্রথমে; bKash/Nagad লাইসেন্সপ্রাপ্ত গেটওয়ের মাধ্যমে — পরিকল্পিত।</li><li>এই প্রিভিউ সংস্করণে কোনো বাস্তব অর্ডার বা পেমেন্ট প্রক্রিয়া হয় না।</li></ul> },
         ]} />
       </section>
