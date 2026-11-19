@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShieldAlert, Banknote, Smartphone } from "lucide-react";
-import { Field, Input, Select } from "@/components/ui/form";
+import { Field, Input } from "@/components/ui/form";
+import { AreaSelect } from "@/components/AreaPicker";
 import { Button, LinkButton } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
 import { useApp } from "@/components/providers";
@@ -10,12 +11,13 @@ import { resolve, totals } from "@/components/cartUtil";
 import { taka } from "@/data/catalog";
 import { cn } from "@/lib/utils";
 
-const districts = ["ঢাকা", "চট্টগ্রাম", "সিলেট", "রাজশাহী", "খুলনা", "বরিশাল", "রংপুর", "ময়মনসিংহ", "বগুড়া", "যশোর"];
 type Errs = Partial<Record<"name" | "phone" | "address" | "district", string>>;
 
 export default function Checkout() {
-  const { cart, hydrated, toast, clearCart } = useApp();
+  const { cart, hydrated, toast, clearCart, area } = useApp();
   const [f, setF] = useState({ name: "", phone: "", address: "", district: "", note: "" });
+  const [loc, setLoc] = useState(area);
+  useEffect(() => { setLoc(area); }, [area]);
   const [pay, setPay] = useState("cod");
   const [err, setErr] = useState<Errs>({});
   const [done, setDone] = useState(false);
@@ -26,7 +28,7 @@ export default function Checkout() {
     if (f.name.trim().length < 3) e.name = "পূর্ণ নাম লিখুন (কমপক্ষে ৩ অক্ষর)";
     if (!/^(\+?88)?01[3-9]\d{8}$/.test(f.phone.replace(/[\s-]/g, ""))) e.phone = "সঠিক মোবাইল নম্বর দিন (যেমন 01712345678)";
     if (f.address.trim().length < 8) e.address = "বিস্তারিত ঠিকানা লিখুন";
-    if (!f.district) e.district = "জেলা নির্বাচন করুন";
+    if (!loc.district) e.district = "বিভাগ ও জেলা নির্বাচন করুন";
     setErr(e); return !Object.keys(e).length;
   };
   const submit = (ev: React.FormEvent) => { ev.preventDefault(); if (!validate()) { toast("ফর্মের ভুলগুলো ঠিক করুন", "err"); return; } setDone(true); window.scrollTo({ top: 0, behavior: "smooth" }); };
@@ -40,7 +42,7 @@ export default function Checkout() {
       </div>
       <div className="mt-6 rounded-md border border-mist-300 bg-white p-5 font-bn">
         <h2 className="text-lg">আপনার দেওয়া তথ্য</h2>
-        <p className="mt-2 text-sm text-ink/75">{f.name} · {f.phone}<br />{f.address}, {f.district}<br />পেমেন্ট: ক্যাশ অন ডেলিভারি · মোট {taka(t.total)}</p>
+        <p className="mt-2 text-sm text-ink/75">{f.name} · {f.phone}<br />{f.address}, {loc.district}, {loc.division}<br />পেমেন্ট: ক্যাশ অন ডেলিভারি · মোট {taka(t.total)}</p>
       </div>
       <div className="mt-6 flex gap-3"><Button variant="outline" onClick={() => setDone(false)}>তথ্য সম্পাদনা</Button><Button onClick={() => { clearCart(); }}>ডেমো কার্ট খালি করুন</Button><LinkButton href="/" variant="ghost">হোম</LinkButton></div>
     </div>
@@ -57,7 +59,7 @@ export default function Checkout() {
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="পূর্ণ নাম" error={err.name}><Input invalid={!!err.name} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} autoComplete="name" /></Field>
               <Field label="মোবাইল নম্বর" error={err.phone}><Input invalid={!!err.phone} inputMode="tel" placeholder="01XXXXXXXXX" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} autoComplete="tel" /></Field>
-              <Field label="জেলা" error={err.district}><Select className="h-11 w-full" value={f.district} onChange={(e) => setF({ ...f, district: e.target.value })}><option value="">নির্বাচন করুন</option>{districts.map((d) => <option key={d}>{d}</option>)}</Select></Field>
+              <div className="sm:col-span-2"><AreaSelect value={loc} onChange={setLoc} allLabel="নির্বাচন করুন" error={err.district} /></div>
               <Field label="বিস্তারিত ঠিকানা" error={err.address} className="sm:col-span-2"><Input invalid={!!err.address} value={f.address} onChange={(e) => setF({ ...f, address: e.target.value })} autoComplete="street-address" /></Field>
               <Field label="বিক্রেতার জন্য নোট (ঐচ্ছিক)" className="sm:col-span-2"><Input value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} /></Field>
             </div>

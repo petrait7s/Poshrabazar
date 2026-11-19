@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { noArea, type Area } from "@/data/locations";
 import { CheckCircle2, Info, X, AlertTriangle } from "lucide-react";
 
 export type Lang = "bn" | "en";
@@ -13,6 +14,7 @@ type Ctx = {
   wishlist: string[]; toggleWish: (slug: string) => void;
   user: DemoUser | null; login: (u: DemoUser) => void; logout: () => void;
   toast: (msg: string, kind?: Toast["kind"]) => void;
+  area: Area; setArea: (a: Area) => void;
   hydrated: boolean;
 };
 const C = createContext<Ctx | null>(null);
@@ -27,10 +29,11 @@ export function Providers({ children }: { children: ReactNode }) {
   const [wishlist, setWish] = useState<string[]>([]);
   const [user, setUser] = useState<DemoUser | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [area, setAreaS] = useState<Area>(noArea);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setLangS(load("pb_lang", "bn")); setCart(load("pb_cart", [])); setWish(load("pb_wish", [])); setUser(load("pb_user", null)); setHydrated(true);
+    setLangS(load("pb_lang", "bn")); setCart(load("pb_cart", [])); setWish(load("pb_wish", [])); setUser(load("pb_user", null)); setAreaS(load("pb_area", noArea)); setHydrated(true);
   }, []);
   useEffect(() => { if (hydrated) save("pb_cart", cart); }, [cart, hydrated]);
   useEffect(() => { if (hydrated) save("pb_wish", wishlist); }, [wishlist, hydrated]);
@@ -56,8 +59,9 @@ export function Providers({ children }: { children: ReactNode }) {
     clearCart: () => setCart([]),
     wishlist, toggleWish: (s) => setWish((w) => (w.includes(s) ? w.filter((x) => x !== s) : [...w, s])),
     user, login: setUser, logout: () => setUser(null),
+    area, setArea: (a) => { setAreaS(a); save("pb_area", a); },
     toast, hydrated,
-  }), [lang, cart, wishlist, user, toast, hydrated]);
+  }), [lang, cart, wishlist, user, area, toast, hydrated]);
 
   return (
     <C.Provider value={value}>
