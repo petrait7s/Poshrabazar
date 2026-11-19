@@ -8,7 +8,7 @@ import { QtyStepper } from "@/components/QtyStepper";
 import { Stars, Tabs } from "@/components/ui/misc";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/components/providers";
-import { bn, getSeller, offersFor, taka, type Product } from "@/data/catalog";
+import { bn, genitive, getSeller, offersFor, taka, type Product } from "@/data/catalog";
 import { cn } from "@/lib/utils";
 import { inArea, areaLabel } from "@/data/locations";
 
@@ -56,6 +56,7 @@ export function ProductDetail({ p }: { p: Product }) {
           <p className="eyebrow">{p.category.replace("-", " & ")}</p>
           <h1 className="mt-2 font-bn text-4xl font-normal sm:text-5xl">{p.bn}</h1>
           <p className="mt-1 text-lg text-mist-500">{p.en}</p>
+          {p.famous && <p className="mt-3 inline-flex items-center gap-2 rounded-sm bg-gold-50 px-2.5 py-1 font-bn text-sm text-gold-700"><MapPin className="h-4 w-4" />{genitive(p.famous)} বিখ্যাত পণ্য · সারা দেশে পাঠানো হয়</p>}
           <p className="mt-4 font-bn text-[15px] text-ink/75">{p.desc}</p>
           <dl className="mt-5 grid grid-cols-3 gap-3 border-y border-mist-300 py-4 font-bn text-sm">
             <div><dt className="text-xs text-mist-500">উৎস</dt><dd className="text-navy">{p.origin}</dd></div>

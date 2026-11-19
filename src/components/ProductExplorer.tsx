@@ -18,7 +18,7 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
   const [mode, setMode] = useState<Mode>(initialMode);
   const [cats, setCats] = useState<string[]>(category ? [category] : []);
   const { area, setArea } = useApp();
-  const [maxPrice, setMaxPrice] = useState(700);
+  const [maxPrice, setMaxPrice] = useState(10000);
   const [verified, setVerified] = useState(false);
   const [sort, setSort] = useState("popular");
   const [open, setOpen] = useState(false);
@@ -32,7 +32,7 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
     const q = query.trim().toLowerCase();
     const list = products.map((p) => {
       let offers = offersFor(p);
-      offers = offers.filter((o) => { const sl = sellers.find((s) => s.slug === o.sellerSlug)!; return inArea(area, sl.location, sl.division); });
+      offers = offers.filter((o) => { const sl = sellers.find((s) => s.slug === o.sellerSlug)!; return inArea(area, sl.location, sl.division) || (!!p.famous && !!sl.nationwide); });
       if (verified) offers = offers.filter((o) => sellers.find((s) => s.slug === o.sellerSlug)!.verified);
       const price = offers.length ? Math.min(...offers.map((o) => o[mode])) : Infinity;
       return { p, offers, price };
@@ -47,8 +47,8 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
     return list;
   }, [mode, cats, area, maxPrice, verified, sort, query]);
 
-  const reset = () => { setCats(category && lockCategory ? [category] : []); setArea(noArea); setMaxPrice(700); setVerified(false); };
-  const active = (lockCategory ? 0 : cats.length) + (area.division ? 1 : 0) + (verified ? 1 : 0) + (maxPrice < 700 ? 1 : 0);
+  const reset = () => { setCats(category && lockCategory ? [category] : []); setArea(noArea); setMaxPrice(10000); setVerified(false); };
+  const active = (lockCategory ? 0 : cats.length) + (area.division ? 1 : 0) + (verified ? 1 : 0) + (maxPrice < 10000 ? 1 : 0);
 
   const Filters = (
     <div className="space-y-6">
@@ -58,8 +58,8 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
         </fieldset>
       )}
       <fieldset><legend className="mb-2 font-bn text-sm font-semibold text-navy">সর্বোচ্চ দাম (প্রতি ইউনিট)</legend>
-        <input type="range" min={30} max={700} step={10} value={maxPrice} onChange={(e) => setMaxPrice(+e.target.value)} className="w-full accent-teal" aria-label="Max price" />
-        <div className="mt-1 flex justify-between text-xs tabular-nums text-mist-500"><span>৳30</span><b className="text-navy">≤ ৳{maxPrice}{maxPrice === 700 ? "+" : ""}</b><span>৳700</span></div>
+        <input type="range" min={50} max={10000} step={50} value={maxPrice} onChange={(e) => setMaxPrice(+e.target.value)} className="w-full accent-teal" aria-label="Max price" />
+        <div className="mt-1 flex justify-between text-xs tabular-nums text-mist-500"><span>৳50</span><b className="text-navy">{maxPrice === 10000 ? "সব দাম" : `≤ ৳${maxPrice}`}</b><span>৳10,000</span></div>
       </fieldset>
       <fieldset><legend className="mb-2 font-bn text-sm font-semibold text-navy">এলাকা (কোথা থেকে কিনবেন)</legend>
         <AreaSelect value={area} onChange={setArea} allLabel="সারা দেশ" className="!grid-cols-1" />

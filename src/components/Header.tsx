@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 const nav = [
   { href: "/marketplace", bn: "মার্কেটপ্লেস", en: "Marketplace", tag: "Buy & Sell" },
+  { href: "/famous", bn: "বিখ্যাত পণ্য", en: "Famous Products", tag: "Nationwide" },
   { href: "/wholesale", bn: "পাইকারি", en: "Wholesale", tag: "Bulk" },
   { href: "/knowledge", bn: "নলেজ হাব", en: "Knowledge Hub", tag: "Learn" },
   { href: "/market-intelligence", bn: "মার্কেট ইন্টেলিজেন্স", en: "Market Intelligence", tag: "Understand" },
@@ -41,7 +42,7 @@ export function Header() {
     <>
       <div className="relative bg-gradient-to-r from-navy-900 via-navy to-[#0f4a49] text-[12px] text-white/90">
         <div className="container-x flex h-8 items-center justify-between gap-3">
-          <p className="truncate font-bn"><span className="text-gold">●</span> <T bn="বাংলার উন্মুক্ত ডিজিটাল বাজার — প্রদর্শনী সংস্করণ, সব তথ্য ডেমো" en="Bangladesh's open digital marketplace — preview edition, all data is demo" /></p>
+          <p className="truncate font-bn"><span className="text-gold">●</span> <T bn="প্রতিটি বিক্রেতার জন্য বিনামূল্যে Khata Lite" en="Free Khata Lite for every seller" /></p>
           <div className="flex items-center gap-4">
             <Link href="/market-prices" className="hidden font-bn hover:text-white sm:inline"><T bn="আজকের বাজারদর" en="Today's prices" /></Link>
             <Link href="/seller/register" className="hidden font-bn hover:text-white sm:inline"><T bn="বিক্রেতা হোন" en="Become a seller" /></Link>
@@ -54,7 +55,6 @@ export function Header() {
             </div>
           </div>
         </div>
-        <div className="kantha opacity-70" />
       </div>
 
       <header className="sticky top-0 z-40 border-b border-white/70 bg-paper/65 shadow-[0_8px_30px_-18px_rgba(20,43,69,.35)] backdrop-blur-xl">

@@ -12,7 +12,6 @@ const col = (title: string, links: [string, string][]) => (
 export function Footer() {
   return (
     <footer className="relative mt-12 overflow-hidden bg-gradient-to-b from-navy via-navy-800 to-navy-900 pb-20 text-white lg:pb-0">
-      <div className="kantha" />
       <div className="container-x relative grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
         <div>
           <Logo tone="white" />
@@ -20,7 +19,7 @@ export function Footer() {
           <p className="mt-2 max-w-xs font-bn text-[14px] leading-relaxed text-white/70">কৃষক, ব্যবসায়ী, পাইকার ও ক্রেতা — সবাই এক বাজারে। One Platform. Every Seller. Every Buyer.</p>
           <p className="mt-5 text-xs text-white/50">Powered by Petra Software Solutions</p>
         </div>
-        {col("Marketplace", [["সব ক্যাটাগরি", "/categories"], ["পাইকারি বাজার", "/wholesale"], ["বিক্রেতা নিবন্ধন", "/seller/register"], ...categories.slice(0, 3).map((c) => [c.bn, `/category/${c.slug}`] as [string, string])])}
+        {col("Marketplace", [["সব ক্যাটাগরি", "/categories"], ["বিখ্যাত পণ্য", "/famous"], ["পাইকারি বাজার", "/wholesale"], ["বিক্রেতা নিবন্ধন", "/seller/register"], ...categories.slice(0, 3).map((c) => [c.bn, `/category/${c.slug}`] as [string, string])])}
         {col("Learn & Understand", [["নলেজ হাব", "/knowledge"], ["আজকের বাজারদর", "/market-prices"], ["মার্কেট ইন্টেলিজেন্স", "/market-intelligence"]])}
         {col("Business Solutions", [["PetraPOS", "/business-solutions/petrapos"], ["PetraPMS", "/business-solutions/petrapms"], ["PetraDMS", "/business-solutions/petradms"], ["Khata Lite (বিনামূল্যে)", "/business-solutions"]])}
         {col("Account", [["লগইন", "/login"], ["নিবন্ধন", "/register"], ["কার্ট", "/cart"], ["আমার অর্ডার", "/account/orders"], ["বিক্রেতা ড্যাশবোর্ড", "/seller/dashboard"], ["অ্যাডমিন", "/admin"]])}
@@ -28,7 +27,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col gap-2 py-5 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 PosraBazar · পসরাবাজার. Powered by Petra Software Solutions.</p>
-          <p>Preview build: product data, prices and sellers are demonstration values. No real orders or payments.</p>
+          <p className="font-bn text-white/70">প্রদর্শনী সংস্করণ: পণ্য, দাম ও বিক্রেতার তথ্য ডেমো। কোনো বাস্তব অর্ডার বা পেমেন্ট হয় না। <span className="font-sans text-white/45">Preview build — demo data, no real orders or payments.</span></p>
         </div>
       </div>
     </footer>
