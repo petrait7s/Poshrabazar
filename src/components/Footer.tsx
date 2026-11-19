@@ -12,7 +12,6 @@ const col = (title: string, links: [string, string][]) => (
 export function Footer() {
   return (
     <footer className="relative mt-12 overflow-hidden bg-gradient-to-b from-navy via-navy-800 to-navy-900 pb-20 text-white lg:pb-0">
-      <div className="kantha" />
       <div className="container-x relative grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
         <div>
           <Logo tone="white" />
@@ -28,7 +27,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col gap-2 py-5 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 PosraBazar · পসরাবাজার. Powered by Petra Software Solutions.</p>
-          <p>Preview build: product data, prices and sellers are demonstration values. No real orders or payments.</p>
+          <p className="font-bn text-white/70">প্রদর্শনী সংস্করণ: পণ্য, দাম ও বিক্রেতার তথ্য ডেমো। কোনো বাস্তব অর্ডার বা পেমেন্ট হয় না। <span className="font-sans text-white/45">Preview build — demo data, no real orders or payments.</span></p>
         </div>
       </div>
     </footer>

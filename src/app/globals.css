@@ -58,7 +58,6 @@
   .glass-card:hover::after { transform: translateX(130%); }
 
   /* ── Bangla ornament ── */
-  .kantha { height: 8px; background: url(/kantha.svg) repeat-x center / 36px 8px; }
 
   .skeleton { @apply relative overflow-hidden bg-mist; }
   .skeleton::after { content: ""; @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent; animation: shimmer 1.4s infinite; }
