@@ -10,7 +10,7 @@ import { AreaSelect } from "@/components/AreaPicker";
 import { divisions } from "@/data/locations";
 import { cn } from "@/lib/utils";
 
-const kinds = ["কৃষক", "খামারি", "পাইকার", "আড়তদার", "দোকানদার"];
+const kinds = ["কৃষক", "খামারি", "পাইকার", "আড়তদার", "দোকানদার", "কারিগর / শিল্পী"];
 const steps = ["ব্যবসার ধরন", "যোগাযোগ ও ঠিকানা", "পণ্য ও যাচাই"];
 
 export default function Page() {
@@ -30,7 +30,7 @@ export default function Page() {
 
   return (
     <>
-      <PillarHero pillar="marketplace" crumbs={[{ label: "হোম", href: "/" }, { label: "বিক্রেতা নিবন্ধন" }]} title="বিক্রেতা হিসেবে যোগ দিন" sub="কৃষক, খামারি, পাইকার, আড়তদার বা দোকানদার — সাথী এজেন্ট আপনাকে যাচাই ও অনবোর্ড করতে সাহায্য করবে।" />
+      <PillarHero pillar="marketplace" crumbs={[{ label: "হোম", href: "/" }, { label: "বিক্রেতা নিবন্ধন" }]} title="বিক্রেতা হিসেবে যোগ দিন" sub="কৃষক, খামারি, কারিগর, মিষ্টি-দই প্রস্তুতকারক, পাইকার, আড়তদার বা দোকানদার — সাথী এজেন্ট আপনাকে যাচাই ও অনবোর্ড করতে সাহায্য করবে।" />
       <div className="container-x grid gap-8 py-10 lg:grid-cols-[1fr_340px]">
         {done ? (
           <div className="rounded-md border-2 border-gold bg-gold-50 p-6">

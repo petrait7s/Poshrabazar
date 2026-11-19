@@ -58,6 +58,15 @@ export default function Home() {
 
       <section className="pb-12 sm:pb-16">
         <div className="container-x">
+          <SectionHead eyebrow="FAMOUS · সারা দেশে" title={<T bn="যার যার এলাকার বিখ্যাত পণ্য" en="Famous from every region" />} sub="বগুড়ার দই, নাটোরের কাঁচাগোল্লা, কক্সবাজারের শুটকি, জামদানি, শীতলপাটি — এখন দেশের যেকোনো জায়গায়।" href="/famous" cta="সব বিখ্যাত পণ্য" />
+          <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-3 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-6">
+            {products.filter((p) => p.famous).filter((_, i) => i % 2 === 0 || i === 3).slice(0, 6).map((p) => <div key={p.slug} className="w-44 shrink-0 sm:w-auto"><ProductCard p={p} /></div>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="pb-12 sm:pb-16">
+        <div className="container-x">
           <SectionHead eyebrow="FEATURED" title={<T bn="আজকের নির্বাচিত পণ্য" en="Featured today" />} sub="প্রতিটি পণ্যে একাধিক বিক্রেতা — সবচেয়ে কম দাম কার্ডেই দেখুন।" href="/marketplace" cta="মার্কেটপ্লেস" />
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{featured.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
         </div>

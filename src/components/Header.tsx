@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 const nav = [
   { href: "/marketplace", bn: "মার্কেটপ্লেস", en: "Marketplace", tag: "Buy & Sell" },
+  { href: "/famous", bn: "বিখ্যাত পণ্য", en: "Famous Products", tag: "Nationwide" },
   { href: "/wholesale", bn: "পাইকারি", en: "Wholesale", tag: "Bulk" },
   { href: "/knowledge", bn: "নলেজ হাব", en: "Knowledge Hub", tag: "Learn" },
   { href: "/market-intelligence", bn: "মার্কেট ইন্টেলিজেন্স", en: "Market Intelligence", tag: "Understand" },

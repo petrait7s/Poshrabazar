@@ -6,7 +6,7 @@ import { markets, priceRows } from "../src/data/prices";
 import { articles, kCategories } from "../src/data/knowledge";
 
 const q = (s: string | null | undefined) => (s == null ? "null" : `'${String(s).replace(/'/g, "''")}'`);
-const kindMap: Record<string, string> = { "কৃষক": "farmer", "খামারি": "farm_owner", "পাইকার": "wholesaler", "আড়তদার": "aratdar", "দোকানদার": "shopkeeper" };
+const kindMap: Record<string, string> = { "কৃষক": "farmer", "খামারি": "farm_owner", "পাইকার": "wholesaler", "আড়তদার": "aratdar", "দোকানদার": "shopkeeper", "কারিগর": "artisan" };
 const paisa = (taka: number) => Math.round(taka * 100);
 const out: string[] = [];
 const w = (s = "") => out.push(s);
@@ -29,16 +29,16 @@ w();
 w("insert into categories (slug, name_bn, name_en, blurb, sort) values");
 w(categories.map((c, i) => `  (${q(c.slug)}, ${q(c.bn)}, ${q(c.en)}, ${q(c.blurb)}, ${i})`).join(",\n") + "\non conflict (slug) do nothing;");
 w();
-w("insert into products (slug, category_id, name_bn, name_en, unit_bn, description, origin, season, moq_wholesale)");
-w("select v.slug, c.id, v.name_bn, v.name_en, v.unit_bn, v.description, v.origin, v.season, v.moq from (values");
-w(products.map((p) => `  (${q(p.slug)}, ${q(p.category)}, ${q(p.bn)}, ${q(p.en)}, ${q(p.unit)}, ${q(p.desc)}, ${q(p.origin)}, ${q(p.season ?? null)}, ${p.minWholesale})`).join(",\n"));
-w(") as v(slug, cat, name_bn, name_en, unit_bn, description, origin, season, moq) join categories c on c.slug = v.cat\non conflict (slug) do nothing;");
+w("insert into products (slug, category_id, name_bn, name_en, unit_bn, description, origin, season, moq_wholesale, famous_district_id)");
+w("select v.slug, c.id, v.name_bn, v.name_en, v.unit_bn, v.description, v.origin, v.season, v.moq, fd.id from (values");
+w(products.map((p) => `  (${q(p.slug)}, ${q(p.category)}, ${q(p.bn)}, ${q(p.en)}, ${q(p.unit)}, ${q(p.desc)}, ${q(p.origin)}, ${q(p.season ?? null)}, ${p.minWholesale}, ${q(p.famous ?? null)})`).join(",\n"));
+w(") as v(slug, cat, name_bn, name_en, unit_bn, description, origin, season, moq, famous) join categories c on c.slug = v.cat left join districts fd on fd.name_bn = v.famous\non conflict (slug) do nothing;");
 w();
 
 // sellers
 w("insert into sellers (slug, name_bn, name_en, kind, description, district_id, serves_nationwide, verification, since_year)");
 w("select v.slug, v.name_bn, v.name_en, v.kind::seller_kind, v.descr, d.id, v.nation, v.ver::verification_status, v.since from (values");
-w(sellers.map((s) => `  (${q(s.slug)}, ${q(s.bn)}, ${q(s.en)}, ${q(kindMap[s.kind])}, ${q(s.desc)}, ${q(s.location)}, ${s.kind === "পাইকার" || s.kind === "আড়তদার"}, ${q(s.verified ? "verified" : "pending")}, ${s.since})`).join(",\n"));
+w(sellers.map((s) => `  (${q(s.slug)}, ${q(s.bn)}, ${q(s.en)}, ${q(kindMap[s.kind])}, ${q(s.desc)}, ${q(s.location)}, ${!!s.nationwide || s.kind === "পাইকার" || s.kind === "আড়তদার"}, ${q(s.verified ? "verified" : "pending")}, ${s.since})`).join(",\n"));
 w(") as v(slug, name_bn, name_en, kind, descr, district, nation, ver, since) join districts d on d.name_bn = v.district\non conflict (slug) do nothing;");
 w();
 // every seller delivers to own division

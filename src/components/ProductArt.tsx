@@ -62,6 +62,29 @@ export function ProductArt({ motif, bg, accent, seed, className }: { motif: Moti
   } else if (motif === "jar") {
     items.push(<g key="jar"><rect x="140" y="70" width="120" height="30" rx="4" fill={dark} /><path d="M148 100 H252 C275 125 280 150 280 175 V250 C280 268 268 280 250 280 H150 C132 280 120 268 120 250 V175 C120 150 125 125 148 100Z" fill={accent} opacity=".95" /><path d="M120 185 H280 V250 C280 268 268 280 250 280 H150 C132 280 120 268 120 250Z" fill={dark} opacity=".25" /><rect x="140" y="150" width="120" height="70" rx="3" fill="#fbf8f0" /><rect x="156" y="168" width="88" height="8" rx="2" fill="#142B45" opacity=".8" /><rect x="170" y="186" width="60" height="5" rx="2" fill="#167C78" opacity=".8" /><path d="M136 120 C132 150 132 200 134 240" stroke="#fff" strokeOpacity=".5" strokeWidth="6" strokeLinecap="round" fill="none" /></g>);
   }
+  if (motif === "pot") {
+    items.push(<g key="pot"><ellipse cx="200" cy="268" rx="104" ry="12" fill="#142B45" opacity=".09" /><path d="M118 130 H282 C296 175 290 235 262 262 C240 280 160 280 138 262 C110 235 104 175 118 130Z" fill={accent} /><path d="M118 130 H282 C288 150 290 170 289 186 H111 C110 170 112 150 118 130Z" fill={dark} opacity=".25" /><ellipse cx="200" cy="130" rx="82" ry="17" fill="#fbf4e2" /><ellipse cx="200" cy="130" rx="82" ry="17" fill="none" stroke={dark} strokeOpacity=".3" strokeWidth="2" /><ellipse cx="180" cy="127" rx="34" ry="6" fill="#fff" opacity=".8" /><path d="M126 200 q74 20 148 0" stroke="#fff" strokeOpacity=".35" strokeWidth="3" fill="none" /><path d="M130 224 q70 18 140 0" stroke="#fff" strokeOpacity=".25" strokeWidth="3" fill="none" /></g>);
+  } else if (motif === "sweet") {
+    items.push(<g key="plate"><ellipse cx="200" cy="228" rx="150" ry="40" fill="#fbf8f0" stroke="#e5dfcc" strokeWidth="2" /><ellipse cx="200" cy="224" rx="124" ry="30" fill="#f1ead8" opacity=".7" /></g>);
+    for (let i = 0; i < 8; i++) {
+      const ring = i < 5 ? 0 : 1, k = ring ? i - 5 : i, x = ring ? 140 + k * 60 : 98 + k * 52, y = ring ? 168 : 214 + (k % 2) * 6, rr = 24 + r() * 5;
+      items.push(<g key={i} transform={`translate(${x} ${y})`}><ellipse rx={rr} ry={rr * 0.82} fill={accent} /><ellipse rx={rr} ry={rr * 0.82} fill="none" stroke={dark} strokeOpacity=".28" strokeWidth="2" /><ellipse cx={-rr * 0.3} cy={-rr * 0.3} rx={rr * 0.34} ry={rr * 0.18} fill="#fff" opacity=".5" />{[0, 1, 2, 3].map((q) => <circle key={q} cx={(r() - 0.5) * rr} cy={(r() - 0.5) * rr * 0.7} r="1.8" fill={dark} opacity=".45" />)}</g>);
+    }
+  } else if (motif === "cloth") {
+    for (let i = 0; i < 4; i++) {
+      const y = 215 - i * 34, dx = (i % 2 ? 12 : -8);
+      items.push(<g key={i} transform={`translate(${dx} 0)`}><rect x="78" y={y} width="244" height="34" rx="5" fill={i % 2 ? shade(accent, 0.12) : accent} /><rect x="78" y={y} width="244" height="7" fill={dark} opacity=".35" /><rect x="78" y={y + 27} width="244" height="7" fill={dark} opacity=".35" />{[...Array(10)].map((_, k) => <path key={k} d={`M${96 + k * 23} ${y + 17} l5 -5 l5 5 l-5 5z`} fill="#fff" opacity=".6" />)}</g>);
+    }
+    items.push(<ellipse key="sh" cx="200" cy="254" rx="140" ry="9" fill="#142B45" opacity=".1" />);
+  } else if (motif === "mat") {
+    items.push(<g key="mat"><rect x="70" y="95" width="260" height="150" rx="6" fill={accent} /><g stroke={dark} strokeOpacity=".28" strokeWidth="2">{[...Array(14)].map((_, k) => <line key={`h${k}`} x1="70" y1={105 + k * 10} x2="330" y2={105 + k * 10} />)}{[...Array(14)].map((_, k) => <line key={`v${k}`} x1={85 + k * 19} y1="95" x2={85 + k * 19} y2="245" strokeOpacity=".16" />)}</g><rect x="70" y="95" width="260" height="14" fill={dark} opacity=".45" /><rect x="70" y="231" width="260" height="14" fill={dark} opacity=".45" /><rect x="170" y="150" width="60" height="42" rx="3" fill="#fff" opacity=".28" /></g>);
+  } else if (motif === "dried") {
+    for (let i = 0; i < 7; i++) {
+      const x = 120 + i * 26, rot = (i - 3) * 6, len = 150 + r() * 24;
+      items.push(<g key={i} transform={`translate(${x} 245) rotate(${rot})`}><path d={`M0 0 C-14 ${-len * 0.4} -12 ${-len * 0.8} 0 ${-len} C12 ${-len * 0.8} 14 ${-len * 0.4} 0 0Z`} fill={i % 2 ? accent : shade(accent, 0.08)} /><path d={`M0 ${-len * 0.1} V${-len * 0.9}`} stroke="#fff" strokeOpacity=".3" strokeWidth="2" /><circle cx="0" cy={-len + 12} r="2.4" fill="#fff" opacity=".9" /></g>);
+    }
+    items.push(<rect key="tie" x="116" y="168" width="168" height="10" rx="5" fill="#8a5a2b" />);
+  }
   return (
     <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" className={className} role="img" aria-hidden>
       <rect width={W} height={H} fill={bg} />

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { ProductArt } from "./ProductArt";
 import { Stars } from "./ui/misc";
 import { useApp } from "./providers";
-import { bn, getSeller, summary, taka, type Category, type Product } from "@/data/catalog";
+import { bn, genitive, getSeller, summary, taka, type Category, type Product } from "@/data/catalog";
 
 export function VerifiedBadge({ small }: { small?: boolean }) {
   return (
@@ -45,6 +45,7 @@ export function ProductCard({ p, className }: { p: Product; className?: string }
       <Link href={`/product/${p.slug}`} className="relative block aspect-[4/3] overflow-hidden" aria-label={p.bn}>
         <ProductArt motif={p.motif} bg={p.color} accent={p.accent} seed={p.slug} className="h-full w-full transition-transform duration-500 group-hover:scale-[1.04]" />
         <span className="absolute left-2 top-2 rounded-sm bg-navy/90 px-1.5 py-0.5 font-bn text-[11px] text-white">{bn(s.sellerCount)} জন বিক্রেতা</span>
+        {p.famous && <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-sm bg-gold px-1.5 py-0.5 font-bn text-[11px] font-medium text-navy shadow-card"><MapPin className="h-3 w-3" />{genitive(p.famous)} বিখ্যাত</span>}
       </Link>
       <WishButton slug={p.slug} className="absolute right-2 top-2" />
       <div className="flex flex-1 flex-col p-3.5">
