@@ -1,7 +1,10 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { SlidersHorizontal, X, BadgeCheck } from "lucide-react";
+import { SlidersHorizontal, X, BadgeCheck, MapPin } from "lucide-react";
+import { useApp } from "./providers";
+import { AreaSelect, AreaButton } from "./AreaPicker";
+import { areaLabel, inArea, noArea } from "@/data/locations";
 import { ProductCard, ProductCardSkeleton } from "./Commerce";
 import { Select } from "./ui/form";
 import { Button } from "./ui/button";
@@ -10,12 +13,11 @@ import { categories, products, sellers, offersFor, bn, type Product } from "@/da
 import { cn } from "@/lib/utils";
 
 type Mode = "retail" | "wholesale";
-const locations = [...new Set(sellers.map((s) => s.location))];
 
 export function ProductExplorer({ category, query = "", initialMode = "retail", lockCategory }: { category?: string; query?: string; initialMode?: Mode; lockCategory?: boolean }) {
   const [mode, setMode] = useState<Mode>(initialMode);
   const [cats, setCats] = useState<string[]>(category ? [category] : []);
-  const [locs, setLocs] = useState<string[]>([]);
+  const { area, setArea } = useApp();
   const [maxPrice, setMaxPrice] = useState(700);
   const [verified, setVerified] = useState(false);
   const [sort, setSort] = useState("popular");
@@ -23,14 +25,14 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
   const [loading, setLoading] = useState(true);
   const toggle = (arr: string[], v: string, set: (a: string[]) => void) => set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
-  useEffect(() => { setLoading(true); const t = setTimeout(() => setLoading(false), 350); return () => clearTimeout(t); }, [mode, cats, locs, maxPrice, verified, sort, query]);
+  useEffect(() => { setLoading(true); const t = setTimeout(() => setLoading(false), 350); return () => clearTimeout(t); }, [mode, cats, area, maxPrice, verified, sort, query]);
   useEffect(() => { if (category) setCats([category]); }, [category]);
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
     const list = products.map((p) => {
       let offers = offersFor(p);
-      if (locs.length) offers = offers.filter((o) => locs.includes(sellers.find((s) => s.slug === o.sellerSlug)!.location));
+      offers = offers.filter((o) => { const sl = sellers.find((s) => s.slug === o.sellerSlug)!; return inArea(area, sl.location, sl.division); });
       if (verified) offers = offers.filter((o) => sellers.find((s) => s.slug === o.sellerSlug)!.verified);
       const price = offers.length ? Math.min(...offers.map((o) => o[mode])) : Infinity;
       return { p, offers, price };
@@ -43,10 +45,10 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
     if (sort === "high") list.sort((a, b) => b.price - a.price);
     if (sort === "sellers") list.sort((a, b) => b.offers.length - a.offers.length);
     return list;
-  }, [mode, cats, locs, maxPrice, verified, sort, query]);
+  }, [mode, cats, area, maxPrice, verified, sort, query]);
 
-  const reset = () => { setCats(category && lockCategory ? [category] : []); setLocs([]); setMaxPrice(700); setVerified(false); };
-  const active = (lockCategory ? 0 : cats.length) + locs.length + (verified ? 1 : 0) + (maxPrice < 700 ? 1 : 0);
+  const reset = () => { setCats(category && lockCategory ? [category] : []); setArea(noArea); setMaxPrice(700); setVerified(false); };
+  const active = (lockCategory ? 0 : cats.length) + (area.division ? 1 : 0) + (verified ? 1 : 0) + (maxPrice < 700 ? 1 : 0);
 
   const Filters = (
     <div className="space-y-6">
@@ -59,8 +61,8 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
         <input type="range" min={30} max={700} step={10} value={maxPrice} onChange={(e) => setMaxPrice(+e.target.value)} className="w-full accent-teal" aria-label="Max price" />
         <div className="mt-1 flex justify-between text-xs tabular-nums text-mist-500"><span>৳30</span><b className="text-navy">≤ ৳{maxPrice}{maxPrice === 700 ? "+" : ""}</b><span>৳700</span></div>
       </fieldset>
-      <fieldset><legend className="mb-2 font-bn text-sm font-semibold text-navy">অবস্থান</legend>
-        {locations.map((l) => <Check key={l} checked={locs.includes(l)} onChange={() => toggle(locs, l, setLocs)} label={l} />)}
+      <fieldset><legend className="mb-2 font-bn text-sm font-semibold text-navy">এলাকা (কোথা থেকে কিনবেন)</legend>
+        <AreaSelect value={area} onChange={setArea} allLabel="সারা দেশ" className="!grid-cols-1" />
       </fieldset>
       <Check checked={verified} onChange={() => setVerified(!verified)} label="শুধু যাচাইকৃত বিক্রেতা" icon />
     </div>
@@ -76,6 +78,12 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
       </aside>
 
       <div>
+        <div className="mb-3 flex flex-wrap items-center gap-3 rounded-md border border-teal/25 bg-teal-50 px-3 py-2">
+          <MapPin className="h-4 w-4 text-teal" />
+          <p className="font-bn text-sm text-teal-700">এলাকা: <b>{areaLabel(area)}</b>{area.division && <span className="text-teal-700/70"> — শুধু এই এলাকার বিক্রেতা</span>}</p>
+          <AreaButton className="ml-auto !py-1.5" label="এলাকা বদলান" />
+          {area.division && <button onClick={() => setArea(noArea)} className="font-bn text-xs text-teal underline">সারা দেশ</button>}
+        </div>
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <div role="group" aria-label="Retail or wholesale" className="inline-flex overflow-hidden rounded-md border border-navy/25 bg-white">
             {(["retail", "wholesale"] as const).map((m) => (
@@ -97,7 +105,7 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
         ) : rows.length ? (
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">{rows.map(({ p }) => <ProductCard key={p.slug} p={p as Product} />)}</div>
         ) : (
-          <EmptyState title="কোনো পণ্য পাওয়া যায়নি" text="ফিল্টার বদলে বা রিসেট করে আবার চেষ্টা করুন।" action={<Button onClick={reset} variant="outline">ফিল্টার রিসেট</Button>} />
+          <EmptyState title="কোনো পণ্য পাওয়া যায়নি" text="ফিল্টার বদলে বা রিসেট করে আবার চেষ্টা করুন।" action={<div className="flex flex-wrap justify-center gap-2"><Button onClick={reset} variant="outline">ফিল্টার রিসেট</Button>{area.division && <Link href="/seller/register" className="inline-flex h-11 items-center rounded-md bg-teal px-5 font-bn text-[15px] text-white hover:bg-teal-600">এই এলাকায় বিক্রেতা হোন</Link>}</div>} />
         )}
       </div>
 
@@ -123,4 +131,3 @@ function Check({ checked, onChange, label, n, icon }: { checked: boolean; onChan
     </label>
   );
 }
-void Link;

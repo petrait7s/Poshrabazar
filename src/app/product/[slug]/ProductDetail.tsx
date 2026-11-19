@@ -10,17 +10,19 @@ import { Button } from "@/components/ui/button";
 import { useApp } from "@/components/providers";
 import { bn, getSeller, offersFor, taka, type Product } from "@/data/catalog";
 import { cn } from "@/lib/utils";
+import { inArea, areaLabel } from "@/data/locations";
 
 const views = ["পুরো দৃশ্য", "ক্লোজ-আপ", "গ্রেডিং", "প্যাকেজিং"];
 
 export function ProductDetail({ p }: { p: Product }) {
-  const { addToCart, toast, wishlist, toggleWish } = useApp();
+  const { addToCart, toast, wishlist, toggleWish, area } = useApp();
+  const near = (slug: string) => { const sl = getSeller(slug)!; return !!area.division && inArea(area, sl.location, sl.division); };
   const [mode, setMode] = useState<"retail" | "wholesale">("retail");
   const [view, setView] = useState(0);
   const [qty, setQty] = useState<Record<string, number>>({});
   const [sortBy, setSortBy] = useState<"price" | "rating">("price");
   const base = offersFor(p);
-  const offers = [...base].sort((a, b) => (sortBy === "price" ? a[mode] - b[mode] : b.rating - a.rating));
+  const offers = [...base].sort((a, b) => (near(b.sellerSlug) ? 1 : 0) - (near(a.sellerSlug) ? 1 : 0) || (sortBy === "price" ? a[mode] - b[mode] : b.rating - a.rating));
   const best = [...base].sort((a, b) => a[mode] - b[mode])[0];
   const wished = wishlist.includes(p.slug);
   const q = (s: string) => qty[s] ?? (mode === "wholesale" ? p.minWholesale : 1);
@@ -81,7 +83,7 @@ export function ProductDetail({ p }: { p: Product }) {
 
       <section id="sellers" className="mt-14 scroll-mt-36">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-          <div><p className="eyebrow">COMPARE SELLERS</p><h2 className="h-section mt-1">{p.bn} — বিক্রেতা তুলনা</h2><p className="mt-1 font-bn text-sm text-ink/60">প্রতিটি রেটিং এই পণ্য × এই বিক্রেতার ডেলিভারি-সম্পন্ন অর্ডার থেকে। দামগুলো ডেমো।</p></div>
+          <div><p className="eyebrow">COMPARE SELLERS</p><h2 className="h-section mt-1">{p.bn} — বিক্রেতা তুলনা</h2>{area.division && <p className="mt-1 font-bn text-sm text-teal-700">আপনার এলাকা ({areaLabel(area)}) এর বিক্রেতারা আগে দেখানো হয়েছে।</p>}<p className="mt-1 font-bn text-sm text-ink/60">প্রতিটি রেটিং এই পণ্য × এই বিক্রেতার ডেলিভারি-সম্পন্ন অর্ডার থেকে। দামগুলো ডেমো।</p></div>
           <div className="flex items-center gap-3">
             <div role="group" className="inline-flex overflow-hidden rounded-md border border-navy/25 bg-white">
               {(["retail", "wholesale"] as const).map((m) => <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)} className={cn("px-3.5 py-1.5 font-bn text-sm", mode === m ? "bg-navy text-white" : "text-navy hover:bg-mist")}>{m === "retail" ? "খুচরা" : "পাইকারি"}</button>)}
@@ -98,7 +100,7 @@ export function ProductDetail({ p }: { p: Product }) {
                 <tr key={o.sellerSlug}>
                   <td>
                     <Link href={`/seller/${s.slug}`} className="font-bn text-[15px] font-medium text-navy hover:text-teal">{s.bn}</Link>
-                    <div className="mt-0.5 flex items-center gap-2">{s.verified && <VerifiedBadge small />}<Stars value={o.rating} count={o.reviews} /></div>
+                    <div className="mt-0.5 flex items-center gap-2">{s.verified && <VerifiedBadge small />}{near(o.sellerSlug) && <span className="rounded-sm bg-gold-50 px-1.5 py-0.5 font-bn text-[11px] text-gold-700">আপনার এলাকায়</span>}<Stars value={o.rating} count={o.reviews} /></div>
                   </td>
                   <td className="font-bn"><span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3 text-mist-500" />{s.location}</span></td>
                   <td><span className="inline-flex items-center gap-1 font-semibold text-navy"><Award className="h-3.5 w-3.5 text-gold" />{o.grade}</span></td>

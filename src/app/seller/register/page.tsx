@@ -6,21 +6,23 @@ import { Button, LinkButton } from "@/components/ui/button";
 import { PillarHero } from "@/components/PillarHero";
 import { useApp } from "@/components/providers";
 import { categories } from "@/data/catalog";
+import { AreaSelect } from "@/components/AreaPicker";
+import { divisions } from "@/data/locations";
 import { cn } from "@/lib/utils";
 
 const kinds = ["কৃষক", "খামারি", "পাইকার", "আড়তদার", "দোকানদার"];
 const steps = ["ব্যবসার ধরন", "যোগাযোগ ও ঠিকানা", "পণ্য ও যাচাই"];
 
 export default function Page() {
-  const { toast } = useApp();
+  const { toast, area } = useApp();
   const [step, setStep] = useState(0);
-  const [f, setF] = useState({ kind: "", biz: "", name: "", phone: "", district: "", address: "", cats: [] as string[], nid: false, terms: false });
+  const [f, setF] = useState({ kind: "", biz: "", name: "", phone: "", division: area.division, district: area.district, address: "", cover: [] as string[], cats: [] as string[], nid: false, terms: false });
   const [e, setE] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
   const check = (s: number) => {
     const er: Record<string, string> = {};
     if (s === 0) { if (!f.kind) er.kind = "ধরন নির্বাচন করুন"; if (f.biz.trim().length < 3) er.biz = "ব্যবসা/খামারের নাম দিন"; }
-    if (s === 1) { if (f.name.trim().length < 3) er.name = "মালিকের নাম দিন"; if (!/^(\+?88)?01[3-9]\d{8}$/.test(f.phone.replace(/[\s-]/g, ""))) er.phone = "সঠিক মোবাইল নম্বর দিন"; if (!f.district.trim()) er.district = "জেলা লিখুন"; if (f.address.trim().length < 6) er.address = "ঠিকানা লিখুন"; }
+    if (s === 1) { if (f.name.trim().length < 3) er.name = "মালিকের নাম দিন"; if (!/^(\+?88)?01[3-9]\d{8}$/.test(f.phone.replace(/[\s-]/g, ""))) er.phone = "সঠিক মোবাইল নম্বর দিন"; if (!f.district) er.district = "বিভাগ ও জেলা নির্বাচন করুন"; if (f.address.trim().length < 6) er.address = "ঠিকানা লিখুন"; }
     if (s === 2) { if (!f.cats.length) er.cats = "কমপক্ষে একটি ক্যাটাগরি বেছে নিন"; if (!f.terms) er.terms = "শর্তে সম্মতি দিন"; }
     setE(er); return !Object.keys(er).length;
   };
@@ -45,10 +47,14 @@ export default function Page() {
             {step === 1 && <div className="grid gap-4 sm:grid-cols-2">
               <Field label="মালিকের নাম" error={e.name}><Input invalid={!!e.name} value={f.name} onChange={(x) => setF({ ...f, name: x.target.value })} /></Field>
               <Field label="মোবাইল নম্বর" error={e.phone}><Input invalid={!!e.phone} inputMode="tel" value={f.phone} onChange={(x) => setF({ ...f, phone: x.target.value })} /></Field>
-              <Field label="জেলা" error={e.district}><Input invalid={!!e.district} value={f.district} onChange={(x) => setF({ ...f, district: x.target.value })} /></Field>
-              <Field label="ঠিকানা" error={e.address}><Input invalid={!!e.address} value={f.address} onChange={(x) => setF({ ...f, address: x.target.value })} /></Field></div>}
+              <div className="sm:col-span-2"><p className="mb-2 font-bn text-sm font-semibold text-navy">আপনার অবস্থান (বিভাগ → জেলা)</p><AreaSelect value={{ division: f.division, district: f.district }} onChange={(a) => setF({ ...f, ...a })} allLabel="নির্বাচন করুন" error={e.district} /></div>
+              <Field label="ঠিকানা" className="sm:col-span-2" error={e.address}><Input invalid={!!e.address} value={f.address} onChange={(x) => setF({ ...f, address: x.target.value })} /></Field></div>}
             {step === 2 && <div className="space-y-4">
               <Field label="কোন ক্যাটাগরিতে বিক্রি করবেন?" error={e.cats}><div className="flex flex-wrap gap-2">{categories.map((c) => { const on = f.cats.includes(c.slug); return <button type="button" key={c.slug} aria-pressed={on} onClick={() => setF({ ...f, cats: on ? f.cats.filter((x) => x !== c.slug) : [...f.cats, c.slug] })} className={cn("inline-flex items-center gap-1 rounded-md border px-3 py-2 font-bn text-sm", on ? "border-teal bg-teal-50 text-teal-700" : "border-mist-300")}>{on && <Check className="h-3.5 w-3.5" />}{c.bn}</button>; })}</div></Field>
+              <Field label="কোথায় বিক্রি করবেন? (ডেলিভারি এলাকা)"><div className="flex flex-wrap gap-2">
+                <button type="button" aria-pressed={f.cover.includes("all")} onClick={() => setF({ ...f, cover: f.cover.includes("all") ? [] : ["all"] })} className={cn("rounded-md border px-3 py-2 font-bn text-sm", f.cover.includes("all") ? "border-navy bg-navy text-white" : "border-mist-300")}>সারা বাংলাদেশ</button>
+                {divisions.map((d) => { const on = f.cover.includes(d.bn) || f.cover.includes("all"); return <button type="button" key={d.bn} disabled={f.cover.includes("all")} aria-pressed={on} onClick={() => setF({ ...f, cover: on ? f.cover.filter((x) => x !== d.bn) : [...f.cover, d.bn] })} className={cn("rounded-md border px-3 py-2 font-bn text-sm disabled:opacity-60", on ? "border-teal bg-teal-50 text-teal-700" : "border-mist-300")}>{d.bn}</button>; })}
+              </div><p className="mt-1 font-bn text-xs text-mist-500">খালি রাখলে শুধু আপনার জেলা ধরা হবে।</p></Field>
               <label className="flex items-start gap-2 font-bn text-sm"><input type="checkbox" className="mt-1 accent-teal" checked={f.nid} onChange={(x) => setF({ ...f, nid: x.target.checked })} />সাথী এজেন্ট দিয়ে যাচাইয়ের জন্য যোগাযোগ চাই</label>
               <label className="flex items-start gap-2 font-bn text-sm"><input type="checkbox" className="mt-1 accent-teal" checked={f.terms} onChange={(x) => setF({ ...f, terms: x.target.checked })} />আমি বিক্রেতার শর্তাবলিতে সম্মত{e.terms && <span className="ml-2 text-xs text-red-600">{e.terms}</span>}</label></div>}
             <div className="mt-7 flex justify-between"><Button type="button" variant="ghost" disabled={!step} onClick={() => setStep(step - 1)}>পিছনে</Button><Button type="submit">{step < 2 ? "পরবর্তী" : "আবেদন যাচাই করুন (ডেমো)"}</Button></div>

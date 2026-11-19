@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, Grid2x2, Home, Languages, LayoutDashboard, LogOut, Menu, ShoppingCart, Store, User, X, Search, Package, Heart } from "lucide-react";
 import { Logo } from "./Logo";
 import { SearchBar } from "./SearchBar";
+import { AreaButton } from "./AreaPicker";
 import { T, useApp } from "./providers";
 import { categories } from "@/data/catalog";
 import { cn } from "@/lib/utils";
@@ -59,6 +60,7 @@ export function Header() {
         <div className="container-x flex h-16 items-center gap-3 lg:gap-6">
           <button aria-label="Menu" onClick={() => setMenu(true)} className="grid h-10 w-10 place-items-center rounded-md hover:bg-mist lg:hidden"><Menu className="h-5 w-5" /></button>
           <Link href="/" aria-label="PosraBazar home" className="shrink-0"><Logo /></Link>
+          <AreaButton className="hidden w-48 shrink-0 lg:flex" />
           <SearchBar className="hidden max-w-2xl flex-1 lg:block" />
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
             <Link href="/seller/register" className="hidden items-center gap-1.5 rounded-md border border-gold/70 bg-gold-50 px-3 py-2 font-bn text-sm font-medium text-gold-700 transition-colors hover:bg-gold hover:text-navy xl:flex"><Store className="h-4 w-4" /><T bn="বিক্রেতা নিবন্ধন" en="Sell on PosraBazar" /></Link>
@@ -95,7 +97,7 @@ export function Header() {
             </Link>
           </div>
         </div>
-        <div className="container-x pb-3 lg:hidden"><SearchBar /></div>
+        <div className="container-x space-y-2 pb-3 lg:hidden"><AreaButton className="w-full !py-1.5" /><SearchBar /></div>
 
         <nav className="hidden border-t border-mist-300/70 bg-white lg:block" aria-label="Primary">
           <div className="container-x flex h-11 items-center gap-1">

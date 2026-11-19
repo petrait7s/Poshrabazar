@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BadgeCheck, Handshake, Scale, Smartphone, Wallet, Sprout, BookOpen, LineChart, Boxes, Truck } from "lucide-react";
 import { Hero } from "./_home/Hero";
 import { PopularTabs } from "./_home/PopularTabs";
+import { AreaSection } from "./_home/AreaSection";
 import { ProductCard, CategoryTile, SellerCard } from "@/components/Commerce";
 import { SectionHead, DemoBadge } from "@/components/ui/misc";
 import { LinkButton } from "@/components/ui/button";
@@ -42,6 +43,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <AreaSection />
 
       <section className="section">
         <div className="container-x">
