@@ -7,12 +7,12 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-gradient-to-b from-[#1f9089] to-teal text-white shadow-[inset_0_1px_0_rgba(255,255,255,.28),0_6px_14px_-6px_rgba(22,124,120,.7)] hover:from-teal hover:to-teal-600",
-        navy: "bg-gradient-to-b from-[#24476d] to-navy text-white shadow-[inset_0_1px_0_rgba(255,255,255,.2),0_6px_14px_-6px_rgba(20,43,69,.7)] hover:from-navy-700 hover:to-navy-800",
-        gold: "bg-gradient-to-b from-[#dcbb76] to-gold text-navy shadow-[inset_0_1px_0_rgba(255,255,255,.45),0_6px_14px_-6px_rgba(198,161,91,.9)] hover:from-gold hover:to-[#b8933f]",
-        outline: "border border-navy/25 bg-white/60 text-navy backdrop-blur hover:border-navy hover:bg-white/90",
-        ghost: "text-navy hover:bg-mist",
-        light: "bg-white text-navy hover:bg-paper",
+        primary: "bg-primary text-white hover:bg-primary-700",
+        dark: "bg-ink text-white hover:bg-ink-700",
+        accent: "bg-accent text-ink hover:bg-[#E08E00]",
+        outline: "border border-ink/25 bg-surface text-ink hover:border-ink hover:bg-tint",
+        ghost: "text-ink hover:bg-tint",
+        light: "bg-white text-ink hover:bg-cream",
         "outline-light": "border border-white/40 text-white hover:bg-white/10",
       },
       size: { sm: "h-9 px-3 text-sm", md: "h-11 px-5 text-[15px]", lg: "h-12 px-6 text-base", icon: "h-10 w-10" },

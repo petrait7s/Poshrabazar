@@ -80,16 +80,60 @@ insert into districts (id, division_id, name_bn) values
   (64, 8, 'নেত্রকোণা')
 on conflict (id) do nothing;
 
+insert into upazilas (district_id, name_bn, name_en)
+select d.id, v.name_bn, v.name_en from (values
+  ('সিলেট', 'সিলেট সদর', 'Sylhet Sadar'),
+  ('সিলেট', 'দক্ষিণ সুরমা', 'Dakshin Surma'),
+  ('সিলেট', 'বালাগঞ্জ', 'Balaganj'),
+  ('সিলেট', 'বিয়ানীবাজার', 'Beanibazar'),
+  ('সিলেট', 'বিশ্বনাথ', 'Bishwanath'),
+  ('সিলেট', 'কোম্পানীগঞ্জ', 'Companiganj'),
+  ('সিলেট', 'ফেঞ্চুগঞ্জ', 'Fenchuganj'),
+  ('সিলেট', 'গোলাপগঞ্জ', 'Golapganj'),
+  ('সিলেট', 'গোয়াইনঘাট', 'Gowainghat'),
+  ('সিলেট', 'জৈন্তাপুর', 'Jaintiapur'),
+  ('সিলেট', 'কানাইঘাট', 'Kanaighat'),
+  ('সিলেট', 'জকিগঞ্জ', 'Zakiganj'),
+  ('সিলেট', 'ওসমানী নগর', 'Osmani Nagar'),
+  ('মৌলভীবাজার', 'মৌলভীবাজার সদর', 'Moulvibazar Sadar'),
+  ('মৌলভীবাজার', 'শ্রীমঙ্গল', 'Sreemangal'),
+  ('মৌলভীবাজার', 'কুলাউড়া', 'Kulaura'),
+  ('মৌলভীবাজার', 'কমলগঞ্জ', 'Kamalganj'),
+  ('মৌলভীবাজার', 'বড়লেখা', 'Barlekha'),
+  ('মৌলভীবাজার', 'জুড়ী', 'Juri'),
+  ('মৌলভীবাজার', 'রাজনগর', 'Rajnagar'),
+  ('হবিগঞ্জ', 'হবিগঞ্জ সদর', 'Habiganj Sadar'),
+  ('হবিগঞ্জ', 'নবীগঞ্জ', 'Nabiganj'),
+  ('হবিগঞ্জ', 'বাহুবল', 'Bahubal'),
+  ('হবিগঞ্জ', 'বানিয়াচং', 'Baniachong'),
+  ('হবিগঞ্জ', 'লাখাই', 'Lakhai'),
+  ('হবিগঞ্জ', 'মাধবপুর', 'Madhabpur'),
+  ('হবিগঞ্জ', 'চুনারুঘাট', 'Chunarughat'),
+  ('হবিগঞ্জ', 'আজমিরীগঞ্জ', 'Ajmiriganj'),
+  ('হবিগঞ্জ', 'শায়েস্তাগঞ্জ', 'Shaistaganj'),
+  ('সুনামগঞ্জ', 'সুনামগঞ্জ সদর', 'Sunamganj Sadar'),
+  ('সুনামগঞ্জ', 'দক্ষিণ সুনামগঞ্জ', 'Dakshin Sunamganj'),
+  ('সুনামগঞ্জ', 'ছাতক', 'Chhatak'),
+  ('সুনামগঞ্জ', 'জগন্নাথপুর', 'Jagannathpur'),
+  ('সুনামগঞ্জ', 'বিশ্বম্ভরপুর', 'Bishwamvarpur'),
+  ('সুনামগঞ্জ', 'দোয়ারাবাজার', 'Dowarabazar'),
+  ('সুনামগঞ্জ', 'ধর্মপাশা', 'Dharmapasha'),
+  ('সুনামগঞ্জ', 'দিরাই', 'Derai'),
+  ('সুনামগঞ্জ', 'জামালগঞ্জ', 'Jamalganj'),
+  ('সুনামগঞ্জ', 'শাল্লা', 'Shalla'),
+  ('সুনামগঞ্জ', 'শান্তিগঞ্জ', 'Shantiganj'),
+  ('সুনামগঞ্জ', 'তাহিরপুর', 'Tahirpur')
+) as v(district, name_bn, name_en) join districts d on d.name_bn = v.district
+on conflict (district_id, name_bn) do nothing;
+
 insert into categories (slug, name_bn, name_en, blurb, sort) values
-  ('vegetables', 'শাকসবজি', 'Vegetables', 'টাটকা মৌসুমি সবজি সরাসরি কৃষকের কাছ থেকে', 0),
-  ('fruits', 'ফলমূল', 'Fruits', 'দেশি ও মৌসুমি ফল', 1),
-  ('rice-pulses', 'চাল ও ডাল', 'Rice & Pulses', 'পাইকারি ও খুচরা চাল, ডাল ও শস্য', 2),
-  ('spices', 'মসলা', 'Spices', 'গুঁড়া ও আস্ত মসলা', 3),
-  ('fish-meat', 'মাছ ও মাংস', 'Fish & Meat', 'তাজা মাছ, ডিম ও প্রাণিজ পণ্য', 4),
-  ('oil-honey', 'তেল ও মধু', 'Oil & Honey', 'ঘানি-ভাঙা তেল, খাঁটি মধু ও ঘি', 5),
-  ('sweets-doi', 'মিষ্টি ও দই', 'Sweets & Doi', 'এলাকার নামকরা মিষ্টি ও দই — সারা দেশে পাঠানো হয়', 6),
-  ('dry-foods', 'শুটকি, চা ও শুকনো খাবার', 'Shutki, Tea & Dry Foods', 'শুটকি, শ্রীমঙ্গলের চা, বাকরখানি ও ঐতিহ্যবাহী শুকনো খাবার', 7),
-  ('crafts', 'শাড়ি ও হস্তশিল্প', 'Saree & Crafts', 'জামদানি, টাঙ্গাইল, সিল্ক, নকশি কাঁথা ও শীতলপাটি', 8)
+  ('seasonal-fruits', 'মৌসুমি ফল', 'Seasonal Fruits', 'বাগান ও খামার থেকে মৌসুমি ফল', 0),
+  ('rice-grains', 'চাল, ডাল ও শস্য', 'Rice, Pulses & Grains', 'স্থানীয় চাল, ডাল ও কৃষিপণ্য', 1),
+  ('vegetables', 'শাকসবজি', 'Vegetables', 'টাটকা মৌসুমি সবজি সরাসরি কৃষকের কাছ থেকে', 2),
+  ('fresh-fish', 'তাজা ও প্রস্তুত মাছ', 'Fresh & Prepared Fish', 'নদী, হাওর ও খামারের মাছ', 3),
+  ('shutki', 'শুটকি', 'Dried Fish (Shutki)', 'বাছাই করা, রোদে শুকানো শুটকি', 4),
+  ('regional-products', 'আঞ্চলিক ও স্থানীয় পণ্য', 'Regional & Local Products', 'মিষ্টি, চা, মধু, তেল, মসলা ও হস্তশিল্প — এলাকার নামকরা পণ্য', 5),
+  ('other-specialty', 'অন্যান্য বিশেষ পণ্য', 'Other Specialty', 'ডিম ও অন্যান্য মৌসুমি, বিশেষ পণ্য', 6)
 on conflict (slug) do nothing;
 
 insert into products (slug, category_id, name_bn, name_en, unit_bn, description, origin, season, moq_wholesale, famous_district_id)
@@ -100,30 +144,30 @@ select v.slug, c.id, v.name_bn, v.name_en, v.unit_bn, v.description, v.origin, v
   ('green-chili', 'vegetables', 'কাঁচা মরিচ', 'Green Chili', 'কেজি', 'ঝাল ও সতেজ কাঁচা মরিচ।', 'বগুড়া', null, 20, null),
   ('brinjal', 'vegetables', 'বেগুন', 'Brinjal', 'কেজি', 'মসৃণ ও তাজা লম্বা বেগুন।', 'যশোর', null, 30, null),
   ('cauliflower', 'vegetables', 'ফুলকপি', 'Cauliflower', 'পিস', 'শীতকালীন সাদা ও ঘন ফুলকপি।', 'মানিকগঞ্জ', 'শীত', 50, null),
-  ('garlic', 'spices', 'রসুন', 'Garlic', 'কেজি', 'ঝাঁঝালো দেশি রসুন।', 'মেহেরপুর', null, 25, null),
-  ('miniket-rice', 'rice-pulses', 'মিনিকেট চাল', 'Miniket Rice', 'কেজি', 'চিকন, সাদা ও ঝরঝরে মিনিকেট চাল।', 'দিনাজপুর', null, 50, null),
-  ('masoor-dal', 'rice-pulses', 'মসুর ডাল', 'Red Lentil', 'কেজি', 'পরিষ্কার বাছাই করা মসুর ডাল।', 'পাবনা', null, 25, null),
-  ('himsagar-mango', 'fruits', 'হিমসাগর আম', 'Himsagar Mango', 'কেজি', 'মিষ্টি ও সুগন্ধি হিমসাগর আম।', 'রাজশাহী / সাতক্ষীরা', 'গ্রীষ্ম', 40, null),
-  ('lemon', 'fruits', 'লেবু', 'Lemon', 'হালি', 'রসালো সিলেটি লেবু।', 'সিলেট', null, 100, null),
-  ('turmeric-powder', 'spices', 'হলুদ গুঁড়া', 'Turmeric Powder', 'কেজি', 'ভেজালমুক্ত ঘরে-গুঁড়া হলুদ।', 'কুষ্টিয়া', null, 10, null),
-  ('rui-fish', 'fish-meat', 'রুই মাছ', 'Rui Fish', 'কেজি', 'চাষের তাজা রুই মাছ।', 'ময়মনসিংহ', null, 20, null),
-  ('farm-egg', 'fish-meat', 'দেশি ডিম', 'Farm Eggs', 'ডজন', 'খামারের তাজা ডিম।', 'গাজীপুর', null, 30, null),
-  ('mustard-oil', 'oil-honey', 'সরিষার তেল', 'Mustard Oil', 'লিটার', 'কাঠের ঘানিতে ভাঙা খাঁটি সরিষার তেল।', 'ঘানি-ভাঙা, মানিকগঞ্জ', null, 20, null),
-  ('khati-honey', 'oil-honey', 'খাঁটি মধু', 'Pure Honey', 'কেজি', 'মৌয়ালদের সংগ্রহ করা খাঁটি মধু।', 'সুন্দরবন', null, 10, null),
-  ('bogura-doi', 'sweets-doi', 'বগুড়ার দই', 'Bogura Doi', 'কেজি', 'মাটির পাতিলে জমানো, ঘন ও মিষ্টি বিখ্যাত বগুড়ার দই।', 'বগুড়া', null, 20, 'বগুড়া'),
-  ('natore-kachagolla', 'sweets-doi', 'নাটোরের কাঁচাগোল্লা', 'Natore Kachagolla', 'কেজি', 'ছানার নরম, সাদা কাঁচাগোল্লা — নাটোরের ঐতিহ্য।', 'নাটোর', null, 10, 'নাটোর'),
-  ('tangail-chomchom', 'sweets-doi', 'টাঙ্গাইলের চমচম', 'Tangail Chomchom', 'কেজি', 'রসে ভেজা, লালচে টাঙ্গাইলের চমচম।', 'টাঙ্গাইল', null, 10, 'টাঙ্গাইল'),
-  ('cumilla-roshmalai', 'sweets-doi', 'কুমিল্লার রসমালাই', 'Cumilla Roshmalai', 'কেজি', 'দুধের ঘন সরে ডোবানো কুমিল্লার রসমালাই।', 'কুমিল্লা', null, 10, 'কুমিল্লা'),
-  ('muktagachha-monda', 'sweets-doi', 'মুক্তাগাছার মণ্ডা', 'Muktagachha Monda', 'কেজি', 'মুক্তাগাছার দুইশো বছরের ঐতিহ্যবাহী মণ্ডা।', 'ময়মনসিংহ', null, 10, 'ময়মনসিংহ'),
-  ('coxsbazar-shutki', 'dry-foods', 'কক্সবাজারের শুটকি', 'Cox''s Bazar Shutki', 'কেজি', 'রোদে শুকানো, পরিষ্কার করা কক্সবাজারের শুটকি।', 'কক্সবাজার', null, 10, 'কক্সবাজার'),
-  ('sreemangal-tea', 'dry-foods', 'শ্রীমঙ্গলের চা', 'Sreemangal Tea', 'কেজি', 'শ্রীমঙ্গলের বাগানের তাজা পাতার চা।', 'মৌলভীবাজার', null, 10, 'মৌলভীবাজার'),
-  ('kushtia-tilkhaja', 'dry-foods', 'কুষ্টিয়ার তিলের খাজা', 'Kushtia Tilkhaja', 'কেজি', 'কুড়মুড়ে তিল ও চিনির কুষ্টিয়ার বিখ্যাত খাজা।', 'কুষ্টিয়া', null, 10, 'কুষ্টিয়া'),
-  ('dhaka-bakarkhani', 'dry-foods', 'ঢাকার বাকরখানি', 'Dhaka Bakarkhani', 'প্যাকেট', 'পুরান ঢাকার ঐতিহ্যবাহী কুড়মুড়ে বাকরখানি।', 'পুরান ঢাকা', null, 20, 'ঢাকা'),
-  ('tangail-saree', 'crafts', 'টাঙ্গাইল শাড়ি', 'Tangail Saree', 'পিস', 'হাতে-বোনা টাঙ্গাইলের তাঁতের শাড়ি।', 'টাঙ্গাইল', null, 5, 'টাঙ্গাইল'),
-  ('rajshahi-silk', 'crafts', 'রাজশাহী সিল্ক', 'Rajshahi Silk', 'পিস', 'রাজশাহীর খাঁটি রেশমের সিল্ক শাড়ি।', 'রাজশাহী', null, 3, 'রাজশাহী'),
-  ('jamdani-saree', 'crafts', 'জামদানি শাড়ি', 'Jamdani Saree', 'পিস', 'নকশা-বোনা ঐতিহ্যবাহী জামদানি।', 'রূপগঞ্জ, নারায়ণগঞ্জ', null, 3, 'নারায়ণগঞ্জ'),
-  ('nakshi-kantha', 'crafts', 'নকশি কাঁথা', 'Nakshi Kantha', 'পিস', 'হাতের সুঁইয়ে বোনা নকশি কাঁথা।', 'জামালপুর', null, 5, 'জামালপুর'),
-  ('shitalpati', 'crafts', 'শীতলপাটি', 'Shitalpati', 'পিস', 'বেত দিয়ে বোনা ঠান্ডা শীতলপাটি।', 'সিলেট', null, 5, 'সিলেট')
+  ('garlic', 'vegetables', 'রসুন', 'Garlic', 'কেজি', 'ঝাঁঝালো দেশি রসুন।', 'মেহেরপুর', null, 25, null),
+  ('miniket-rice', 'rice-grains', 'মিনিকেট চাল', 'Miniket Rice', 'কেজি', 'চিকন, সাদা ও ঝরঝরে মিনিকেট চাল।', 'দিনাজপুর', null, 50, null),
+  ('masoor-dal', 'rice-grains', 'মসুর ডাল', 'Red Lentil', 'কেজি', 'পরিষ্কার বাছাই করা মসুর ডাল।', 'পাবনা', null, 25, null),
+  ('himsagar-mango', 'seasonal-fruits', 'হিমসাগর আম', 'Himsagar Mango', 'কেজি', 'মিষ্টি ও সুগন্ধি হিমসাগর আম।', 'রাজশাহী / সাতক্ষীরা', 'গ্রীষ্ম', 40, null),
+  ('lemon', 'seasonal-fruits', 'লেবু', 'Lemon', 'হালি', 'রসালো সিলেটি লেবু।', 'সিলেট', null, 100, null),
+  ('turmeric-powder', 'regional-products', 'হলুদ গুঁড়া', 'Turmeric Powder', 'কেজি', 'ভেজালমুক্ত ঘরে-গুঁড়া হলুদ।', 'কুষ্টিয়া', null, 10, null),
+  ('rui-fish', 'fresh-fish', 'রুই মাছ', 'Rui Fish', 'কেজি', 'চাষের তাজা রুই মাছ।', 'ময়মনসিংহ', null, 20, null),
+  ('farm-egg', 'other-specialty', 'দেশি ডিম', 'Farm Eggs', 'ডজন', 'খামারের তাজা ডিম।', 'গাজীপুর', null, 30, null),
+  ('mustard-oil', 'regional-products', 'সরিষার তেল', 'Mustard Oil', 'লিটার', 'কাঠের ঘানিতে ভাঙা খাঁটি সরিষার তেল।', 'ঘানি-ভাঙা, মানিকগঞ্জ', null, 20, null),
+  ('khati-honey', 'regional-products', 'খাঁটি মধু', 'Pure Honey', 'কেজি', 'মৌয়ালদের সংগ্রহ করা খাঁটি মধু।', 'সুন্দরবন', null, 10, null),
+  ('bogura-doi', 'regional-products', 'বগুড়ার দই', 'Bogura Doi', 'কেজি', 'মাটির পাতিলে জমানো, ঘন ও মিষ্টি বিখ্যাত বগুড়ার দই।', 'বগুড়া', null, 20, 'বগুড়া'),
+  ('natore-kachagolla', 'regional-products', 'নাটোরের কাঁচাগোল্লা', 'Natore Kachagolla', 'কেজি', 'ছানার নরম, সাদা কাঁচাগোল্লা — নাটোরের ঐতিহ্য।', 'নাটোর', null, 10, 'নাটোর'),
+  ('tangail-chomchom', 'regional-products', 'টাঙ্গাইলের চমচম', 'Tangail Chomchom', 'কেজি', 'রসে ভেজা, লালচে টাঙ্গাইলের চমচম।', 'টাঙ্গাইল', null, 10, 'টাঙ্গাইল'),
+  ('cumilla-roshmalai', 'regional-products', 'কুমিল্লার রসমালাই', 'Cumilla Roshmalai', 'কেজি', 'দুধের ঘন সরে ডোবানো কুমিল্লার রসমালাই।', 'কুমিল্লা', null, 10, 'কুমিল্লা'),
+  ('muktagachha-monda', 'regional-products', 'মুক্তাগাছার মণ্ডা', 'Muktagachha Monda', 'কেজি', 'মুক্তাগাছার দুইশো বছরের ঐতিহ্যবাহী মণ্ডা।', 'ময়মনসিংহ', null, 10, 'ময়মনসিংহ'),
+  ('coxsbazar-shutki', 'shutki', 'কক্সবাজারের শুটকি', 'Cox''s Bazar Shutki', 'কেজি', 'রোদে শুকানো, পরিষ্কার করা কক্সবাজারের শুটকি।', 'কক্সবাজার', null, 10, 'কক্সবাজার'),
+  ('sreemangal-tea', 'regional-products', 'শ্রীমঙ্গলের চা', 'Sreemangal Tea', 'কেজি', 'শ্রীমঙ্গলের বাগানের তাজা পাতার চা।', 'মৌলভীবাজার', null, 10, 'মৌলভীবাজার'),
+  ('kushtia-tilkhaja', 'regional-products', 'কুষ্টিয়ার তিলের খাজা', 'Kushtia Tilkhaja', 'কেজি', 'কুড়মুড়ে তিল ও চিনির কুষ্টিয়ার বিখ্যাত খাজা।', 'কুষ্টিয়া', null, 10, 'কুষ্টিয়া'),
+  ('dhaka-bakarkhani', 'regional-products', 'ঢাকার বাকরখানি', 'Dhaka Bakarkhani', 'প্যাকেট', 'পুরান ঢাকার ঐতিহ্যবাহী কুড়মুড়ে বাকরখানি।', 'পুরান ঢাকা', null, 20, 'ঢাকা'),
+  ('tangail-saree', 'regional-products', 'টাঙ্গাইল শাড়ি', 'Tangail Saree', 'পিস', 'হাতে-বোনা টাঙ্গাইলের তাঁতের শাড়ি।', 'টাঙ্গাইল', null, 5, 'টাঙ্গাইল'),
+  ('rajshahi-silk', 'regional-products', 'রাজশাহী সিল্ক', 'Rajshahi Silk', 'পিস', 'রাজশাহীর খাঁটি রেশমের সিল্ক শাড়ি।', 'রাজশাহী', null, 3, 'রাজশাহী'),
+  ('jamdani-saree', 'regional-products', 'জামদানি শাড়ি', 'Jamdani Saree', 'পিস', 'নকশা-বোনা ঐতিহ্যবাহী জামদানি।', 'রূপগঞ্জ, নারায়ণগঞ্জ', null, 3, 'নারায়ণগঞ্জ'),
+  ('nakshi-kantha', 'regional-products', 'নকশি কাঁথা', 'Nakshi Kantha', 'পিস', 'হাতের সুঁইয়ে বোনা নকশি কাঁথা।', 'জামালপুর', null, 5, 'জামালপুর'),
+  ('shitalpati', 'regional-products', 'শীতলপাটি', 'Shitalpati', 'পিস', 'বেত দিয়ে বোনা ঠান্ডা শীতলপাটি।', 'সিলেট', null, 5, 'সিলেট')
 ) as v(slug, cat, name_bn, name_en, unit_bn, description, origin, season, moq, famous) join categories c on c.slug = v.cat left join districts fd on fd.name_bn = v.famous
 on conflict (slug) do nothing;
 
@@ -187,9 +231,10 @@ select p.id, s.id, v.r, v.w, v.moq, v.stock, v.grade, v.origin, 'active' from (v
   ('cauliflower', 'sylhet-krishi-bhandar', 3800, 3000, 50, 487, 'A', 'মানিকগঞ্জ'),
   ('cauliflower', 'bogura-farmers-hub', 3800, 3100, 50, 578, 'A', 'মানিকগঞ্জ'),
   ('cauliflower', 'dhaka-fresh-trade', 4100, 3300, 50, 669, 'B', 'মানিকগঞ্জ'),
+  ('garlic', 'jashore-green-farm', 15800, 13800, 25, 575, 'A', 'মেহেরপুর'),
   ('garlic', 'sylhet-krishi-bhandar', 16000, 13900, 25, 302, 'A', 'মেহেরপুর'),
   ('garlic', 'bogura-farmers-hub', 16300, 14200, 25, 393, 'A', 'মেহেরপুর'),
-  ('garlic', 'chattogram-bazar-ghar', 18000, 15700, 25, 484, 'B', 'মেহেরপুর'),
+  ('garlic', 'dhaka-fresh-trade', 17500, 15200, 25, 484, 'B', 'মেহেরপুর'),
   ('miniket-rice', 'dinajpur-rice-mill', 6700, 6100, 50, 524, 'A', 'দিনাজপুর'),
   ('miniket-rice', 'chattogram-bazar-ghar', 7800, 7100, 50, 615, 'A', 'দিনাজপুর'),
   ('masoor-dal', 'dinajpur-rice-mill', 11600, 10400, 25, 450, 'A', 'পাবনা'),
@@ -202,17 +247,22 @@ select p.id, s.id, v.r, v.w, v.moq, v.stock, v.grade, v.origin, 'active' from (v
   ('lemon', 'dhaka-fresh-trade', 3400, 2700, 100, 356, 'A', 'সিলেট'),
   ('turmeric-powder', 'sylhet-krishi-bhandar', 32000, 28200, 10, 635, 'A', 'কুষ্টিয়া'),
   ('turmeric-powder', 'bogura-farmers-hub', 32600, 28800, 10, 726, 'A', 'কুষ্টিয়া'),
-  ('turmeric-powder', 'chattogram-bazar-ghar', 36000, 31800, 10, 817, 'B', 'কুষ্টিয়া'),
+  ('turmeric-powder', 'dhaka-fresh-trade', 35000, 30900, 10, 817, 'B', 'কুষ্টিয়া'),
+  ('turmeric-powder', 'chattogram-bazar-ghar', 35300, 31200, 10, 908, 'A', 'কুষ্টিয়া'),
   ('rui-fish', 'mymensingh-matshya', 27800, 24500, 20, 558, 'B', 'ময়মনসিংহ'),
   ('rui-fish', 'dhaka-fresh-trade', 29000, 25500, 20, 376, 'A', 'ময়মনসিংহ'),
   ('rui-fish', 'chattogram-bazar-ghar', 31400, 27600, 20, 467, 'A', 'ময়মনসিংহ'),
   ('farm-egg', 'mymensingh-matshya', 15800, 14200, 30, 558, 'B', 'গাজীপুর'),
   ('farm-egg', 'dhaka-fresh-trade', 16500, 14800, 30, 376, 'A', 'গাজীপুর'),
   ('farm-egg', 'chattogram-bazar-ghar', 17800, 16000, 30, 467, 'A', 'গাজীপুর'),
-  ('mustard-oil', 'dhaka-fresh-trade', 26000, 23500, 20, 487, 'A', 'ঘানি-ভাঙা, মানিকগঞ্জ'),
-  ('mustard-oil', 'chattogram-bazar-ghar', 28100, 25400, 20, 578, 'A', 'ঘানি-ভাঙা, মানিকগঞ্জ'),
-  ('khati-honey', 'dhaka-fresh-trade', 64900, 57900, 10, 487, 'A', 'সুন্দরবন'),
-  ('khati-honey', 'chattogram-bazar-ghar', 70300, 62700, 10, 578, 'A', 'সুন্দরবন'),
+  ('mustard-oil', 'sylhet-krishi-bhandar', 24500, 22100, 20, 487, 'A', 'ঘানি-ভাঙা, মানিকগঞ্জ'),
+  ('mustard-oil', 'bogura-farmers-hub', 24900, 22500, 20, 578, 'A', 'ঘানি-ভাঙা, মানিকগঞ্জ'),
+  ('mustard-oil', 'dhaka-fresh-trade', 26800, 24200, 20, 669, 'B', 'ঘানি-ভাঙা, মানিকগঞ্জ'),
+  ('mustard-oil', 'chattogram-bazar-ghar', 27000, 24400, 20, 760, 'A', 'ঘানি-ভাঙা, মানিকগঞ্জ'),
+  ('khati-honey', 'sylhet-krishi-bhandar', 61200, 54600, 10, 487, 'A', 'সুন্দরবন'),
+  ('khati-honey', 'bogura-farmers-hub', 62300, 55600, 10, 578, 'A', 'সুন্দরবন'),
+  ('khati-honey', 'dhaka-fresh-trade', 67000, 59700, 10, 669, 'B', 'সুন্দরবন'),
+  ('khati-honey', 'chattogram-bazar-ghar', 67500, 60300, 10, 760, 'A', 'সুন্দরবন'),
   ('bogura-doi', 'bogura-doi-ghar', 24700, 21700, 20, 450, 'A', 'বগুড়া'),
   ('bogura-doi', 'bogura-mishti-bhandar', 27300, 24000, 20, 541, 'A', 'বগুড়া'),
   ('bogura-doi', 'dhaka-desi-mishti', 27600, 24200, 20, 632, 'B', 'বগুড়া'),
@@ -1099,25 +1149,5 @@ select p.id, m.id, current_date - v.ago, v.r, v.w from (values
   ('shitalpati', 'rajshahi-bazar', 0, 256900, 222300)
 ) as v(pslug, mslug, ago, r, w) join products p on p.slug = v.pslug join markets m on m.slug = v.mslug
 on conflict (product_id, market_id, price_date) do nothing;
-
-insert into article_categories (slug, name_bn, name_en) values
-  ('farming', 'কৃষি', 'Agriculture'),
-  ('livestock-fisheries', 'প্রাণিসম্পদ ও মৎস্য', 'Livestock & Fisheries'),
-  ('storage', 'সংরক্ষণ ও পরিবহন', 'Storage & Transport'),
-  ('selling', 'বিক্রয় ও দাম', 'Selling & Pricing'),
-  ('business', 'ক্ষুদ্র ব্যবসা ও উদ্যোক্তা', 'Small Business & Entrepreneurship'),
-  ('digital', 'ডিজিটাল টুলস', 'Digital Tools')
-on conflict (slug) do nothing;
-
-insert into articles (slug, category_id, title_bn, title_en, excerpt, body, author, read_minutes, status, published_at)
-select v.slug, c.id, v.t_bn, v.t_en, v.excerpt, v.body::jsonb, v.author, v.mins, 'published', now() - (v.ord || ' days')::interval from (values
-  ('potato-storage-basics', 'storage', 'আলু সংরক্ষণের মৌলিক নিয়ম', 'Potato storage basics', 'আলু পচন ও অঙ্কুরোদগম কমাতে সংরক্ষণের সহজ ধাপগুলো।', '["আলু তোলার পর কয়েক দিন ছায়াযুক্ত জায়গায় রেখে শুকিয়ে নিলে খোসা শক্ত হয় এবং সংরক্ষণক্ষমতা বাড়ে।","ক্ষতিগ্রস্ত বা কাটা আলু আলাদা করুন। একটি পচা আলু পুরো স্তূপ নষ্ট করতে পারে।","সংরক্ষণস্থান ঠান্ডা, অন্ধকার ও বাতাস চলাচলযুক্ত হওয়া উচিত। সরাসরি আলো পড়লে আলু সবুজ হয়ে যায়।","বস্তায় নয়, বাতাস চলাচলের সুযোগ রেখে ঝুড়ি বা কাঠের ট্রেতে রাখা ভালো।"]', 'পসরাবাজার সম্পাদকীয়', 5, 0),
-  ('pricing-your-produce', 'selling', 'পণ্যের ন্যায্য দাম কীভাবে ঠিক করবেন', 'Pricing your produce fairly', 'খরচ, বাজারদর ও পরিমাণভেদে দাম নির্ধারণের একটি সহজ কাঠামো।', '["প্রথমে উৎপাদন, পরিবহন, মজুরি ও ক্ষতির মোট খরচ হিসাব করুন।","এরপর আজকের বাজারদর দেখুন। মার্কেট প্রাইস পাতায় বিভিন্ন বাজারের দরের তুলনা পাবেন।","খুচরা ও পাইকারি দাম আলাদা রাখুন। বেশি পরিমাণে কিনলে কম দাম দেওয়া স্বাভাবিক।"]', 'পসরাবাজার সম্পাদকীয়', 6, 3),
-  ('safe-vegetable-farming', 'farming', 'নিরাপদ সবজি চাষের পাঁচটি ধাপ', 'Five steps to safe vegetable farming', 'মাটি পরীক্ষা থেকে সংগ্রহ পর্যন্ত নিরাপদ চাষের চেকলিস্ট।', '["জমি প্রস্তুতের আগে মাটির অবস্থা বুঝে নিন।","ভালো বীজ ও সঠিক দূরত্বে রোপণ করুন।","সার ও কীটনাশক প্রয়োগে নির্দেশিত মাত্রা মানুন এবং সংগ্রহের আগে অপেক্ষার সময় মেনে চলুন।"]', 'পসরাবাজার সম্পাদকীয়', 7, 6),
-  ('start-wholesale-business', 'business', 'পাইকারি ব্যবসা শুরুর আগে যা জানা দরকার', 'Before you start a wholesale business', 'মূলধন, সরবরাহ শৃঙ্খল ও ক্রেতা খুঁজে পাওয়ার প্রাথমিক ধারণা।', '["পণ্য নির্বাচন করুন যেখানে আপনার সরবরাহের নির্ভরযোগ্য উৎস আছে।","ন্যূনতম অর্ডার পরিমাণ ও পেমেন্টের শর্ত পরিষ্কার রাখুন।","নিয়মিত হিসাব রাখার জন্য ডিজিটাল টুল ব্যবহার করুন।"]', 'পসরাবাজার সম্পাদকীয়', 8, 9),
-  ('digital-bookkeeping', 'digital', 'দোকানের হিসাব ডিজিটালভাবে রাখুন', 'Keep shop accounts digitally', 'খাতা থেকে সফটওয়্যারে যাওয়ার সহজ পথ।', '["প্রতিদিনের বিক্রি ও ক্রয় একটি জায়গায় লিখে রাখুন।","স্টক কমে গেলে সতর্কতা পেতে ইনভেন্টরি টুল ব্যবহার করুন।","মাসের শেষে লাভ-ক্ষতির সারসংক্ষেপ দেখুন।"]', 'পেট্রা সফটওয়্যার সলিউশনস', 4, 12),
-  ('reading-market-trends', 'selling', 'বাজারের দামের ওঠানামা বুঝবেন যেভাবে', 'How to read market price trends', 'মৌসুম, সরবরাহ ও চাহিদা কীভাবে দামকে প্রভাবিত করে।', '["সরবরাহ বাড়লে সাধারণত দাম কমে, চাহিদা বাড়লে বাড়ে।","সাত দিনের গড়ের সঙ্গে আজকের দাম তুলনা করলে প্রবণতা বোঝা যায়।"]', 'পসরাবাজার সম্পাদকীয়', 5, 15)
-) as v(slug, cat, t_bn, t_en, excerpt, body, author, mins, ord) join article_categories c on c.slug = v.cat
-on conflict (slug) do nothing;
 
 commit;

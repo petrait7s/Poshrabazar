@@ -27,7 +27,7 @@ Regenerate the seed after editing `src/data`: `npm run db:seed:generate`.
 | Orders | `orders`, `order_items` (per-seller status), `order_events` (tracking timeline), `reviews` |
 | Intelligence | `markets`, `market_prices` (daily), `price_alerts` |
 | Knowledge | `article_categories`, `articles` |
-| Tools | `khata_entries` (Khata Lite), `demo_requests` (PetraPOS/PMS/DMS leads) |
+| Retired | `khata_entries`, `demo_requests` (dropped by migration `20261121000003`) |
 
 Money is integer paisa. Frontend shows `paisa / 100`.
 
@@ -48,3 +48,24 @@ Money is integer paisa. Frontend shows `paisa / 100`.
 
 ## Not in this schema yet
 Seed contains no users, orders or reviews (they need real `auth.users`). Payment gateway tables, delivery-zone pricing, SMS/WhatsApp notifications and image storage buckets are next.
+
+
+## Pivot schema (Phase 0)
+
+Added next to the legacy tables by `20261121000001`–`3`; the legacy seller model stays until a Phase 1 cleanup. Every migration has a matching file in `rollbacks/`.
+
+| Migration | Adds |
+|---|---|
+| `20261121000001_pivot_core` | `upazilas`, `user_roles`, `stores`, `store_members`, `producer_profiles`, delivery zones and pickup points, `listings` (supply / store offer, own / linked stock), `price_tiers`, append-only `stock_movements`, `stock_receive()` / `stock_adjust()` |
+| `20261121000002_pivot_orders_finance` | `sub_orders`, `order_lines`, `fulfilments`, `commission_rules` (0% pilot), `line_financials` (immutable snapshot per line), append-only `ledger_entries`, `place_order_v2()`, `advance_fulfilment()`, `cancel_sub_order()`, `confirm_delivery()` |
+| `20261121000003_retire_legacy_pillars` | drops `khata_entries`, `demo_requests` |
+
+**Money safety.** The ledger records amounts owed per store on delivered orders. It is not a wallet: there are no balances for customers, and deliberately no top-up, withdrawal or payout functions. Payments other than cash on delivery are rejected by `place_order_v2()`.
+
+**Audit trail.** `line_financials` stores gross, supplier payable, seller margin, commission, seller net, the rate and base used, and the rule id. Rules that produced a snapshot cannot be deleted. Stock numbers always equal the sum of `stock_movements`.
+
+### Tests
+```bash
+npm run db:test        # needs PostgreSQL 15+ and rights to create databases (PGHOST/PGPORT/PGUSER)
+```
+Runs migrations on a scratch database, executes `tests/01`–`05`, verifies that rolling back migrations 3→1 restores the pre-pivot schema exactly (and that they re-apply), and loads `seed.sql`.

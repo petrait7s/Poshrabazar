@@ -51,7 +51,7 @@ export function ProductArt({ motif, bg, accent, seed, className }: { motif: Moti
     if (motif === "powder") items.push(<g key="bowl"><path d="M50 235 H350 C350 285 300 292 200 292 C100 292 50 285 50 235Z" fill="#fbf8f0" stroke="#e5dfcc" strokeWidth="2" /></g>);
   } else if (motif === "fish") {
     for (let i = 0; i < 2; i++) {
-      items.push(<g key={i} transform={`translate(${i ? 220 : 170} ${i ? 200 : 130}) rotate(${i ? -8 : 6})`}><path d="M-110 0 C-60 -52 40 -52 90 -6 L132 -38 L126 0 L132 38 L90 6 C40 52 -60 52 -110 0Z" fill={accent} /><path d="M-100 4 C-50 30 30 30 85 4 C30 52 -60 50 -100 4Z" fill="#fff" opacity=".35" /><circle cx="-76" cy="-8" r="6" fill="#fff" /><circle cx="-75" cy="-8" r="2.8" fill="#142B45" /><path d="M-52 -26 C-40 -4 -40 8 -52 28" stroke="#fff" strokeOpacity=".4" strokeWidth="3" fill="none" />{[...Array(8)].map((_, k) => <path key={k} d={`M${-30 + k * 12} -22 q8 20 0 40`} stroke="#fff" strokeOpacity=".18" strokeWidth="2" fill="none" />)}</g>);
+      items.push(<g key={i} transform={`translate(${i ? 220 : 170} ${i ? 200 : 130}) rotate(${i ? -8 : 6})`}><path d="M-110 0 C-60 -52 40 -52 90 -6 L132 -38 L126 0 L132 38 L90 6 C40 52 -60 52 -110 0Z" fill={accent} /><path d="M-100 4 C-50 30 30 30 85 4 C30 52 -60 50 -100 4Z" fill="#fff" opacity=".35" /><circle cx="-76" cy="-8" r="6" fill="#fff" /><circle cx="-75" cy="-8" r="2.8" fill="#292524" /><path d="M-52 -26 C-40 -4 -40 8 -52 28" stroke="#fff" strokeOpacity=".4" strokeWidth="3" fill="none" />{[...Array(8)].map((_, k) => <path key={k} d={`M${-30 + k * 12} -22 q8 20 0 40`} stroke="#fff" strokeOpacity=".18" strokeWidth="2" fill="none" />)}</g>);
     }
   } else if (motif === "egg") {
     for (let i = 0; i < 9; i++) {
@@ -60,10 +60,10 @@ export function ProductArt({ motif, bg, accent, seed, className }: { motif: Moti
     }
     items.push(<path key="tray" d="M50 245 H350 L335 280 H65Z" fill="#c9a77a" opacity=".6" />);
   } else if (motif === "jar") {
-    items.push(<g key="jar"><rect x="140" y="70" width="120" height="30" rx="4" fill={dark} /><path d="M148 100 H252 C275 125 280 150 280 175 V250 C280 268 268 280 250 280 H150 C132 280 120 268 120 250 V175 C120 150 125 125 148 100Z" fill={accent} opacity=".95" /><path d="M120 185 H280 V250 C280 268 268 280 250 280 H150 C132 280 120 268 120 250Z" fill={dark} opacity=".25" /><rect x="140" y="150" width="120" height="70" rx="3" fill="#fbf8f0" /><rect x="156" y="168" width="88" height="8" rx="2" fill="#142B45" opacity=".8" /><rect x="170" y="186" width="60" height="5" rx="2" fill="#167C78" opacity=".8" /><path d="M136 120 C132 150 132 200 134 240" stroke="#fff" strokeOpacity=".5" strokeWidth="6" strokeLinecap="round" fill="none" /></g>);
+    items.push(<g key="jar"><rect x="140" y="70" width="120" height="30" rx="4" fill={dark} /><path d="M148 100 H252 C275 125 280 150 280 175 V250 C280 268 268 280 250 280 H150 C132 280 120 268 120 250 V175 C120 150 125 125 148 100Z" fill={accent} opacity=".95" /><path d="M120 185 H280 V250 C280 268 268 280 250 280 H150 C132 280 120 268 120 250Z" fill={dark} opacity=".25" /><rect x="140" y="150" width="120" height="70" rx="3" fill="#fbf8f0" /><rect x="156" y="168" width="88" height="8" rx="2" fill="#292524" opacity=".8" /><rect x="170" y="186" width="60" height="5" rx="2" fill="#C2410C" opacity=".8" /><path d="M136 120 C132 150 132 200 134 240" stroke="#fff" strokeOpacity=".5" strokeWidth="6" strokeLinecap="round" fill="none" /></g>);
   }
   if (motif === "pot") {
-    items.push(<g key="pot"><ellipse cx="200" cy="268" rx="104" ry="12" fill="#142B45" opacity=".09" /><path d="M118 130 H282 C296 175 290 235 262 262 C240 280 160 280 138 262 C110 235 104 175 118 130Z" fill={accent} /><path d="M118 130 H282 C288 150 290 170 289 186 H111 C110 170 112 150 118 130Z" fill={dark} opacity=".25" /><ellipse cx="200" cy="130" rx="82" ry="17" fill="#fbf4e2" /><ellipse cx="200" cy="130" rx="82" ry="17" fill="none" stroke={dark} strokeOpacity=".3" strokeWidth="2" /><ellipse cx="180" cy="127" rx="34" ry="6" fill="#fff" opacity=".8" /><path d="M126 200 q74 20 148 0" stroke="#fff" strokeOpacity=".35" strokeWidth="3" fill="none" /><path d="M130 224 q70 18 140 0" stroke="#fff" strokeOpacity=".25" strokeWidth="3" fill="none" /></g>);
+    items.push(<g key="pot"><ellipse cx="200" cy="268" rx="104" ry="12" fill="#292524" opacity=".09" /><path d="M118 130 H282 C296 175 290 235 262 262 C240 280 160 280 138 262 C110 235 104 175 118 130Z" fill={accent} /><path d="M118 130 H282 C288 150 290 170 289 186 H111 C110 170 112 150 118 130Z" fill={dark} opacity=".25" /><ellipse cx="200" cy="130" rx="82" ry="17" fill="#fbf4e2" /><ellipse cx="200" cy="130" rx="82" ry="17" fill="none" stroke={dark} strokeOpacity=".3" strokeWidth="2" /><ellipse cx="180" cy="127" rx="34" ry="6" fill="#fff" opacity=".8" /><path d="M126 200 q74 20 148 0" stroke="#fff" strokeOpacity=".35" strokeWidth="3" fill="none" /><path d="M130 224 q70 18 140 0" stroke="#fff" strokeOpacity=".25" strokeWidth="3" fill="none" /></g>);
   } else if (motif === "sweet") {
     items.push(<g key="plate"><ellipse cx="200" cy="228" rx="150" ry="40" fill="#fbf8f0" stroke="#e5dfcc" strokeWidth="2" /><ellipse cx="200" cy="224" rx="124" ry="30" fill="#f1ead8" opacity=".7" /></g>);
     for (let i = 0; i < 8; i++) {
@@ -75,7 +75,7 @@ export function ProductArt({ motif, bg, accent, seed, className }: { motif: Moti
       const y = 215 - i * 34, dx = (i % 2 ? 12 : -8);
       items.push(<g key={i} transform={`translate(${dx} 0)`}><rect x="78" y={y} width="244" height="34" rx="5" fill={i % 2 ? shade(accent, 0.12) : accent} /><rect x="78" y={y} width="244" height="7" fill={dark} opacity=".35" /><rect x="78" y={y + 27} width="244" height="7" fill={dark} opacity=".35" />{[...Array(10)].map((_, k) => <path key={k} d={`M${96 + k * 23} ${y + 17} l5 -5 l5 5 l-5 5z`} fill="#fff" opacity=".6" />)}</g>);
     }
-    items.push(<ellipse key="sh" cx="200" cy="254" rx="140" ry="9" fill="#142B45" opacity=".1" />);
+    items.push(<ellipse key="sh" cx="200" cy="254" rx="140" ry="9" fill="#292524" opacity=".1" />);
   } else if (motif === "mat") {
     items.push(<g key="mat"><rect x="70" y="95" width="260" height="150" rx="6" fill={accent} /><g stroke={dark} strokeOpacity=".28" strokeWidth="2">{[...Array(14)].map((_, k) => <line key={`h${k}`} x1="70" y1={105 + k * 10} x2="330" y2={105 + k * 10} />)}{[...Array(14)].map((_, k) => <line key={`v${k}`} x1={85 + k * 19} y1="95" x2={85 + k * 19} y2="245" strokeOpacity=".16" />)}</g><rect x="70" y="95" width="260" height="14" fill={dark} opacity=".45" /><rect x="70" y="231" width="260" height="14" fill={dark} opacity=".45" /><rect x="170" y="150" width="60" height="42" rx="3" fill="#fff" opacity=".28" /></g>);
   } else if (motif === "dried") {
@@ -89,7 +89,7 @@ export function ProductArt({ motif, bg, accent, seed, className }: { motif: Moti
     <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" className={className} role="img" aria-hidden>
       <rect width={W} height={H} fill={bg} />
       <circle cx="330" cy="50" r="110" fill="#fff" opacity=".28" />
-      <ellipse cx="200" cy="262" rx="170" ry="16" fill="#142B45" opacity=".07" />
+      <ellipse cx="200" cy="262" rx="170" ry="16" fill="#292524" opacity=".07" />
       {items}
     </svg>
   );

@@ -13,13 +13,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const list = products.filter((p) => offersFor(p).some((o) => o.sellerSlug === s.slug));
   return (
     <>
-      <section className="glass-band">
+      <section className="surface-band">
         <div className="container-x py-8">
           <Breadcrumb items={[{ label: "হোম", href: "/" }, { label: "বিক্রেতা" }, { label: s.bn }]} />
           <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
-            <div className="grid h-20 w-20 shrink-0 place-items-center rounded-md bg-navy font-bn text-4xl text-white">{s.bn[0]}</div>
+            <div className="grid h-20 w-20 shrink-0 place-items-center rounded-md bg-ink font-bn text-4xl text-white">{s.bn[0]}</div>
             <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-3"><h1 className="font-bn text-3xl font-normal">{s.bn}</h1>{s.verified ? <VerifiedBadge /> : <span className="rounded-sm bg-gold-50 px-2 py-1 font-bn text-xs text-gold-700">যাচাই চলমান</span>}</div>
+              <div className="flex flex-wrap items-center gap-3"><h1 className="font-bn text-3xl font-semibold">{s.bn}</h1>{s.verified ? <VerifiedBadge /> : <span className="rounded-sm bg-accent-50 px-2 py-1 font-bn text-xs text-accent-700">যাচাই চলমান</span>}</div>
               <p className="mt-1 font-bn text-ink/70">{s.desc}</p>
               <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 font-bn text-sm text-ink/70">
                 <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{s.location}, {s.division}</span>
@@ -28,12 +28,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 <span>{s.kind}</span><Stars value={s.rating} />
               </div>
             </div>
-            <div className="flex flex-wrap gap-2"><FollowButton slug={s.slug} /><a href={`/u/${s.slug}`} className="inline-flex h-10 items-center rounded-md border border-navy/25 bg-white/70 px-4 font-bn text-sm text-navy hover:bg-white">পোস্ট দেখুন</a><button className="inline-flex h-10 items-center gap-2 rounded-md border border-navy/25 bg-white/70 px-4 font-bn text-sm text-navy hover:bg-white"><MessageCircle className="h-4 w-4" />মেসেজ (শীঘ্রই)</button></div>
+            <div className="flex flex-wrap gap-2"><FollowButton slug={s.slug} /><button className="inline-flex h-10 items-center gap-2 rounded-md border border-ink/25 bg-white/70 px-4 font-bn text-sm text-ink hover:bg-white"><MessageCircle className="h-4 w-4" />মেসেজ (শীঘ্রই)</button></div>
           </div>
         </div>
       </section>
       <div className="container-x py-10">
-        <h2 className="h-section mb-5">এই বিক্রেতার পণ্য <span className="text-base text-mist-500">({bn(list.length)})</span></h2>
+        <h2 className="h-section mb-5">এই বিক্রেতার পণ্য <span className="text-base text-muted">({bn(list.length)})</span></h2>
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{list.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
       </div>
     </>

@@ -7,7 +7,7 @@ export function FollowButton({ slug, className, size = "md" }: { slug: string; c
   const on = isFollowing(slug);
   return (
     <button onClick={() => toggleFollow(slug)} aria-pressed={on}
-      className={cn("inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border font-bn font-medium transition-colors", size === "sm" ? "h-8 px-3 text-xs" : "h-10 px-4 text-sm", on ? "border-teal/40 bg-teal-50 text-teal-700 hover:bg-white" : "border-navy bg-navy text-white hover:bg-teal hover:border-teal", className)}>
+      className={cn("inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border font-bn font-medium transition-colors", size === "sm" ? "h-8 px-3 text-xs" : "h-10 px-4 text-sm", on ? "border-primary/40 bg-primary-50 text-primary-800 hover:bg-white" : "border-ink bg-ink text-white hover:bg-primary hover:border-primary", className)}>
       {on ? <Check className="h-3.5 w-3.5" /> : <UserPlus className="h-3.5 w-3.5" />}{on ? "ফলো করছেন" : "ফলো করুন"}
     </button>
   );

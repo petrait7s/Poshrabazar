@@ -1,9 +1,8 @@
 // Generates supabase/seed.sql from the demo data in src/data. Run: npm run db:seed:generate
 import { writeFileSync } from "node:fs";
-import { divisions } from "../src/data/locations";
+import { divisions, upazilas } from "../src/data/locations";
 import { categories, products, sellers, offersFor } from "../src/data/catalog";
 import { markets, priceRows } from "../src/data/prices";
-import { articles, kCategories } from "../src/data/knowledge";
 
 const q = (s: string | null | undefined) => (s == null ? "null" : `'${String(s).replace(/'/g, "''")}'`);
 const kindMap: Record<string, string> = { "কৃষক": "farmer", "খামারি": "farm_owner", "পাইকার": "wholesaler", "আড়তদার": "aratdar", "দোকানদার": "shopkeeper", "কারিগর": "artisan" };
@@ -23,6 +22,13 @@ w(divisions.map((d, i) => `  (${i + 1}, ${q(d.bn)}, ${q(d.en)})`).join(",\n") + 
 w();
 w("insert into districts (id, division_id, name_bn) values");
 w(divisions.flatMap((d, i) => d.districts.map((n) => `  (${++did}, ${i + 1}, ${q(n)})`)).join(",\n") + "\non conflict (id) do nothing;");
+w();
+
+// upazilas (launch region only; coordinates intentionally left empty until verified data is loaded)
+w("insert into upazilas (district_id, name_bn, name_en)");
+w("select d.id, v.name_bn, v.name_en from (values");
+w(Object.entries(upazilas).flatMap(([dist, list]) => list.map((u) => `  (${q(dist)}, ${q(u.bn)}, ${q(u.en)})`)).join(",\n"));
+w(") as v(district, name_bn, name_en) join districts d on d.name_bn = v.district\non conflict (district_id, name_bn) do nothing;");
 w();
 
 // categories & products
@@ -76,15 +82,6 @@ w(pr.join(",\n"));
 w(") as v(pslug, mslug, ago, r, w) join products p on p.slug = v.pslug join markets m on m.slug = v.mslug\non conflict (product_id, market_id, price_date) do nothing;");
 w();
 
-// knowledge
-w("insert into article_categories (slug, name_bn, name_en) values");
-w(kCategories.map((c) => `  (${q(c.slug)}, ${q(c.bn)}, ${q(c.en)})`).join(",\n") + "\non conflict (slug) do nothing;");
-w();
-w("insert into articles (slug, category_id, title_bn, title_en, excerpt, body, author, read_minutes, status, published_at)");
-w("select v.slug, c.id, v.t_bn, v.t_en, v.excerpt, v.body::jsonb, v.author, v.mins, 'published', now() - (v.ord || ' days')::interval from (values");
-w(articles.map((a, i) => `  (${q(a.slug)}, ${q(a.cat)}, ${q(a.bn)}, ${q(a.en)}, ${q(a.excerpt)}, ${q(JSON.stringify(a.body))}, ${q(a.author)}, ${a.minutes}, ${i * 3})`).join(",\n"));
-w(") as v(slug, cat, t_bn, t_en, excerpt, body, author, mins, ord) join article_categories c on c.slug = v.cat\non conflict (slug) do nothing;");
-w();
 w("commit;");
 writeFileSync(new URL("../supabase/seed.sql", import.meta.url), out.join("\n") + "\n");
-console.log(`seed.sql: ${products.length} products, ${sellers.length} sellers, ${rows.length} offers, ${pr.length} price rows, ${articles.length} articles`);
+console.log(`seed.sql: ${products.length} products, ${sellers.length} sellers, ${rows.length} offers, ${pr.length} price rows`);

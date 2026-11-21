@@ -1,23 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Tiro_Bangla } from "next/font/google";
+import { Inter, Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SocialProvider } from "@/components/social";
 import { Header, BottomNav } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
-const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat", display: "swap" });
-const bangla = Tiro_Bangla({ subsets: ["bengali", "latin"], weight: "400", variable: "--font-bangla", display: "swap" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const bangla = Noto_Sans_Bengali({ subsets: ["bengali"], variable: "--font-bangla", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "PosraBazar · পসরাবাজার — Buy. Sell. Learn. Grow.", template: "%s · PosraBazar" },
-  description: "বাংলার উন্মুক্ত ডিজিটাল বাজার — কৃষক, ব্যবসায়ী, পাইকার ও ক্রেতা সবাই এক বাজারে। Open marketplace & business ecosystem for Bangladesh.",
+  title: { default: "PosraBazar · পসরাবাজার", template: "%s · PosraBazar" },
+  description: "সিলেটের কৃষক, উৎপাদক, শিক্ষার্থী উদ্যোক্তা ও ক্রেতাদের মার্কেটপ্লেস। A community marketplace for farmers, producers and local entrepreneurs in Sylhet, Bangladesh.",
 };
-export const viewport: Viewport = { themeColor: "#142B45", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#C2410C", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="bn" className={`${montserrat.variable} ${bangla.variable}`}>
+    <html lang="bn" className={`${inter.variable} ${bangla.variable}`}>
       <body>
         <Providers>
           <SocialProvider>

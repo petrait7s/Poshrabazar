@@ -14,12 +14,43 @@ Scope of this document: audit of the current project, new product vision, roles,
 - Recommendation: keep the Next.js + Supabase direction, create a **new long-lived branch** for the pivot, tag the current `main` as the old concept, and execute in four phases starting with real authentication, a store/producer split, upazila-level location, and COD orders with seller sub-orders.
 
 ### Assumptions I am making (please correct any that are wrong)
-1. The product name and brand may change. I treat "PosraBazar / Petra" branding as undecided (see decision D6).
+1. The product name and brand may change. The working brand name is **PosraBazar** (decision D6, now approved).
 2. One person can hold several roles (a student can be a customer **and** a reseller; a producer can also sell retail).
 3. Phase 1 uses **Cash on Delivery** only. Online payment comes after the platform is live with real users.
 4. We are not holding warehouse stock. Every product belongs to a seller's own listing.
 5. Bangla is the primary language; English is secondary.
 6. Team is small (1–3 developers), so I prefer managed services (Supabase) over custom infrastructure.
+
+---
+
+## 0.1 Approved decisions (recorded before Phase 0)
+
+The product owner approved the strategy and decided as follows. These are now the source of truth.
+
+| # | Decision | What it means in practice |
+|---|---|---|
+| D1 | **Both linked and own-stock reseller modes in the MVP** | In *linked* mode the producer stays responsible for stock and fulfilment and the student reseller sets their own selling price (never below the supplier's price). In *own-stock* mode the seller holds and manages stock. Stock is only ever changed through an append-only movement log, and a producer's stock is shared by every reseller linked to it, so nothing can be oversold. Responsibilities are separate: the fulfilling store moves the fulfilment; the selling store owns the customer relationship and price. |
+| D2 | **Producer/store-managed delivery inside defined zones, plus pickup points** | No platform logistics. Each store declares the zones it serves and its fee. Fulfilments carry a `method` and a `provider` column so a courier integration can be added later without redesign. |
+| D3 | **Commission configurable per transaction type; promotional 0% pilot** | `commission_rules` holds rates as data (basis points, per transaction type, optional per category, with start/end dates). The pilot ships with 0% for *direct*, *reseller* and *wholesale* sales. The financial model treats the three separately. **No wallet and no holding of customer money is implemented**; the ledger only records what each party is owed on delivered orders. Anything that holds or moves money needs legal review first. |
+| D4 | **Fonts: Noto Sans Bengali (Bengali) + Inter (English)** | Readability on mobile and desktop first. |
+| D5 | **Brand: PosraBazar remains the working name; former co-branding removed** | Removed from the interface and documentation, except where technically necessary (a rollback script must recreate a legacy table constraint exactly). |
+| D6 | **Existing pages** | **Keep and redesign:** Market Prices, Regional Products, Follow Stores. **Defer:** Knowledge, Community Feed, Wallet (code kept under `src/_deferred/`, out of routing and navigation). **Remove:** Business Solutions, Khata Lite. |
+
+Additional working rules: preserve the prototype and its history (tag `v0-posrabazar-concept`, `main` untouched); keep migrations reversible where practical; keep every financial calculation auditable (immutable per-line snapshots recording the rule used, append-only ledger, no deletes of referenced rules); test linked stock, own-stock, parent/sub-orders and per-seller financials; no fake payment integrations and nothing that implies demo features are production-ready; apply the Deep Orange palette with accessible contrast.
+
+### Phase 0 status
+
+| Item | State |
+|---|---|
+| Decisions documented | Done (this section) |
+| Branch `pivot/sylhet-marketplace` cut from the old `main` commit | Done |
+| Tag `v0-posrabazar-concept` on the old `main` commit | Created locally; **the remote refused the tag push (HTTP 403)**, see the Phase 0 report |
+| Design tokens, fonts, flat UI primitives | Done (`docs/DESIGN_SYSTEM.md`) |
+| Business Solutions, Khata Lite removed; old fee/wallet UI removed; Knowledge/Community/Wallet deferred | Done |
+| Final category taxonomy (7) | Done in `src/data/catalog.ts`; also seeded |
+| Sylhet-division upazilas (41) | Done: `src/data/locations.ts`, seeded |
+| Migrations 1–3 with rollbacks and tests | Done: `npm run db:test` |
+| Real authentication, Supabase project, error tracking, photography | **Not started (Phase 1 / needs owner input)** |
 
 ---
 
@@ -68,10 +99,10 @@ Scope of this document: audit of the current project, new product vision, roles,
 - **Visual identity**: navy/teal/gold glass style, alpona/kantha/flower ornaments, Tiro Bangla headlines. Replace with the orange/cream system you specified.
 - **Hero art, illustration set, line-art farmer**: replace with photography.
 - **"Four pillars" structure** (Marketplace, Knowledge Hub, Market Intelligence, Business Solutions). The new product is one marketplace with a supply network; see 1.3.
-- **Business Solutions pillar** (PetraPOS/PMS/DMS), **Khata Lite**, demo-request form: unrelated to the new concept. Remove from navigation and the database.
+- **Business Solutions pillar** (the old POS / property / distribution software pages), **Khata Lite**, and the software demo-request form: unrelated to the new concept. Removed from the interface in Phase 0; their database tables are dropped by migration 3 (with a rollback).
 - **Platform fee rule** (1.5% above ৳999): replace with a commission model per transaction type (section 5).
 - **Seed data and `src/data` catalogue**: replace with Sylhet-focused data.
-- Hard-coded copy referring to "Petra Software Solutions", "Core Idea v1.0" and demo notices tied to the old concept.
+- Hard-coded copy tied to the old concept: the former parent-company co-branding, the "Core Idea v1.0" wording and old demo notices.
 
 ### 1.3 Features that conflict with, or are outside, the new concept
 
@@ -416,7 +447,7 @@ Defaults are my recommendation; reply "go with defaults" or change any.
 | D3 | Commission structure | Decide after a small pilot; build the system so rates are configurable per transaction type and category. I will not hard-code rates until you confirm. |
 | D4 | Payment path | COD first; pick a licensed aggregator for online payments in Phase 3 and take legal advice on holding funds |
 | D5 | Fonts | Hind Siliguri or Noto Sans Bengali for UI, Montserrat for Latin; drop Tiro Bangla for body text |
-| D6 | Brand name and domain | Keep "PosraBazar / পসরাবাজার" if it still fits ("Posra" = a trader's display of wares); drop the "Petra" co-branding and Petra software references unless you want them |
+| D6 | Brand name and domain | Keep "PosraBazar / পসরাবাজার" if it still fits ("Posra" = a trader's display of wares); remove the former co-branding and software references |
 | D7 | Existing features to keep | Keep: market prices, regional/famous products, follow on stores. Defer: knowledge hub, community feed, wallet for customers. Remove: Business Solutions, Khata Lite. |
 
 ---
