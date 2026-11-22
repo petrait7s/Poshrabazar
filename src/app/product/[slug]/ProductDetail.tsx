@@ -98,7 +98,7 @@ export function ProductDetail({ p }: { p: Product }) {
               {offers.map((o) => { const s = getSeller(o.sellerSlug)!; const isBest = o.sellerSlug === best.sellerSlug; return (
                 <tr key={o.sellerSlug}>
                   <td>
-                    <Link href={`/seller/${s.slug}`} className="font-bn text-[15px] font-medium text-ink hover:text-primary">{s.bn}</Link>
+                    <Link href={`/stores/${s.slug}`} className="font-bn text-[15px] font-medium text-ink hover:text-primary">{s.bn}</Link>
                     <div className="mt-0.5 flex items-center gap-2">{near(o.sellerSlug) && <span className="rounded-sm bg-accent-50 px-1.5 py-0.5 font-bn text-[11px] text-accent-700">আপনার এলাকায়</span>}</div>
                   </td>
                   <td className="font-bn"><span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3 text-muted" />{s.location}</span></td>
@@ -117,7 +117,7 @@ export function ProductDetail({ p }: { p: Product }) {
           {offers.map((o) => { const s = getSeller(o.sellerSlug)!; const isBest = o.sellerSlug === best.sellerSlug; return (
             <div key={o.sellerSlug} className={cn("rounded-md border bg-white p-4", isBest ? "border-primary" : "border-line")}>
               <div className="flex items-start justify-between gap-2">
-                <div><Link href={`/seller/${s.slug}`} className="font-bn text-base font-medium text-ink">{s.bn}</Link><p className="flex items-center gap-1 font-bn text-xs text-ink/60"><MapPin className="h-3 w-3" />{s.location} · গ্রেড {o.grade}</p></div>
+                <div><Link href={`/stores/${s.slug}`} className="font-bn text-base font-medium text-ink">{s.bn}</Link><p className="flex items-center gap-1 font-bn text-xs text-ink/60"><MapPin className="h-3 w-3" />{s.location} · গ্রেড {o.grade}</p></div>
                 {isBest && <span className="rounded-sm bg-primary px-1.5 py-0.5 font-bn text-[11px] text-white">সেরা দাম</span>}
               </div>
               <div className="mt-2 flex items-center gap-2"></div>

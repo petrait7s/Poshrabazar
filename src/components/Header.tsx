@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, ChevronDown, Compass, Home, MapPin, Package, Search, ShoppingBag, User } from "lucide-react";
+import { Bell, ChevronDown, Grid2x2, Home, Store, MapPin, Package, Search, ShoppingBag, User } from "lucide-react";
 import { Logo } from "./Logo";
 import { bn } from "@/data/catalog";
 import { LocationSheet } from "./LocationSheet";
@@ -10,10 +10,9 @@ import { useApp } from "./providers";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/marketplace", label: "মার্কেটপ্লেস" },
-  { href: "/wholesale", label: "পাইকারি" },
-  { href: "/famous", label: "আঞ্চলিক পণ্য" },
-  { href: "/market-prices", label: "বাজারদর" },
+  { href: "/categories", label: "ক্যাটাগরি" },
+  { href: "/stores", label: "দোকান" },
+  { href: "/seller/register", label: "বিক্রেতা হোন" },
 ];
 
 export function Header() {
@@ -61,17 +60,18 @@ export function BottomNav() {
   const path = usePathname();
   const { cart, hydrated } = useApp();
   const count = cart.reduce((a, l) => a + l.qty, 0);
-  const explore = ["/marketplace", "/category", "/product", "/famous", "/wholesale", "/search", "/seller", "/market-prices"].some((p) => path.startsWith(p));
+  const cats = ["/categories", "/category", "/product", "/search", "/marketplace", "/wholesale", "/famous"].some((p) => path.startsWith(p));
   const items = [
     { href: "/", label: "হোম", icon: Home, on: path === "/" },
-    { href: "/marketplace", label: "এক্সপ্লোর", icon: Compass, on: explore },
+    { href: "/categories", label: "ক্যাটাগরি", icon: Grid2x2, on: cats },
+    { href: "/stores", label: "দোকান", icon: Store, on: path.startsWith("/stores") || path.startsWith("/seller/") },
     { href: "/cart", label: "কার্ট", icon: ShoppingBag, on: path.startsWith("/cart") || path.startsWith("/checkout"), badge: hydrated ? count : 0 },
     { href: "/account/orders", label: "অর্ডার", icon: Package, on: path.startsWith("/account/orders") },
     { href: "/account", label: "প্রোফাইল", icon: User, on: path === "/account" || path.startsWith("/login") || path.startsWith("/register") },
   ];
   return (
     <nav aria-label="মোবাইল মেনু" className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] lg:hidden">
-      <ul className="grid h-14 grid-cols-5">
+      <ul className="grid h-14 grid-cols-6">
         {items.map((it) => (
           <li key={it.href}>
             <Link href={it.href} aria-current={it.on ? "page" : undefined} className={cn("relative flex h-14 flex-col items-center justify-center gap-0.5 text-[11px]", it.on ? "font-semibold text-primary" : "text-muted")}>

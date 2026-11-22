@@ -1,9 +1,6 @@
 import Image from "next/image";
+import { HomeSections } from "@/components/home/Sections";
 import { HomeSearch } from "@/components/home/HomeSearch";
-import { NearbyProducts } from "@/components/home/NearbyProducts";
-import { RegionIndex } from "@/components/home/RegionIndex";
-import { StoresSection } from "@/components/home/Stores";
-import { PriceCompare } from "@/components/home/PriceCompare";
 
 const facts = ["সরাসরি উৎপাদক", "উৎস ও তারিখ স্পষ্ট", "খুচরা ও পাইকারি"];
 
@@ -44,33 +41,7 @@ export default function Home() {
         </ol>
       </section>
 
-      <NearbyProducts />
-
-      {/* Regions: an index, not cards */}
-      <section aria-labelledby="reg-h" className="container-x pt-12 lg:grid lg:grid-cols-[1fr_1.4fr] lg:gap-14 lg:pt-20">
-        <div className="lg:sticky lg:top-24 lg:self-start">
-          <p className="text-xs font-semibold tracking-[0.04em] text-primary">উপজেলা অনুযায়ী</p>
-          <h2 id="reg-h" className="text-[22px] leading-snug lg:text-[28px]">এলাকা ধরে খুঁজুন</h2>
-          <p className="text-[13.5px] leading-normal text-muted">কোন উপজেলার মাঠ, নদী ও বাগান থেকে পণ্য আসছে</p>
-        </div>
-        <div className="mt-4 lg:mt-0"><RegionIndex /></div>
-      </section>
-
-      <StoresSection />
-
-      {/* Retail & wholesale */}
-      <section aria-labelledby="pr-h" className="mt-12 border-y border-line bg-surface py-10 lg:mt-20 lg:py-16">
-        <div className="container-x lg:grid lg:grid-cols-[1fr_1.1fr] lg:gap-14">
-          <div className="mb-6 lg:mb-0">
-            <p className="text-xs font-semibold tracking-[0.04em] text-primary">খুচরা ও পাইকারি</p>
-            <h2 id="pr-h" className="text-[22px] leading-snug lg:text-[28px]">বেশি নিলে, কম দাম</h2>
-            <p className="max-w-sm text-[13.5px] leading-normal text-muted">দোকানদার, পাইকার ও বড় পরিবারের জন্য। ন্যূনতম পরিমাণ পূরণ হলেই পাইকারি দর।</p>
-          </div>
-          <PriceCompare />
-        </div>
-      </section>
-
-      <p className="container-x py-6 text-xs leading-relaxed text-muted">এই পাতার দাম, উৎপাদক, দোকান ও দূরত্ব নমুনা (ডেমো)। পণ্যের ছবি অস্থায়ী; আসল ছবি যুক্ত হবে। আপাতত শুধু ক্যাশ অন ডেলিভারি।</p>
+      <HomeSections />
     </>
   );
 }

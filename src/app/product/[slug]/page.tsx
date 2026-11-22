@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const more = related.length < 4 ? [...related, ...products.filter((x) => x.category !== p.category).slice(0, 4 - related.length)] : related;
   return (
     <div className="container-x py-6 sm:py-8">
-      <Breadcrumb items={[{ label: "হোম", href: "/" }, { label: c.bn, href: `/category/${c.slug}` }, { label: p.bn }]} />
+      <Breadcrumb items={[{ label: "হোম", href: "/" }, { label: c.bn, href: `/categories/${c.slug}` }, { label: p.bn }]} />
       <div className="mt-5"><ProductDetail p={p} /></div>
       <section className="mt-16"><SectionHead title="আরও পণ্য" /><div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{more.map((x) => <ProductCard key={x.slug} p={x} />)}</div></section>
     </div>

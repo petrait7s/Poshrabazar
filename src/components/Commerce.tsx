@@ -86,7 +86,7 @@ export function ProductCardSkeleton() {
 
 export function CategoryTile({ c, count }: { c: Category; count?: number }) {
   return (
-    <Link href={`/category/${c.slug}`} style={{ background: `linear-gradient(135deg, ${c.color}d0, #FFFFFF 78%)` }} className="surface-card group flex items-center gap-3 p-2.5">
+    <Link href={`/categories/${c.slug}`} style={{ background: `linear-gradient(135deg, ${c.color}d0, #FFFFFF 78%)` }} className="surface-card group flex items-center gap-3 p-2.5">
       <div className="h-14 w-14 shrink-0 overflow-hidden rounded">
         <ProductArt motif={c.motif} bg={c.color} accent="#C2410C" seed={c.slug} className="h-full w-full scale-150" />
       </div>
@@ -101,7 +101,7 @@ export function CategoryTile({ c, count }: { c: Category; count?: number }) {
 export function SellerCard({ slug }: { slug: string }) {
   const s = getSeller(slug)!;
   return (
-    <Link href={`/seller/${s.slug}`} className="surface-card group flex flex-col p-4">
+    <Link href={`/stores/${s.slug}`} className="surface-card group flex flex-col p-4">
       <div className="flex items-start gap-3">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded bg-ink font-bn text-lg text-white">{s.bn[0]}</div>
         <div className="min-w-0">

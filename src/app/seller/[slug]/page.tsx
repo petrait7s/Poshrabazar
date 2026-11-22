@@ -1,40 +1,4 @@
-import { notFound } from "next/navigation";
-import { MapPin, CalendarDays, ShoppingBag, MessageCircle } from "lucide-react";
-import { ProductCard, VerifiedBadge } from "@/components/Commerce";
-import { FollowButton } from "@/components/FollowButton";
-import { Breadcrumb, Stars } from "@/components/ui/misc";
-import { getSeller, products, sellers, offersFor, bn } from "@/data/catalog";
-
-export const generateStaticParams = () => sellers.filter((s) => s.slug !== "register").map((s) => ({ slug: s.slug }));
-
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const s = getSeller((await params).slug);
-  if (!s) notFound();
-  const list = products.filter((p) => offersFor(p).some((o) => o.sellerSlug === s.slug));
-  return (
-    <>
-      <section className="surface-band">
-        <div className="container-x py-8">
-          <Breadcrumb items={[{ label: "হোম", href: "/" }, { label: "বিক্রেতা" }, { label: s.bn }]} />
-          <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
-            <div className="grid h-20 w-20 shrink-0 place-items-center rounded-md bg-ink font-bn text-4xl text-white">{s.bn[0]}</div>
-            <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-3"><h1 className="font-bn text-3xl font-semibold">{s.bn}</h1></div>
-              <p className="mt-1 font-bn text-ink/70">{s.desc}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 font-bn text-sm text-ink/70">
-                <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{s.location}, {s.division}</span>
-                <span className="flex items-center gap-1"><CalendarDays className="h-4 w-4" />{bn(s.since)} থেকে</span>
-                <span>{s.kind}</span>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2"><FollowButton slug={s.slug} /><button className="inline-flex h-10 items-center gap-2 rounded-md border border-ink/25 bg-white/70 px-4 font-bn text-sm text-ink hover:bg-white"><MessageCircle className="h-4 w-4" />মেসেজ (শীঘ্রই)</button></div>
-          </div>
-        </div>
-      </section>
-      <div className="container-x py-10">
-        <h2 className="h-section mb-5">এই বিক্রেতার পণ্য <span className="text-base text-muted">({bn(list.length)})</span></h2>
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{list.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
-      </div>
-    </>
-  );
-}
+import { redirect } from "next/navigation";
+import { sellers } from "@/data/catalog";
+export const generateStaticParams = () => sellers.map((s) => ({ slug: s.slug }));
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) { redirect(`/stores/${(await params).slug}`); }

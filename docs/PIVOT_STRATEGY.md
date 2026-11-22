@@ -759,3 +759,14 @@ You replied "go with defaults". Recorded as follows.
 Removed from the demo front end: ratings, order counts, review counts, "verified" badges and the verified-sellers filter. The demo sellers still exist as clearly labelled sample data until real stores replace them. The seed no longer contains any seller, store, offer or rating.
 
 **Still to do, blocked or next:** Supabase project and credentials (auth, storage bucket for documents); Q1 and Q4 inputs; Phase 1B onward (UI over these tables). `place_order_v2` is dropped: the demo checkout still uses localStorage and is not affected.
+
+### 11.16 Phase 1B status (2026-11-22)
+
+Built on the sample catalogue (the front end is still not connected to Supabase):
+
+- Navigation: Home, Categories, Stores, Cart, Orders, Profile (six items); desktop header links Categories, Stores, Become a Seller.
+- `/categories/[slug]` with filters (product origin: Sylhet division, other districts, or one district; retail or wholesale; price; area) and price sorting. `/category/[slug]` redirects.
+- `/stores` directory (filter by category and product origin) and `/stores/[slug]` storefronts with tabs Products (grouped by category), About and sourcing, Updates (empty until real stores post). `/seller/[slug]` redirects.
+- Homepage rebuilt in plan order with the no-duplicate "used" list: category row, campaign (hidden, none configured), shop by category (no products), stores, produced in Sylhet, other districts by district, wholesale. "Fresh today" and "Recently added" stay hidden because they need real harvest and listing dates. The invented homepage stores were deleted.
+- Search also matches origin district and store name.
+- Not done: Become a Seller flow (1C), real data wiring (needs Supabase), product page origin/inventory/harvest date (needs real listings).

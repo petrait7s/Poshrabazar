@@ -17,7 +17,7 @@ export function Footer() {
           <Logo tone="white" withBangla />
           <p className="mt-4 max-w-xs font-bn text-[14px] leading-relaxed text-white/70">সিলেটের কৃষক, উৎপাদক, তরুণ উদ্যোক্তা ও ক্রেতাদের মার্কেটপ্লেস।</p>
         </div>
-        {col("Marketplace", [["সব ক্যাটাগরি", "/categories"], ["আঞ্চলিক পণ্য", "/famous"], ["পাইকারি বাজার", "/wholesale"], ["বিক্রেতা নিবন্ধন", "/seller/register"], ...categories.slice(0, 3).map((c) => [c.bn, `/category/${c.slug}`] as [string, string])])}
+        {col("Marketplace", [["সব ক্যাটাগরি", "/categories"], ["আঞ্চলিক পণ্য", "/famous"], ["পাইকারি বাজার", "/wholesale"], ["বিক্রেতা নিবন্ধন", "/seller/register"], ...categories.slice(0, 3).map((c) => [c.bn, `/categories/${c.slug}`] as [string, string])])}
         {col("বাজার", [["বাজারদর", "/market-prices"], ["বিক্রেতা নিবন্ধন", "/seller/register"]])}
         {col("Account", [["লগইন", "/login"], ["নিবন্ধন", "/register"], ["কার্ট", "/cart"], ["আমার অর্ডার", "/account/orders"], ["বিক্রেতা ড্যাশবোর্ড", "/seller/dashboard"], ["অ্যাডমিন", "/admin"]])}
       </div>
