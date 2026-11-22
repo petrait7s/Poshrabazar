@@ -16,7 +16,7 @@ export function AreaSection() {
   const [dist, setDist] = useState("");
   const d = divisions.find((x) => x.bn === div)!;
   const picked: Area = { division: div, district: dist };
-  const go = () => { setArea(picked); router.push(mode === "buy" ? "/marketplace" : "/seller/register"); };
+  const go = () => { setArea(picked); router.push(mode === "buy" ? "/marketplace" : "/become-a-seller"); };
 
   return (
     <section className="surface-band py-14 sm:py-16">

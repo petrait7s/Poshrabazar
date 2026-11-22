@@ -770,3 +770,13 @@ Built on the sample catalogue (the front end is still not connected to Supabase)
 - Homepage rebuilt in plan order with the no-duplicate "used" list: category row, campaign (hidden, none configured), shop by category (no products), stores, produced in Sylhet, other districts by district, wholesale. "Fresh today" and "Recently added" stay hidden because they need real harvest and listing dates. The invented homepage stores were deleted.
 - Search also matches origin district and store name.
 - Not done: Become a Seller flow (1C), real data wiring (needs Supabase), product page origin/inventory/harvest date (needs real listings).
+
+### 11.17 Phase 1C status (2026-11-22)
+
+Seller onboarding and the seller dashboard are built as a **preview**: the data layer `src/lib/applications.ts` mirrors the database functions of migration 20261122000001 (same states, same rules: evidence per seller type, approval needs an identity document, request-info and reject need a note, 5 updates a day, publishing needs an approved store and a stated origin) but stores everything in the browser's localStorage. Replace its function bodies with RPC calls when Supabase is connected; the pages stay.
+
+- `/become-a-seller`: five-step application (who, where, what, evidence, agreements); customers register first. `/seller/register` redirects.
+- `/become-a-seller/status`: submitted, in review, needs information (answer and resubmit), approved, rejected, withdrawn; withdraw; evidence list; history.
+- `/admin/applications`: review queue by status, evidence check, start review, approve, request information, reject, event log. Admin access is the demo login checkbox only.
+- `/seller/dashboard` (own store only): products with origin district required and publish gated by approval, sourcing entries, production note, store updates, orders placeholder that states the seller will not see customer phone or address. The invented demo dashboard was removed. Register no longer offers a seller role; a seller is a customer with an approved application.
+- Not in the preview: real file upload (only file names are kept), a public page for approved preview stores (storefronts are static from the sample catalogue), photos on updates, stock movements, orders. All need Supabase.

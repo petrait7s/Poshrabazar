@@ -1,62 +1,118 @@
 "use client";
-import { useState } from "react";
-import { BarChart3, Boxes, LayoutDashboard, ListChecks, PackageSearch, Tag, Plus } from "lucide-react";
-import { DashboardShell, Panel, Stat, StatusPill } from "@/components/DashboardShell";
-import { BarChart } from "@/components/Viz";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/form";
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { LayoutDashboard, ListChecks, Newspaper, PackageSearch, Store } from "lucide-react";
+import { DashboardShell, Panel, Stat } from "@/components/DashboardShell";
+import { Button, LinkButton } from "@/components/ui/button";
+import { Field, Input, Select } from "@/components/ui/form";
+import { EmptyState } from "@/components/ui/misc";
 import { useApp } from "@/components/providers";
-import { products, taka, bn, offersFor } from "@/data/catalog";
+import { bn, getProduct, products, taka } from "@/data/catalog";
+import { divisions } from "@/data/locations";
+import { originDistrict } from "@/data/market";
+import { addListing, addPost, getStore, postKinds, setListingStatus, sourceTypes, statusBn, updateStore, useApplications, type Post, type Source } from "@/lib/applications";
 
-const me = "dhaka-fresh-trade";
-const initial = products.filter((p) => offersFor(p).some((o) => o.sellerSlug === me)).map((p) => { const o = offersFor(p).find((x) => x.sellerSlug === me)!; return { slug: p.slug, name: p.bn, unit: p.unit, retail: o.retail, wholesale: o.wholesale, stock: o.stock, active: true }; });
-const initOrders = [
-  { id: "PB-DEMO-2210", who: "আরিফ হোসেন", item: "আলু × ৫০ কেজি", amt: 1550, st: "নতুন" }, { id: "PB-DEMO-2209", who: "রহমান স্টোর", item: "পেঁয়াজ × ৮০ কেজি", amt: 4320, st: "প্রস্তুত" },
-  { id: "PB-DEMO-2204", who: "সুমি আক্তার", item: "ডিম × ২ ডজন", amt: 330, st: "পথে" }, { id: "PB-DEMO-2198", who: "ঢাকা মুদি ভাণ্ডার", item: "সরিষার তেল × ২০ লিটার", amt: 4700, st: "সম্পন্ন" },
-];
-const flow = ["নতুন", "প্রস্তুত", "পথে", "সম্পন্ন"];
+const districts = divisions.flatMap((d) => d.districts);
+const num = (v: string) => Math.max(0, parseInt(v.replace(/\D/g, ""), 10) || 0);
+const listingBn = { pending: "খসড়া", active: "প্রকাশিত", paused: "বিরতি", rejected: "মডারেটর বাতিল" } as const;
 
 export default function Page() {
-  const { toast } = useApp();
+  const { user, toast } = useApp();
+  const { apps, ready } = useApplications();
   const [tab, setTab] = useState("overview");
-  const [list, setList] = useState(initial);
-  const [orders, setOrders] = useState(initOrders);
-  const nav = [{ id: "overview", label: "ওভারভিউ", icon: LayoutDashboard }, { id: "listings", label: "পণ্য তালিকা", icon: ListChecks }, { id: "prices", label: "দাম হালনাগাদ", icon: Tag }, { id: "inventory", label: "ইনভেন্টরি", icon: Boxes }, { id: "orders", label: "অর্ডার", icon: PackageSearch, badge: orders.filter((o) => o.st === "নতুন").length }, { id: "sales", label: "বিক্রয় সারসংক্ষেপ", icon: BarChart3 }];
-  const upd = (slug: string, patch: Partial<(typeof initial)[0]>) => setList((l) => l.map((x) => (x.slug === slug ? { ...x, ...patch } : x)));
-  const num = (v: string) => Math.max(0, parseInt(v.replace(/\D/g, ""), 10) || 0);
+  const [, bump] = useState(0);
+  const mine = useMemo(() => apps.filter((a) => a.owner === user?.phone).sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)), [apps, user]);
+  const a = mine.find((x) => x.status === "approved") ?? mine[0];
+  const approved = a?.status === "approved";
+  const run = (fn: () => void, ok?: string) => { try { fn(); bump((n) => n + 1); if (ok) toast(ok, "ok"); } catch (x) { toast((x as Error).message, "err"); } };
+
+  const [pf, setPf] = useState({ slug: "", retail: "", wholesale: "", moq: "1", stock: "", cost: "", origin: "", source: "" });
+  const [sf, setSf] = useState<Omit<Source, "id">>({ name: "", type: "own_farm", district: "", relationship: "we_grow", description: "" });
+  const [post, setPost] = useState<Pick<Post, "kind" | "title" | "body">>({ kind: "sourcing", title: "", body: "" });
+  const [prod, setProd] = useState<string | null>(null);
+
+  if (!user) return <div className="container-x py-10 font-bn">ড্যাশবোর্ড দেখতে <Link href="/login" className="text-primary underline">লগইন</Link> করুন।</div>;
+  if (ready && !a) return <div className="container-x max-w-xl py-10"><EmptyState title="আপনার এখনো দোকান নেই" text="বিক্রেতা হতে আবেদন করুন। অনুমোদনের পর এখানে নিজের দোকান চালাবেন।" action={<LinkButton href="/become-a-seller">বিক্রেতা হওয়ার আবেদন</LinkButton>} /></div>;
+  if (!a) return null;
+
+  const s = getStore(a.id);
+  const nav = [{ id: "overview", label: "ওভারভিউ", icon: LayoutDashboard }, { id: "products", label: "পণ্য", icon: ListChecks }, { id: "profile", label: "দোকানের পরিচিতি", icon: Store }, { id: "updates", label: "আপডেট", icon: Newspaper }, { id: "orders", label: "অর্ডার", icon: PackageSearch }];
+  const prodChoice = getProduct(pf.slug);
 
   return (
-    <DashboardShell title="বিক্রেতা ড্যাশবোর্ড" sub="ঢাকা ফ্রেশ ট্রেড (ডেমো অ্যাকাউন্ট)" nav={nav} active={tab} onChange={setTab} actions={<Button size="sm" onClick={() => toast("নতুন পণ্য যোগ — শীঘ্রই", "info")}><Plus className="h-4 w-4" />নতুন পণ্য</Button>}>
-      {tab === "overview" && (
-        <div className="space-y-5">
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4"><Stat label="এই মাসের বিক্রি" value="৳৪,২৮,৫০০" delta="+১২%" hint="গত মাসের তুলনায়" /><Stat label="অর্ডার" value={bn(orders.length * 31)} delta="+৮%" /><Stat label="সক্রিয় পণ্য" value={bn(list.filter((l) => l.active).length)} /><Stat label="গড় রেটিং" value="৪.৫" hint="১২৮ রিভিউ" /></div>
-          <div className="grid gap-5 lg:grid-cols-2">
-            <Panel title="সাপ্তাহিক বিক্রি (হাজার ৳)"><BarChart data={[42, 58, 51, 73, 66, 89, 61]} labels={["শনি", "রবি", "সোম", "মঙ্গ", "বুধ", "বৃহ", "শুক্র"]} /></Panel>
-            <Panel title="সাম্প্রতিক অর্ডার" action={<button onClick={() => setTab("orders")} className="font-bn text-sm text-primary">সব</button>}>
-              <ul className="divide-y divide-tint">{orders.slice(0, 4).map((o) => <li key={o.id} className="flex items-center justify-between py-2.5 font-bn text-sm"><span>{o.who}<span className="block text-xs text-muted">{o.item}</span></span><span className="flex items-center gap-3"><b className="tabular-nums">{taka(o.amt)}</b><StatusPill s={o.st} /></span></li>)}</ul>
-            </Panel>
-          </div>
-          <Panel title="পণ্যে আপনার র‍্যাংক (ডেমো)"><ul className="grid gap-2 sm:grid-cols-3">{list.slice(0, 3).map((l, i) => <li key={l.slug} className="rounded border border-line p-3 font-bn text-sm">{l.name}<b className="block text-xl text-ink">#{bn(i + 1)} <span className="text-xs font-normal text-muted">/ ৪ জন বিক্রেতা</span></b></li>)}</ul></Panel>
+    <DashboardShell title={a.storeNameBn} sub={`${statusBn[a.status]} · শুধু আপনার দোকানের তথ্য`} nav={nav} active={tab} onChange={setTab}>
+      {!approved && <div className="mb-5 rounded-md border border-accent/50 bg-accent-50 p-4 font-bn text-sm text-accent-700">দোকান এখনো অনুমোদিত নয় ({statusBn[a.status]})। পণ্য খসড়া করতে পারবেন, কিন্তু প্রকাশ করতে পারবেন না। <Link href="/become-a-seller/status" className="underline">আবেদনের অবস্থা</Link></div>}
+
+      {tab === "overview" && <div className="space-y-5">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <Stat label="পণ্য" value={bn(s.listings.length)} /><Stat label="প্রকাশিত" value={bn(s.listings.filter((l) => l.status === "active").length)} />
+          <Stat label="সংগ্রহের উৎস" value={bn(s.sources.length)} /><Stat label="আপডেট" value={bn(s.posts.length)} />
         </div>
-      )}
-      {tab === "listings" && (
-        <Panel title="পণ্য তালিকা"><div className="overflow-x-auto"><table className="tbl w-full min-w-[560px]"><thead><tr><th>পণ্য</th><th>খুচরা</th><th>পাইকারি</th><th>স্টক</th><th>স্ট্যাটাস</th><th /></tr></thead><tbody>{list.map((l) => <tr key={l.slug}><td className="font-bn text-[15px]">{l.name}</td><td className="tabular-nums">{taka(l.retail)}/{l.unit}</td><td className="tabular-nums">{taka(l.wholesale)}/{l.unit}</td><td className="font-bn tabular-nums">{bn(l.stock)}</td><td><StatusPill s={l.active ? "সক্রিয়" : "বিরতি"} /></td><td className="text-right"><Button size="sm" variant="outline" onClick={() => { upd(l.slug, { active: !l.active }); toast(l.active ? `${l.name} বিরতিতে` : `${l.name} সক্রিয়`, "info"); }}>{l.active ? "বিরতি" : "সক্রিয়"}</Button></td></tr>)}</tbody></table></div></Panel>
-      )}
-      {tab === "prices" && (
-        <Panel title="দৈনিক দাম হালনাগাদ" action={<Button size="sm" onClick={() => toast("দাম হালনাগাদ হয়েছে (ডেমো, সংরক্ষিত নয়)")}>সংরক্ষণ</Button>}>
-          <div className="grid gap-3 md:grid-cols-2">{list.map((l) => <div key={l.slug} className="rounded-md border border-line p-3"><p className="font-bn text-ink">{l.name} <span className="text-xs text-muted">/{l.unit}</span></p><div className="mt-2 grid grid-cols-2 gap-2"><label className="font-bn text-xs text-ink/60">খুচরা ৳<Input inputMode="numeric" value={l.retail} onChange={(e) => upd(l.slug, { retail: num(e.target.value) })} /></label><label className="font-bn text-xs text-ink/60">পাইকারি ৳<Input inputMode="numeric" value={l.wholesale} onChange={(e) => upd(l.slug, { wholesale: num(e.target.value) })} /></label></div></div>)}</div>
+        <Panel title="পরের ধাপ"><ol className="list-decimal space-y-1 pl-5 font-bn text-sm">
+          <li className={s.listings.length ? "text-muted line-through" : ""}>পণ্য যোগ করুন (দাম, মজুত, কোন জেলা থেকে আসে)</li>
+          <li className={s.sources.length ? "text-muted line-through" : ""}>পণ্য কোথা থেকে সংগ্রহ করেন তা লিখুন</li>
+          <li className={s.listings.some((l) => l.status === "active") ? "text-muted line-through" : ""}>অনুমোদনের পর পণ্য প্রকাশ করুন</li>
+        </ol></Panel>
+      </div>}
+
+      {tab === "products" && <div className="space-y-5">
+        <Panel title="নতুন পণ্য">
+          <form className="grid gap-3 p-4 sm:grid-cols-2" onSubmit={(e) => { e.preventDefault(); run(() => { addListing(a.id, { productSlug: pf.slug, retail: num(pf.retail) * 100, wholesale: num(pf.wholesale) * 100, moq: Math.max(1, num(pf.moq)), stock: num(pf.stock), unitCost: pf.cost ? num(pf.cost) * 100 : null, originDistrict: pf.origin, sourceId: pf.source }); setPf({ slug: "", retail: "", wholesale: "", moq: "1", stock: "", cost: "", origin: "", source: "" }); }, "পণ্য খসড়া হিসেবে যোগ হয়েছে"); }}>
+            <Field label="পণ্য"><Select className="h-11 w-full" value={pf.slug} onChange={(e) => { const p = getProduct(e.target.value); setPf({ ...pf, slug: e.target.value, origin: p ? originDistrict(p) : "" }); }}><option value="">বাছুন</option>{products.map((p) => <option key={p.slug} value={p.slug}>{p.bn}</option>)}</Select></Field>
+            <Field label={`পণ্য কোন জেলা থেকে আসে${prodChoice ? "" : ""}`}><Select className="h-11 w-full" value={pf.origin} onChange={(e) => setPf({ ...pf, origin: e.target.value })}><option value="">বাছুন</option>{districts.map((d) => <option key={d}>{d}</option>)}</Select></Field>
+            <Field label={`খুচরা দাম (৳${prodChoice ? `/${prodChoice.unit}` : ""})`}><Input inputMode="numeric" value={pf.retail} onChange={(e) => setPf({ ...pf, retail: e.target.value })} /></Field>
+            <Field label="পাইকারি দাম (ঐচ্ছিক)"><Input inputMode="numeric" value={pf.wholesale} onChange={(e) => setPf({ ...pf, wholesale: e.target.value })} /></Field>
+            <Field label="পাইকারির ন্যূনতম পরিমাণ"><Input inputMode="numeric" value={pf.moq} onChange={(e) => setPf({ ...pf, moq: e.target.value })} /></Field>
+            <Field label="মজুত"><Input inputMode="numeric" value={pf.stock} onChange={(e) => setPf({ ...pf, stock: e.target.value })} /></Field>
+            <Field label="কেনা দাম (৳, ঐচ্ছিক)" hint="লাভ-ক্ষতির হিসাবের জন্য"><Input inputMode="numeric" value={pf.cost} onChange={(e) => setPf({ ...pf, cost: e.target.value })} /></Field>
+            <Field label="সংগ্রহের উৎস (ঐচ্ছিক)"><Select className="h-11 w-full" value={pf.source} onChange={(e) => setPf({ ...pf, source: e.target.value })}><option value="">—</option>{s.sources.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</Select></Field>
+            <div className="sm:col-span-2"><Button type="submit">খসড়ায় যোগ করুন</Button></div>
+          </form>
         </Panel>
-      )}
-      {tab === "inventory" && (
-        <Panel title="ইনভেন্টরি"><ul className="divide-y divide-tint">{list.map((l) => <li key={l.slug} className="flex items-center justify-between gap-3 py-3"><div className="min-w-0 flex-1"><p className="font-bn">{l.name}</p><div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-tint"><div className={l.stock < 150 ? "h-full bg-red-500" : "h-full bg-primary"} style={{ width: `${Math.min(100, l.stock / 10)}%` }} /></div>{l.stock < 150 && <p className="mt-1 font-bn text-xs text-red-600">স্টক কম</p>}</div><div className="flex items-center gap-1"><Button size="icon" variant="outline" onClick={() => upd(l.slug, { stock: Math.max(0, l.stock - 10) })} aria-label="-10">−</Button><span className="w-16 text-center font-semibold tabular-nums">{l.stock}</span><Button size="icon" variant="outline" onClick={() => upd(l.slug, { stock: l.stock + 10 })} aria-label="+10">+</Button></div></li>)}</ul></Panel>
-      )}
-      {tab === "orders" && (
-        <Panel title="অর্ডার"><div className="overflow-x-auto"><table className="tbl w-full min-w-[520px]"><thead><tr><th>অর্ডার</th><th>ক্রেতা</th><th>পণ্য</th><th>মোট</th><th>স্ট্যাটাস</th><th /></tr></thead><tbody>{orders.map((o) => <tr key={o.id}><td className="text-xs">{o.id}</td><td className="font-bn">{o.who}</td><td className="font-bn">{o.item}</td><td className="tabular-nums">{taka(o.amt)}</td><td><StatusPill s={o.st} /></td><td className="text-right">{o.st !== "সম্পন্ন" && <Button size="sm" onClick={() => { const n = flow[flow.indexOf(o.st) + 1]; setOrders(orders.map((x) => (x.id === o.id ? { ...x, st: n } : x))); toast(`অবস্থা: ${n}`); }}>পরবর্তী ধাপ</Button>}</td></tr>)}</tbody></table></div></Panel>
-      )}
-      {tab === "sales" && (
-        <div className="space-y-5"><div className="grid grid-cols-2 gap-3 lg:grid-cols-4"><Stat label="আজকের বিক্রি" value="৳৬১,২০০" /><Stat label="সাপ্তাহিক" value="৳৪,৪০,০০০" /><Stat label="গড় অর্ডার মূল্য" value="৳১,৩৮০" /><Stat label="ফেরত হার" value="১.৮%" /></div>
-          <Panel title="মাসিক বিক্রি (লাখ ৳)"><BarChart height={200} data={[2.1, 2.6, 3.0, 2.8, 3.6, 4.3]} labels={["জুন", "জুলাই", "আগস্ট", "সেপ্টে", "অক্টো", "নভে"]} /></Panel></div>
-      )}
+        <Panel title={`আপনার পণ্য (${bn(s.listings.length)})`}>
+          {!s.listings.length ? <p className="p-4 font-bn text-sm text-muted">এখনো কোনো পণ্য নেই।</p> : (
+            <ul className="divide-y divide-tint">{s.listings.map((l) => { const p = getProduct(l.productSlug)!; return (
+              <li key={l.id} className="flex flex-wrap items-center justify-between gap-3 p-4 font-bn text-sm">
+                <span><b className="text-base">{p.bn}</b><span className="block text-xs text-muted">{taka(l.retail / 100)}/{p.unit} · মজুত {bn(l.stock)} · উৎস {l.originDistrict}{l.unitCost != null && ` · কেনা ${taka(l.unitCost / 100)}`}</span></span>
+                <span className="flex items-center gap-2"><span className="rounded-sm bg-tint px-2 py-1 text-xs">{listingBn[l.status]}</span>
+                  {l.status !== "active" && l.status !== "rejected" && <Button size="sm" onClick={() => run(() => setListingStatus(a.id, l.id, "active", approved), "প্রকাশিত")}>প্রকাশ</Button>}
+                  {l.status === "active" && <Button size="sm" variant="outline" onClick={() => run(() => setListingStatus(a.id, l.id, "paused", approved))}>বিরতি</Button>}</span>
+              </li>); })}</ul>)}
+        </Panel>
+      </div>}
+
+      {tab === "profile" && <div className="space-y-5">
+        <Panel title="পণ্য কোথা থেকে আসে (সংগ্রহের উৎস)">
+          <ul className="divide-y divide-tint">{s.sources.map((x) => <li key={x.id} className="flex items-center justify-between gap-3 p-4 font-bn text-sm"><span><b>{x.name}</b><span className="block text-xs text-muted">{sourceTypes[x.type]} · {x.district || "—"} · {x.relationship === "we_grow" ? "আমরা ফলাই" : "যাদের কাছ থেকে কিনি"}</span></span><Button size="sm" variant="outline" onClick={() => run(() => updateStore(a.id, (st) => ({ ...st, sources: st.sources.filter((y) => y.id !== x.id) })))}>মুছুন</Button></li>)}</ul>
+          <form className="grid gap-3 border-t border-tint p-4 sm:grid-cols-2" onSubmit={(e) => { e.preventDefault(); if (sf.name.trim().length < 2) { toast("উৎসের নাম দিন", "err"); return; } run(() => { updateStore(a.id, (st) => ({ ...st, sources: [...st.sources, { ...sf, id: crypto.randomUUID() }] })); setSf({ ...sf, name: "", description: "" }); }, "যোগ হয়েছে"); }}>
+            <Field label="উৎসের নাম"><Input value={sf.name} onChange={(e) => setSf({ ...sf, name: e.target.value })} /></Field>
+            <Field label="ধরন"><Select className="h-11 w-full" value={sf.type} onChange={(e) => setSf({ ...sf, type: e.target.value as Source["type"] })}>{Object.entries(sourceTypes).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</Select></Field>
+            <Field label="জেলা"><Select className="h-11 w-full" value={sf.district} onChange={(e) => setSf({ ...sf, district: e.target.value })}><option value="">বাছুন</option>{districts.map((d) => <option key={d}>{d}</option>)}</Select></Field>
+            <Field label="সম্পর্ক"><Select className="h-11 w-full" value={sf.relationship} onChange={(e) => setSf({ ...sf, relationship: e.target.value as Source["relationship"] })}><option value="we_grow">আমরা ফলাই / তৈরি করি</option><option value="we_buy_from">এদের কাছ থেকে কিনি</option></Select></Field>
+            <div className="sm:col-span-2"><Button type="submit">উৎস যোগ করুন</Button></div>
+          </form>
+        </Panel>
+        <Panel title="কীভাবে ফলানো বা তৈরি হয়">
+          <div className="space-y-3 p-4"><textarea className="min-h-28 w-full rounded-md border border-line bg-white p-3 font-bn text-[15px]" value={prod ?? s.production} onChange={(e) => setProd(e.target.value)} />
+            <p className="font-bn text-xs text-muted">এটি “বিক্রেতার নিজের বিবরণ” হিসেবে দেখানো হবে। জৈব, রাসায়নিকমুক্ত, ফরমালিনমুক্ত ইত্যাদি দাবি প্রমাণ ছাড়া লিখবেন না।</p>
+            <Button onClick={() => run(() => updateStore(a.id, (st) => ({ ...st, production: prod ?? st.production })), "সংরক্ষিত")}>সংরক্ষণ</Button></div>
+        </Panel>
+      </div>}
+
+      {tab === "updates" && <div className="space-y-5">
+        <Panel title="নতুন আপডেট">
+          <form className="space-y-3 p-4" onSubmit={(e) => { e.preventDefault(); if (!approved) { toast("অনুমোদনের পর আপডেট দিতে পারবেন", "err"); return; } run(() => { addPost(a.id, post); setPost({ kind: post.kind, title: "", body: "" }); }, "আপডেট প্রকাশিত"); }}>
+            <Field label="ধরন"><Select className="h-11 w-full" value={post.kind} onChange={(e) => setPost({ ...post, kind: e.target.value as Post["kind"] })}>{Object.entries(postKinds).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</Select></Field>
+            <Field label="শিরোনাম"><Input value={post.title} onChange={(e) => setPost({ ...post, title: e.target.value })} /></Field>
+            <Field label="বিবরণ"><textarea className="min-h-24 w-full rounded-md border border-line bg-white p-3 font-bn text-[15px]" value={post.body} onChange={(e) => setPost({ ...post, body: e.target.value })} /></Field>
+            <p className="font-bn text-xs text-muted">দিনে সর্বোচ্চ ৫টি। প্রিভিউতে ছবি যোগ করা যায় না। আপডেট শুধু আপনার দোকানের পাতায় দেখা যায়।</p>
+            <Button type="submit" disabled={!approved}>প্রকাশ করুন</Button>
+          </form>
+        </Panel>
+        <Panel title={`আপনার আপডেট (${bn(s.posts.length)})`}>{!s.posts.length ? <p className="p-4 font-bn text-sm text-muted">এখনো কোনো আপডেট নেই।</p> : <ul className="divide-y divide-tint">{s.posts.map((p) => <li key={p.id} className="p-4 font-bn text-sm"><span className="text-xs text-muted">{postKinds[p.kind]} · {new Date(p.at).toLocaleString("bn-BD")}</span><b className="block text-base">{p.title}</b>{p.body && <p>{p.body}</p>}</li>)}</ul>}</Panel>
+      </div>}
+
+      {tab === "orders" && <Panel title="অর্ডার"><div className="p-4"><EmptyState title="এখনো কোনো অর্ডার নেই" text="অর্ডার এলে এখানে ক্রেতার প্রথম নাম, এলাকা ও পণ্য দেখবেন। ফোন নম্বর ও ঠিকানা আপনি দেখবেন না, কারণ ডেলিভারি পসরাবাজার করে। আপনি পণ্য প্রস্তুত করে পসরাবাজারের হাতে তুলে দেবেন।" /></div></Panel>}
     </DashboardShell>
   );
 }

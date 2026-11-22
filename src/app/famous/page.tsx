@@ -11,7 +11,7 @@ export default function Page() {
   return (
     <>
       <PillarHero pillar="marketplace" crumbs={[{ label: "হোম", href: "/" }, { label: "মার্কেটপ্লেস", href: "/marketplace" }, { label: "বিখ্যাত পণ্য" }]} title="যার যার এলাকার সেরা — সারা দেশে" sub="দই, মিষ্টি, শুটকি, চা, জামদানি, শীতলপাটি — যে পণ্য এলাকাকে বিখ্যাত করেছে, তা এখন দেশের যেকোনো জায়গায় পাঠানো যায়।">
-        <LinkButton href="/seller/register" variant="accent">আপনার এলাকার পণ্য বিক্রি করুন</LinkButton>
+        <LinkButton href="/become-a-seller" variant="accent">আপনার এলাকার পণ্য বিক্রি করুন</LinkButton>
       </PillarHero>
       <div className="container-x space-y-12 py-10">
         {groups.map(({ d, items }) => (

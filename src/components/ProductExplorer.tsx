@@ -111,7 +111,7 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
         ) : rows.length ? (
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">{rows.map(({ p }) => <ProductCard key={p.slug} p={p as Product} />)}</div>
         ) : (
-          <EmptyState title="কোনো পণ্য পাওয়া যায়নি" text="ফিল্টার বদলে বা রিসেট করে আবার চেষ্টা করুন।" action={<div className="flex flex-wrap justify-center gap-2"><Button onClick={reset} variant="outline">ফিল্টার রিসেট</Button>{area.division && <Link href="/seller/register" className="inline-flex h-11 items-center rounded-md bg-primary px-5 font-bn text-[15px] text-white hover:bg-primary-700">এই এলাকায় বিক্রেতা হোন</Link>}</div>} />
+          <EmptyState title="কোনো পণ্য পাওয়া যায়নি" text="ফিল্টার বদলে বা রিসেট করে আবার চেষ্টা করুন।" action={<div className="flex flex-wrap justify-center gap-2"><Button onClick={reset} variant="outline">ফিল্টার রিসেট</Button>{area.division && <Link href="/become-a-seller" className="inline-flex h-11 items-center rounded-md bg-primary px-5 font-bn text-[15px] text-white hover:bg-primary-700">এই এলাকায় বিক্রেতা হোন</Link>}</div>} />
         )}
       </div>
 

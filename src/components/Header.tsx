@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/categories", label: "ক্যাটাগরি" },
   { href: "/stores", label: "দোকান" },
-  { href: "/seller/register", label: "বিক্রেতা হোন" },
+  { href: "/become-a-seller", label: "বিক্রেতা হোন" },
 ];
 
 export function Header() {

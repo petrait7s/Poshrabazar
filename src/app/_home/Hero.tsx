@@ -30,7 +30,7 @@ export function Hero() {
           <SearchBar size="lg" className="mt-7 hidden max-w-xl sm:block" />
           <div className="mt-7 flex flex-wrap gap-3 sm:mt-5">
             <LinkButton href="/marketplace" variant="dark" size="lg">পণ্য খুঁজুন <ArrowRight className="h-4 w-4" /></LinkButton>
-            <LinkButton href="/seller/register" variant="outline" size="lg">বিক্রেতা হিসেবে যোগ দিন</LinkButton>
+            <LinkButton href="/become-a-seller" variant="outline" size="lg">বিক্রেতা হিসেবে যোগ দিন</LinkButton>
           </div>
           <dl className="mt-9 grid max-w-xl grid-cols-3 gap-2.5 sm:gap-3">
             {[["এক পণ্য, বহু বিক্রেতা", "One product, many sellers"], ["খুচরা + পাইকারি", "Retail + wholesale"], ["ক্যাশ অন ডেলিভারি", "Online payment coming later"]].map(([a, b]) => (
