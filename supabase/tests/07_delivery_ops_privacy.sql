@@ -68,3 +68,20 @@ begin
   perform t.eq((select status from order_deliveries where order_id = o)::text, 'failed', 'delivery marked failed');
   perform t.eq((select settled_at from order_deliveries where order_id = o), null::timestamptz, 'no revenue for a failed delivery');
 end $$;
+
+-- SEARCH
+do $$
+begin
+  perform t.as_user('buyer2');
+  perform t.ok((select count(*) from search_listings('আম')) >= 1, 'search finds a product by name');
+  perform t.eq((select count(*) from search_listings('আম', null, null, null, t.id('s_p1')))::int, 0, 'store filter narrows results');
+  perform t.ok((select count(*) from search_listings(null, null, null, null, null, true)) >= 1, 'wholesale filter works');
+  perform t.ok((select count(*) from search_stores('R1')) = 1, 'search finds a store by name');
+  perform t.as_service();
+  update stores set suspended_at = now(), suspended_reason = 'test' where id = t.id('s_r1');
+  perform t.as_user('buyer2');
+  perform t.eq((select count(*) from search_stores('R1'))::int, 0, 'suspended stores leave search');
+  perform t.eq((select count(*) from search_listings(null, null, null, null, t.id('s_r1')))::int, 0, 'their products leave search too');
+  perform t.as_service();
+  update stores set suspended_at = null, suspended_reason = null where id = t.id('s_r1');
+end $$;
