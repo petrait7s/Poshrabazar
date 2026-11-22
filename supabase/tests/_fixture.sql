@@ -30,10 +30,10 @@ begin
     ('outsider', '00000000-0000-0000-0000-00000000d001'), ('admin', '00000000-0000-0000-0000-00000000e001');
   insert into user_roles (user_id, role) values (t.id('admin'), 'admin');
 
-  insert into stores (slug, type, name_bn, upazila_id, status) values ('p1', 'producer', 'P1', u1, 'verified') returning id into s_p1;
-  insert into stores (slug, type, name_bn, upazila_id, status) values ('p2', 'producer', 'P2', u2, 'verified') returning id into s_p2;
-  insert into stores (slug, type, name_bn, upazila_id, status) values ('r1', 'reseller', 'R1', u1, 'verified') returning id into s_r1;
-  insert into stores (slug, type, name_bn, upazila_id, status) values ('r2', 'reseller', 'R2', u1, 'verified') returning id into s_r2;
+  insert into stores (slug, type, name_bn, upazila_id, status, published) values ('p1', 'producer', 'P1', u1, 'verified', true) returning id into s_p1;
+  insert into stores (slug, type, name_bn, upazila_id, status, published) values ('p2', 'producer', 'P2', u2, 'verified', true) returning id into s_p2;
+  insert into stores (slug, type, name_bn, upazila_id, status, published) values ('r1', 'reseller', 'R1', u1, 'verified', true) returning id into s_r1;
+  insert into stores (slug, type, name_bn, upazila_id, status, published) values ('r2', 'reseller', 'R2', u1, 'verified', true) returning id into s_r2;
   insert into store_members values (s_p1, t.id('prod1'), 'owner'), (s_p2, t.id('prod2'), 'owner'), (s_r1, t.id('res1'), 'owner'), (s_r2, t.id('res2'), 'owner');
   insert into t.ids values ('s_p1', s_p1), ('s_p2', s_p2), ('s_r1', s_r1), ('s_r2', s_r2);
 

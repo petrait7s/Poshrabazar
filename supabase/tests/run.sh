@@ -2,7 +2,7 @@
 # Database tests. Needs a reachable PostgreSQL 15+ (PGHOST/PGPORT/PGUSER/PGPASSWORD as usual) and permission to create databases.
 #   npm run db:test
 # Steps: (0) -, (1) apply all migrations to a scratch DB and run every tests/NN_*.sql; (2) apply, then roll back the
-# three pivot migrations on a second DB and prove the schema is identical to the pre-pivot schema.
+# pivot migrations on a second DB and prove the schema is identical to the pre-pivot schema.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PGOPTIONS='--client-min-messages=warning'
@@ -10,7 +10,7 @@ A=pb_test_up; B=pb_test_roll
 psql_() { psql -X -q -v ON_ERROR_STOP=1 "$@"; }
 fresh() { psql -X -q -d postgres -c "drop database if exists $1" -c "create database $1"; }
 legacy=(migrations/20261120000001_schema.sql migrations/20261120000002_security_logic.sql migrations/20261120000003_artisan_famous.sql)
-pivot=(migrations/20261121000001_pivot_core.sql migrations/20261121000002_pivot_orders_finance.sql migrations/20261121000003_retire_legacy_pillars.sql)
+pivot=(migrations/20261121000001_pivot_core.sql migrations/20261121000002_pivot_orders_finance.sql migrations/20261121000003_retire_legacy_pillars.sql migrations/20261122000001_seller_onboarding.sql)
 
 echo "== 1. migrations + tests"
 fresh $A
@@ -29,6 +29,7 @@ psql_ -d $B -f tests/_stub.sql
 for f in "${legacy[@]}"; do psql_ -d $B -f "$f"; done
 psql_ -d $B -At -f tests/schema_snapshot.sql > /tmp/pb_schema_before.txt
 for f in "${pivot[@]}"; do psql_ -d $B -f "$f"; done
+psql_ -d $B -f rollbacks/20261122000001_seller_onboarding_down.sql
 psql_ -d $B -f rollbacks/20261121000003_retire_legacy_pillars_down.sql
 psql_ -d $B -f rollbacks/20261121000002_pivot_orders_finance_down.sql
 psql_ -d $B -f rollbacks/20261121000001_pivot_core_down.sql
