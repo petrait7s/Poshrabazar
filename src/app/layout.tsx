@@ -12,7 +12,7 @@ const bangla = Tiro_Bangla({ subsets: ["bengali"], weight: "400", variable: "--f
 
 export const metadata: Metadata = {
   title: { default: "PosraBazar · পসরাবাজার", template: "%s · PosraBazar" },
-  description: "সিলেটের কৃষক, উৎপাদক, শিক্ষার্থী উদ্যোক্তা ও ক্রেতাদের মার্কেটপ্লেস। A community marketplace for farmers, producers and local entrepreneurs in Sylhet, Bangladesh.",
+  description: "সিলেটের কৃষক, উৎপাদক, তরুণ উদ্যোক্তা ও ক্রেতাদের মার্কেটপ্লেস। A community marketplace for farmers, producers and local entrepreneurs in Sylhet, Bangladesh.",
 };
 export const viewport: Viewport = { themeColor: "#C2410C", width: "device-width", initialScale: 1 };
 

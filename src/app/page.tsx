@@ -17,7 +17,7 @@ export default function Home() {
           <h1 id="hero-h" className="mt-3 text-[32px] leading-[1.38] tracking-[-0.01em] lg:text-[52px] lg:leading-[1.3]">
             স্থানীয় পণ্য,<br />স্থানীয় মানুষের<br /><span className="text-primary">কাছ থেকে</span>
           </h1>
-          <p className="mt-3 max-w-[320px] text-[15px] leading-[1.65] text-stone-600 lg:max-w-md lg:text-base">কৃষক, উৎপাদক ও শিক্ষার্থী উদ্যোক্তাদের পণ্য। উৎস দেখে, দাম মিলিয়ে কিনুন।</p>
+          <p className="mt-3 max-w-[320px] text-[15px] leading-[1.65] text-stone-600 lg:max-w-md lg:text-base">কৃষক, উৎপাদক ও তরুণ উদ্যোক্তাদের পণ্য। উৎস দেখে, দাম মিলিয়ে কিনুন।</p>
           <div className="mt-6 lg:max-w-md"><HomeSearch /></div>
           <ol className="mt-8 hidden grid-cols-3 gap-3 lg:grid lg:max-w-md">
             {facts.map((f, i) => (

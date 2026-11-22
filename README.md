@@ -1,6 +1,6 @@
 # PosraBazar · পসরাবাজার
 
-> **Pivot in progress (branch `pivot/sylhet-marketplace`).** A community marketplace for Sylhet's farmers, producers, student entrepreneurs and buyers. See `docs/PIVOT_STRATEGY.md`. The previous concept is preserved on `main` and in tag `v0-posrabazar-concept`.
+> **Pivot in progress (branch `pivot/sylhet-marketplace`).** A community marketplace for Sylhet's farmers, producers, young entrepreneurs and buyers. See `docs/PIVOT_STRATEGY.md`. The previous concept is preserved on `main` and in tag `v0-posrabazar-concept`.
 
 Next.js (App Router) + TypeScript + Tailwind. Fonts: Inter + Tiro Bangla (via `next/font`).
 

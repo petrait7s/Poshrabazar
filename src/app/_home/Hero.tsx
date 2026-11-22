@@ -25,8 +25,8 @@ export function Hero() {
         <div className="animate-rise">
           <p className="eyebrow"><T bn="সিলেট থেকে শুরু" en="Starting in Sylhet" /></p>
           <h1 className="mt-4 font-bn text-[2.6rem] font-semibold leading-[1.15] !text-ink sm:text-6xl">মাঠ থেকে সরাসরি,<br />আপনার <span className="text-primary">এলাকার বাজার</span></h1>
-          <p className="mt-5 max-w-xl font-bn text-lg font-medium text-ink sm:text-xl">কৃষক, উৎপাদক, শিক্ষার্থী উদ্যোক্তা ও ক্রেতা—সবাই এক বাজারে।</p>
-          <p className="mt-1 text-sm text-ink/75">Farmers, producers, student entrepreneurs and buyers — in one marketplace.</p>
+          <p className="mt-5 max-w-xl font-bn text-lg font-medium text-ink sm:text-xl">কৃষক, উৎপাদক, তরুণ উদ্যোক্তা ও ক্রেতা—সবাই এক বাজারে।</p>
+          <p className="mt-1 text-sm text-ink/75">Farmers, producers, young entrepreneurs and buyers — in one marketplace.</p>
           <SearchBar size="lg" className="mt-7 hidden max-w-xl sm:block" />
           <div className="mt-7 flex flex-wrap gap-3 sm:mt-5">
             <LinkButton href="/marketplace" variant="dark" size="lg">পণ্য খুঁজুন <ArrowRight className="h-4 w-4" /></LinkButton>
