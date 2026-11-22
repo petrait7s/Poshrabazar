@@ -19,13 +19,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
             <div className="grid h-20 w-20 shrink-0 place-items-center rounded-md bg-ink font-bn text-4xl text-white">{s.bn[0]}</div>
             <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-3"><h1 className="font-bn text-3xl font-semibold">{s.bn}</h1>{s.verified ? <VerifiedBadge /> : <span className="rounded-sm bg-accent-50 px-2 py-1 font-bn text-xs text-accent-700">যাচাই চলমান</span>}</div>
+              <div className="flex flex-wrap items-center gap-3"><h1 className="font-bn text-3xl font-semibold">{s.bn}</h1></div>
               <p className="mt-1 font-bn text-ink/70">{s.desc}</p>
               <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 font-bn text-sm text-ink/70">
                 <span className="flex items-center gap-1"><MapPin className="h-4 w-4" />{s.location}, {s.division}</span>
-                <span className="flex items-center gap-1"><ShoppingBag className="h-4 w-4" />{bn(s.orders)}+ অর্ডার</span>
                 <span className="flex items-center gap-1"><CalendarDays className="h-4 w-4" />{bn(s.since)} থেকে</span>
-                <span>{s.kind}</span><Stars value={s.rating} />
+                <span>{s.kind}</span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2"><FollowButton slug={s.slug} /><button className="inline-flex h-10 items-center gap-2 rounded-md border border-ink/25 bg-white/70 px-4 font-bn text-sm text-ink hover:bg-white"><MessageCircle className="h-4 w-4" />মেসেজ (শীঘ্রই)</button></div>

@@ -12,7 +12,7 @@ const buyers: Member[] = [
   { slug: "rahman-store", name: "রহমান স্টোর", role: "buyer", location: "খুলনা", verified: false, bio: "ছোট দোকানদার, পাইকারি কিনি।", followers: 31 },
 ];
 export const members: Member[] = [
-  ...sellers.map((s) => ({ slug: s.slug, name: s.bn, role: "seller" as const, location: s.location, verified: s.verified, bio: s.desc, followers: Math.round(s.orders / 6) })),
+  ...sellers.map((s) => ({ slug: s.slug, name: s.bn, role: "seller" as const, location: s.location, verified: false, bio: s.desc, followers: 0 })),
   ...buyers,
 ];
 export const getMember = (slug: string) => members.find((m) => m.slug === slug);

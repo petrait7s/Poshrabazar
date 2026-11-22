@@ -3,9 +3,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { BadgeCheck, Heart, MapPin, ShoppingBasket, Sprout, Truck, Wallet, Award } from "lucide-react";
 import { ProductArt } from "@/components/ProductArt";
-import { Price, VerifiedBadge, WishButton } from "@/components/Commerce";
+import { Price, WishButton } from "@/components/Commerce";
 import { QtyStepper } from "@/components/QtyStepper";
-import { Stars, Tabs } from "@/components/ui/misc";
+import { Tabs } from "@/components/ui/misc";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/components/providers";
 import { bn, genitive, getSeller, offersFor, taka, type Product } from "@/data/catalog";
@@ -20,9 +20,8 @@ export function ProductDetail({ p }: { p: Product }) {
   const [mode, setMode] = useState<"retail" | "wholesale">("retail");
   const [view, setView] = useState(0);
   const [qty, setQty] = useState<Record<string, number>>({});
-  const [sortBy, setSortBy] = useState<"price" | "rating">("price");
   const base = offersFor(p);
-  const offers = [...base].sort((a, b) => (near(b.sellerSlug) ? 1 : 0) - (near(a.sellerSlug) ? 1 : 0) || (sortBy === "price" ? a[mode] - b[mode] : b.rating - a.rating));
+  const offers = [...base].sort((a, b) => (near(b.sellerSlug) ? 1 : 0) - (near(a.sellerSlug) ? 1 : 0) || a[mode] - b[mode]);
   const best = [...base].sort((a, b) => a[mode] - b[mode])[0];
   const wished = wishlist.includes(p.slug);
   const q = (s: string) => qty[s] ?? (mode === "wholesale" ? p.minWholesale : 1);
@@ -89,7 +88,6 @@ export function ProductDetail({ p }: { p: Product }) {
             <div role="group" className="inline-flex overflow-hidden rounded-md border border-ink/25 bg-white">
               {(["retail", "wholesale"] as const).map((m) => <button key={m} aria-pressed={mode === m} onClick={() => setMode(m)} className={cn("px-3.5 py-1.5 font-bn text-sm", mode === m ? "bg-ink text-white" : "text-ink hover:bg-tint")}>{m === "retail" ? "খুচরা" : "পাইকারি"}</button>)}
             </div>
-            <select aria-label="Sort" value={sortBy} onChange={(e) => setSortBy(e.target.value as "price" | "rating")} className="h-9 surface rounded-md px-2 font-bn text-sm"><option value="price">দাম অনুযায়ী</option><option value="rating">রেটিং অনুযায়ী</option></select>
           </div>
         </div>
 
@@ -101,7 +99,7 @@ export function ProductDetail({ p }: { p: Product }) {
                 <tr key={o.sellerSlug}>
                   <td>
                     <Link href={`/seller/${s.slug}`} className="font-bn text-[15px] font-medium text-ink hover:text-primary">{s.bn}</Link>
-                    <div className="mt-0.5 flex items-center gap-2">{s.verified && <VerifiedBadge small />}{near(o.sellerSlug) && <span className="rounded-sm bg-accent-50 px-1.5 py-0.5 font-bn text-[11px] text-accent-700">আপনার এলাকায়</span>}<Stars value={o.rating} count={o.reviews} /></div>
+                    <div className="mt-0.5 flex items-center gap-2">{near(o.sellerSlug) && <span className="rounded-sm bg-accent-50 px-1.5 py-0.5 font-bn text-[11px] text-accent-700">আপনার এলাকায়</span>}</div>
                   </td>
                   <td className="font-bn"><span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3 text-muted" />{s.location}</span></td>
                   <td><span className="inline-flex items-center gap-1 font-semibold text-ink"><Award className="h-3.5 w-3.5 text-accent" />{o.grade}</span></td>
@@ -122,7 +120,7 @@ export function ProductDetail({ p }: { p: Product }) {
                 <div><Link href={`/seller/${s.slug}`} className="font-bn text-base font-medium text-ink">{s.bn}</Link><p className="flex items-center gap-1 font-bn text-xs text-ink/60"><MapPin className="h-3 w-3" />{s.location} · গ্রেড {o.grade}</p></div>
                 {isBest && <span className="rounded-sm bg-primary px-1.5 py-0.5 font-bn text-[11px] text-white">সেরা দাম</span>}
               </div>
-              <div className="mt-2 flex items-center gap-2">{s.verified && <VerifiedBadge small />}<Stars value={o.rating} count={o.reviews} /></div>
+              <div className="mt-2 flex items-center gap-2"></div>
               <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
                 <div className={cn("rounded border p-2", mode === "retail" ? "border-primary bg-primary-50" : "border-line")}><p className="font-bn text-[10px] text-muted">খুচরা</p><Price value={o.retail} unit={p.unit} size="sm" /></div>
                 <div className={cn("rounded border p-2", mode === "wholesale" ? "border-primary bg-primary-50" : "border-line")}><p className="font-bn text-[10px] text-muted">পাইকারি · MOQ {bn(o.minWholesale)}</p><Price value={o.wholesale} unit={p.unit} size="sm" /></div>
@@ -135,7 +133,6 @@ export function ProductDetail({ p }: { p: Product }) {
       <section className="mt-14">
         <Tabs tabs={[
           { id: "d", label: "বিবরণ", content: <div className="max-w-2xl space-y-3 font-bn text-[15px] text-ink/80"><p>{p.desc}</p><p className="flex items-center gap-2 text-sm"><Sprout className="h-4 w-4 text-primary" />উৎস: {p.origin}{p.season && ` · মৌসুম: ${p.season}`}</p></div> },
-          { id: "r", label: `রিভিউ (${bn(base.reduce((a, o) => a + o.reviews, 0))})`, content: <div className="grid gap-3 md:grid-cols-2">{base.slice(0, 4).map((o) => <div key={o.sellerSlug} className="surface rounded-md p-4"><div className="flex justify-between"><b className="font-bn text-ink">{getSeller(o.sellerSlug)!.bn}</b><Stars value={o.rating} count={o.reviews} /></div><p className="mt-2 font-bn text-sm text-ink/70">এই বিক্রেতার {p.bn} নিয়ে যাচাইকৃত ক্রেতাদের গড় রেটিং। (ডেমো)</p></div>)}</div> },
           { id: "s", label: "ডেলিভারি ও পেমেন্ট", content: <ul className="max-w-2xl list-disc space-y-2 pl-5 font-bn text-[15px] text-ink/80"><li>এখন শুধু ক্যাশ অন ডেলিভারি (COD)। অনলাইন পেমেন্ট পরে যুক্ত হবে।</li><li>এই প্রিভিউ সংস্করণে কোনো বাস্তব অর্ডার বা পেমেন্ট প্রক্রিয়া হয় না।</li></ul> },
         ]} />
       </section>

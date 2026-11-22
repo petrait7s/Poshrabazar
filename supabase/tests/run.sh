@@ -46,7 +46,7 @@ fresh $A
 psql_ -d $A -f tests/_stub.sql
 for f in "${legacy[@]}" "${pivot[@]}"; do psql_ -d $A -f "$f"; done
 psql_ -d $A -f seed.sql
-cnt=$(psql -X -At -d $A -c "select (select count(*) from upazilas) || ' upazilas, ' || (select count(*) from categories) || ' categories, ' || (select count(*) from products) || ' products'")
+cnt=$(psql -X -At -d $A -c "select (select count(*) from upazilas) || ' upazilas, ' || (select count(*) from categories) || ' categories, ' || (select count(*) from products) || ' products, ' || (select count(*) from service_areas) || ' service districts'")
 echo "  PASS  seed loaded: $cnt"
 
 psql -X -q -d postgres -c "drop database if exists $A" -c "drop database if exists $B"

@@ -19,13 +19,12 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
   const [cats, setCats] = useState<string[]>(category ? [category] : []);
   const { area, setArea } = useApp();
   const [maxPrice, setMaxPrice] = useState(10000);
-  const [verified, setVerified] = useState(false);
   const [sort, setSort] = useState("popular");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const toggle = (arr: string[], v: string, set: (a: string[]) => void) => set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
-  useEffect(() => { setLoading(true); const t = setTimeout(() => setLoading(false), 350); return () => clearTimeout(t); }, [mode, cats, area, maxPrice, verified, sort, query]);
+  useEffect(() => { setLoading(true); const t = setTimeout(() => setLoading(false), 350); return () => clearTimeout(t); }, [mode, cats, area, maxPrice, sort, query]);
   useEffect(() => { if (category) setCats([category]); }, [category]);
 
   const rows = useMemo(() => {
@@ -33,7 +32,6 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
     const list = products.map((p) => {
       let offers = offersFor(p);
       offers = offers.filter((o) => { const sl = sellers.find((s) => s.slug === o.sellerSlug)!; return inArea(area, sl.location, sl.division) || (!!p.famous && !!sl.nationwide); });
-      if (verified) offers = offers.filter((o) => sellers.find((s) => s.slug === o.sellerSlug)!.verified);
       const price = offers.length ? Math.min(...offers.map((o) => o[mode])) : Infinity;
       return { p, offers, price };
     }).filter(({ p, offers, price }) =>
@@ -45,10 +43,10 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
     if (sort === "high") list.sort((a, b) => b.price - a.price);
     if (sort === "sellers") list.sort((a, b) => b.offers.length - a.offers.length);
     return list;
-  }, [mode, cats, area, maxPrice, verified, sort, query]);
+  }, [mode, cats, area, maxPrice, sort, query]);
 
-  const reset = () => { setCats(category && lockCategory ? [category] : []); setArea(noArea); setMaxPrice(10000); setVerified(false); };
-  const active = (lockCategory ? 0 : cats.length) + (area.division ? 1 : 0) + (verified ? 1 : 0) + (maxPrice < 10000 ? 1 : 0);
+  const reset = () => { setCats(category && lockCategory ? [category] : []); setArea(noArea); setMaxPrice(10000); };
+  const active = (lockCategory ? 0 : cats.length) + (area.division ? 1 : 0) + (maxPrice < 10000 ? 1 : 0);
 
   const Filters = (
     <div className="space-y-6">
@@ -64,7 +62,6 @@ export function ProductExplorer({ category, query = "", initialMode = "retail", 
       <fieldset><legend className="mb-2 font-bn text-sm font-semibold text-ink">এলাকা (কোথা থেকে কিনবেন)</legend>
         <AreaSelect value={area} onChange={setArea} allLabel="সারা দেশ" className="!grid-cols-1" />
       </fieldset>
-      <Check checked={verified} onChange={() => setVerified(!verified)} label="শুধু যাচাইকৃত বিক্রেতা" icon />
     </div>
   );
 

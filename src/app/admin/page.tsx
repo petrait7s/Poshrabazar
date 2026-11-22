@@ -11,7 +11,7 @@ import { categories, products, sellers, bn } from "@/data/catalog";
 export default function Page() {
   const { toast } = useApp();
   const [tab, setTab] = useState("overview");
-  const [ver, setVer] = useState([{ n: "নোয়াখালী কৃষি সমিতি", k: "সমবায়", l: "নোয়াখালী", s: "অপেক্ষমাণ" }, { n: "রংপুর পাইকারি হাউস", k: "পাইকার", l: "রংপুর", s: "অপেক্ষমাণ" }, { n: "বরিশাল ফিশ ফার্ম", k: "খামারি", l: "বরিশাল", s: "অপেক্ষমাণ" }, ...sellers.slice(0, 3).map((s) => ({ n: s.bn, k: s.kind, l: s.location, s: s.verified ? "যাচাইকৃত" : "অপেক্ষমাণ" }))]);
+  const [ver, setVer] = useState([{ n: "নোয়াখালী কৃষি সমিতি", k: "সমবায়", l: "নোয়াখালী", s: "অপেক্ষমাণ" }, { n: "রংপুর পাইকারি হাউস", k: "পাইকার", l: "রংপুর", s: "অপেক্ষমাণ" }, { n: "বরিশাল ফিশ ফার্ম", k: "খামারি", l: "বরিশাল", s: "অপেক্ষমাণ" }, ...sellers.slice(0, 3).map((s) => ({ n: s.bn, k: s.kind, l: s.location, s: "অপেক্ষমাণ" }))]);
   const [mod, setMod] = useState([{ id: 1, t: "আলু — ৳১২/কেজি", by: "যশোর গ্রিন ফার্ম", why: "দাম অস্বাভাবিক কম", s: "অপেক্ষমাণ" }, { id: 2, t: "খাঁটি মধু (১০০% দেশি)", by: "অজানা বিক্রেতা", why: "দাবির প্রমাণ নেই", s: "অপেক্ষমাণ" }, { id: 3, t: "টমেটো — গ্রেড A", by: "ঢাকা ফ্রেশ ট্রেড", why: "ছবি মিলছে না", s: "অপেক্ষমাণ" }]);
   const [cats, setCats] = useState(categories.map((c) => c.bn));
   const [nc, setNc] = useState("");

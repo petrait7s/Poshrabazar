@@ -736,3 +736,26 @@ Exit criteria: a stranger can apply, be approved and sell; a customer in Sylhet 
 | Q12 | **Claims policy** for production and sourcing text | Seller's own statement, labelled as such; no organic, chemical-free or similar claims without evidence an admin has seen |
 | Q13 | **No global feed** | Confirm: updates appear only on a store's own page, on linked product pages, and later in a buyer-built "Following" tab |
 | Q10 | **Is the founder one legal business behind all 10 stores?** | Assume yes: stores are trade identities for management reporting, not separate legal sellers |
+
+### 11.15 Resolution of 11.14 and Phase 1A status (2026-11-22)
+
+You replied "go with defaults". Recorded as follows.
+
+| # | Status |
+|---|---|
+| Q1 | **Open, no default.** The database creates no launch store. `create_founder_store()` exists; seeding the 10 stores waits for names, categories and sourcing |
+| Q2, Q3, Q5–Q13 | **Defaults accepted** as written in 11.14. Q2 is enforced in part: approval is refused without an identity document. Q3 (phone login) needs the Supabase project |
+| Q4 | **Open, no default.** The tables exist (`delivery_zones`, `zone_upazilas`, `delivery_zone_fees`) but hold no rows. Without a fee row for an upazila, checkout rejects delivery to it. Supply zones, fees and the free-delivery threshold |
+
+**Built in Phase 1A (database and data only, all tested on PostgreSQL 16 with reversible migrations):**
+
+| Migration | Content |
+|---|---|
+| 20261122000001 seller onboarding | Seller applications with status history and private document records; submit, resubmit, withdraw, review (approve needs an identity document), suspend, reinstate; stores have `published`, `operation_mode`, `delivery_arrangement`, `seller_type`; a store outside Sylhet is allowed (`district_id`); approved stores publish listings directly, admins can reject; store sourcing entries, store updates (5 a day, 6 photos, staff can hide), follows |
+| 20261122000002 geography and categories | The 10 categories; listing origin district (required to publish); inventory locations; service areas |
+| 20261122000003 delivery and operations | `place_order_v3`: only service-area districts, one platform delivery fee per order from the zone fee (free above the threshold), pickup carries no fee, seller-managed delivery is refused for now; founder handover workflow (`advance_order_delivery`: pending, preparing, ready for delivery, out for delivery, delivered or failed) tied to the fulfilments; delivery fee posts to a `delivery_revenue` account and never to a seller; unit cost with moving average, cost snapshot per line, `store_profit_loss` view; sellers can no longer read an order's phone and address, they use the `seller_orders` view (first name and upazila only) |
+| 20261122000004 search | `search_listings` and `search_stores` (product, category, store, origin district or upazila, retail or wholesale), RLS applies |
+
+Removed from the demo front end: ratings, order counts, review counts, "verified" badges and the verified-sellers filter. The demo sellers still exist as clearly labelled sample data until real stores replace them. The seed no longer contains any seller, store, offer or rating.
+
+**Still to do, blocked or next:** Supabase project and credentials (auth, storage bucket for documents); Q1 and Q4 inputs; Phase 1B onward (UI over these tables). `place_order_v2` is dropped: the demo checkout still uses localStorage and is not affected.

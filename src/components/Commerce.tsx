@@ -3,7 +3,6 @@ import Link from "next/link";
 import { BadgeCheck, Heart, MapPin, ShoppingBasket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductArt } from "./ProductArt";
-import { Stars } from "./ui/misc";
 import { useApp } from "./providers";
 import { bn, genitive, getSeller, summary, taka, type Category, type Product } from "@/data/catalog";
 
@@ -65,7 +64,6 @@ export function ProductCard({ p, className }: { p: Product; className?: string }
         </div>
         <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-tint pt-2.5 text-xs text-ink/70">
           <span className="flex min-w-0 items-center gap-1 font-bn"><MapPin className="h-3 w-3 shrink-0" /><span className="truncate">{s.top.bn}</span></span>
-          {s.anyVerified && <VerifiedBadge small />}
         </div>
         <button
           onClick={() => { addToCart({ productSlug: p.slug, sellerSlug: best.sellerSlug, mode: "retail", qty: 1 }); toast(`${p.bn} কার্টে যোগ হয়েছে`); }}
@@ -110,10 +108,6 @@ export function SellerCard({ slug }: { slug: string }) {
           <h3 className="truncate font-bn text-base text-ink group-hover:text-primary">{s.bn}</h3>
           <p className="flex items-center gap-1 font-bn text-xs text-ink/60"><MapPin className="h-3 w-3" />{s.location} · {s.kind}</p>
         </div>
-      </div>
-      <div className="mt-3 flex items-center justify-between">
-        <Stars value={s.rating} count={s.orders} />
-        {s.verified ? <VerifiedBadge small /> : <span className="font-bn text-[11px] text-muted">যাচাই চলমান</span>}
       </div>
     </Link>
   );
