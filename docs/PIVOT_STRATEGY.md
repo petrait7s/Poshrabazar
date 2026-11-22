@@ -161,7 +161,7 @@ A community-driven, multi-vendor marketplace for Bangladesh's agricultural and r
 ### 2.4 Non-goals for the MVP
 - Platform-owned warehouses or fleet; third-party courier integration; advanced logistics optimisation.
 - Customers outside the Sylhet service area.
-- A social feed, automated seller recruitment, Knowledge Hub, Business Solutions software.
+- A marketplace-wide social feed (mixed timeline, likes, comments), automated seller recruitment, Knowledge Hub, Business Solutions software. Per-store updates on the store's own page are in scope (section 11.6a).
 - Online payments, customer wallet and stored balances, automated payouts.
 - Native mobile apps (a fast PWA first).
 
@@ -467,9 +467,10 @@ Decisions recorded:
 | U6 | **Delivery is founder-managed** at launch for **all** stores, including external sellers, unless a different arrangement is explicitly approved for a store. No third-party courier integration. The design stays ready for seller-managed delivery and third-party logistics. |
 | U7 | **Structured discovery**: by seller and by category, never a random feed. Navigation: Home, Categories, Stores, Cart, Orders, Profile. |
 | U8 | **Geography unchanged**: nationwide sourcing, Sylhet-only customers and sales. Product origin, store location, inventory location and delivery destination are four separate facts. |
+| U10 | **Store story and updates.** Each seller's profile shows what they sell, where the products are collected from, and how they are grown or made, and the seller can post updates about this (text, photos, later short video) on **their own store page**. This is a per-store journal for buyers, not a marketplace-wide social feed. |
 | U9 | The founder gets one **operational dashboard** over every store, with a store switcher; each seller gets a dashboard limited to their own store. |
 
-Not in the MVP: automated seller recruitment, third-party courier integration, advanced logistics optimisation, a social feed.
+Not in the MVP: automated seller recruitment, third-party courier integration, advanced logistics optimisation, and a marketplace-wide social feed (no mixed timeline, likes, comments or algorithmic ranking). Store updates on each store's own page are in (U10).
 
 ### 11.2 What Phase 0 already gives us, and what is missing
 
@@ -481,6 +482,7 @@ Not in the MVP: automated seller recruitment, third-party courier integration, a
 | Publishing gated by approval | Listing guard forces every new listing to `pending` for non-admins and blocks self-approval. That would make **every** seller wait for per-listing approval | **Change**: once a store is approved, its owner publishes directly; admin can take listings down |
 | Seller types | `store_type` (reseller, producer, wholesaler, retailer) describes a sales model, not who the seller is | **Add** `seller_type` (individual, farmer_producer, youth_entrepreneur, business) |
 | Seller onboarding | A demo form that sends nothing | **Missing**: applications, evidence uploads, review queue, status page |
+| Store story: what is sold, where it comes from, how it is made | Nothing for storefronts. The earlier community posts are a demo (browser storage, global feed, likes) kept in `src/_deferred/` | **Add** structured sourcing entries and per-store updates, see 11.6a; the old demo is not reused as a global feed |
 | Store identity | name, description, upazila only | **Add** tagline, logo, cover, sourcing note, operation mode |
 | Product must have category, seller, origin, valid inventory | Category and seller are enforced; stock holder exists; origin is optional and limited to Sylhet upazilas | **Change**: origin must be a district anywhere in Bangladesh and required before publishing; add inventory location |
 | Four-way geography split | Origin partial, store location Sylhet-only, inventory location absent, delivery destination not restricted to a service area | **Add** origin district, inventory location, service-area allow-list enforced at checkout |
@@ -514,6 +516,8 @@ Not in the MVP: automated seller recruitment, third-party courier integration, a
 
 **What the applicant sees.** A status page ("Under review", "We need more information: ...", "Approved", "Not approved: reason"), without any automated message in the first release other than the in-app status; SMS or email notification is a later improvement.
 
+**Profile pre-fill.** The application's "what you sell" and sourcing answers become the first version of the public profile, so a newly approved store is not empty; the seller then edits it and adds updates (11.6a).
+
 **Founder-operated stores** are created directly by the admin, marked `founder_managed`, and show the label "PosraBazar পরিচালিত". They do not claim to be verified sellers, and they use the same listing, stock, order and finance machinery as everyone else.
 
 **Privacy.** Identity documents go to a private storage bucket readable only by the applicant and admins; they are never shown on a storefront. Collect only what the evidence rules require. Collecting national ID numbers needs a data-protection decision from the founder.
@@ -528,6 +532,7 @@ Roles are capabilities; store membership is access to one store. One account can
 | Apply to become a seller | yes | (applying) | n/a | n/a | n/a | n/a |
 | See own application status | n/a | yes | n/a | n/a | n/a | all |
 | Edit store profile (name, tagline, logo, story) | no | draft only | yes | yes | no | all stores |
+| Edit sourcing entries and post store updates | no | drafts only, not public | yes, after approval | yes, after approval | no | all stores (can hide a post) |
 | Create and edit products, prices, stock | no | drafts only, not published | yes | yes | stock only | all stores |
 | Publish products | no | **no** | yes, after approval | yes, after approval | no | all stores |
 | Receive stock and set unit cost | no | no | yes | yes | yes | all stores |
@@ -589,6 +594,28 @@ Discovery has two axes only: **by store** and **by category**. There is no mixed
 
 **Search** covers product name, category, store name, origin district or upazila, and retail or wholesale availability (Bangla and English, Postgres full-text plus trigram matching).
 
+### 11.6a Store profile: what is sold, where it comes from, how it is made
+
+Buyers should be able to understand a seller before buying. Every storefront (founder-operated or independent) therefore has three parts, and the seller can keep adding to it with updates.
+
+**Storefront tabs:** *Products* (grouped by category), *About and sourcing*, *Updates*.
+
+**1. What we sell.** Built automatically from the store's published products by category, plus a short description the seller writes.
+
+**2. Where the products come from (sourcing).** Structured entries, not free-form posts. Each entry has a source name, source type (own farm, local farmers, supplier in another district, wholesale market, own workshop), district and upazila, the seller's relationship ("we grow it", "we buy from"), and an optional photo. A product can point to one of these entries, so the product page can say "Source: [entry], [district]" next to the origin. This makes origin specific and checkable instead of a bare district name.
+
+**3. How it is grown or made (production and handling).** A short written section with photos covering how the product is produced, harvested or caught, cleaned, dried, packed and stored. Typical for farmers and producers, equally useful for resellers describing how they handle goods.
+
+**4. Updates (a per-store journal).** The seller posts short updates on their own store page: a new sourcing trip, a harvest in progress, how a batch is processed, new stock, a seasonal note. An update has a type (sourcing, production, new stock, announcement), a title, text, up to six photos, and optionally a link to one of the store's products or sourcing entries. Updates show newest first on that store's page and, when linked, on the related product page. There are no likes, comments, shares or algorithmic ranking in the MVP, and **no marketplace-wide feed**: updates are found by opening a store, a product or a followed store, in keeping with the structured discovery rule (U7).
+
+**Following.** A buyer can follow a store (a simple list under Stores). In a later phase, updates from followed stores can appear in a "Following" tab that the buyer chose to build, which is still not a mixed public feed.
+
+**Honest-claims policy (important).** Production and sourcing text is the **seller's own statement** and is labelled that way on the page ("বিক্রেতার নিজের বিবরণ") unless an admin has checked it. Regulated or hard-to-prove claims such as organic, chemical-free, formalin-free, halal or "farm fresh today" are not allowed in free text without evidence an admin has seen; "harvested or caught on" dates come from the listing field, not from prose. Founder-operated stores follow the same rule. An admin can hide any update or sourcing entry with a recorded reason.
+
+**Who can post.** Seller owner and manager of an **approved** store. Applicants can draft but not publish; staff cannot post. Light rate limits (for example a few posts a day) keep stores from flooding their own page. Customers cannot post in the MVP.
+
+**Media.** Photos are in the MVP (resized on upload, private-until-published not needed). Short video is valuable for farmers but costs storage and bandwidth and is heavy on low-end phones; recommended as a later addition (question Q11).
+
 ### 11.7 Geography: four separate facts
 
 | Fact | Meaning | Where it lives | Restriction |
@@ -613,13 +640,14 @@ Nationwide sourcing, Sylhet-only customers and sales; expanding the service area
 - *Finance:* store-wise revenue and product cost, gross margin, delivery fee records, settlement statements.
 - *Settings:* delivery zones and fees, categories, campaigns, featured stores.
 
-**Seller dashboard (mobile-first, own store only):** overview, products (create, edit, pause, publish after approval), inventory with cost, orders to prepare and hand over, earnings and settlement statement, store profile. A seller who owns several stores can switch between them.
+**Seller dashboard (mobile-first, own store only):** overview, products (create, edit, pause, publish after approval), inventory with cost, orders to prepare and hand over, earnings and settlement statement, store profile. A seller who owns several stores can switch between them. A **Profile and updates** area lets the seller edit sourcing entries and the production section, write updates with photos, and link them to products.
 
 ### 11.9 Database changes (new migrations, each reversible, each with tests)
 
 *Migration 4, seller onboarding and publishing:*
 - `seller_type` enum; `stores.seller_type`, `operation_mode` (`founder_managed`, `independent`), `delivery_arrangement` (`platform_managed`, `seller_managed`, `third_party`), tagline, logo, cover, sourcing note, `published`, `featured`.
 - `seller_applications` (applicant, store, type, identity and contact, location, business details, categories, agreements, status, review fields) and `application_events` (audit log); `application_documents` pointing at a private storage bucket.
+- `store_sources` (name, type, district, upazila, relationship, photo, text), `store_posts` (store, type, title, body, optional linked listing and source, status published/hidden, hidden reason, published at), `store_post_media` (post, image path, order), `store_follows` (user, store), and `listings.source_id`.
 - Rewrite the listing publish guard: owners of approved stores publish directly; unapproved stores cannot publish; admins can take down.
 - Row-level security so an applicant sees only their own application and a seller only their own store; `is_admin` sees all.
 
@@ -639,7 +667,7 @@ Nationwide sourcing, Sylhet-only customers and sales; expanding the service area
 
 *Unchanged and reused:* listings, price tiers, stock movement log, parent order and sub-orders, fulfilments, financial snapshots, commission rules (0% pilot), the append-only ledger, the rollback harness and the test suite. Linked-stock mode stays in the schema but is not used by the launch stores.
 
-*Tests to add:* application state machine and who may do what; approved vs unapproved publishing; service-area enforcement; delivery fee in the delivery-revenue account and not a store's payable; delivery status flow and pickup flow; cost snapshots and store-wise profit; one seller cannot read another's rows or customers' contact details.
+*Tests to add:* only owners and managers of approved stores can publish updates; an admin can hide an update and the reason is kept; a hidden or unapproved store's updates are not public; application state machine and who may do what; approved vs unapproved publishing; service-area enforcement; delivery fee in the delivery-revenue account and not a store's payable; delivery status flow and pickup flow; cost snapshots and store-wise profit; one seller cannot read another's rows or customers' contact details.
 
 ### 11.10 Routes and screens
 
@@ -647,11 +675,11 @@ Nationwide sourcing, Sylhet-only customers and sales; expanding the service area
 |---|---|
 | `/` | Rebuilt to the 11-section homepage |
 | `/categories`, `/categories/[slug]` | Category grid and category pages with filters and sorting (`/category/[slug]` redirects) |
-| `/stores`, `/stores/[slug]` | Directory and storefronts (`/seller/[slug]` redirects) |
+| `/stores`, `/stores/[slug]` | Directory and storefronts with tabs Products, About and sourcing, Updates (`/seller/[slug]` redirects); follow button |
 | `/search` | Upgraded search |
 | `/product/[slug]` | Shows store, origin, inventory location and harvest date |
 | `/become-a-seller`, `/become-a-seller/status` | Application and status (replaces the demo `/seller/register`) |
-| `/seller/*` | Real seller dashboard (products, inventory, orders, earnings, profile) |
+| `/seller/*` | Real seller dashboard (products, inventory, orders, earnings, profile, sourcing entries, updates) |
 | `/admin/*` | Overview, applications, stores and `stores/[slug]`, inventory, orders and `orders/[id]`, deliveries, finance, settings |
 | `/cart`, `/checkout`, `/account/orders` | Real orders, delivery or pickup choice, zone fee, COD |
 | `/marketplace` feed, `/famous`, `/market-prices`, `/wholesale` | Feed removed; regional and bulk become filters; market prices hidden from navigation for the MVP |
@@ -674,6 +702,7 @@ COD only. For the founder's own stores the cash is simply the business's revenue
 | Delivery and pickup with zone fees, status flow, COD cash record | Seller-managed delivery, courier integration, delivery slots |
 | Unit costs and store-wise profit | Advanced reporting |
 | Manual settlement statements | Online payments, automated payouts |
+| Store profile sections (sourcing entries, production text) and photo updates on each store page; follow a store | Short video updates; "Following" updates tab; likes or comments |
 | Real reviews from delivered orders (small) | Review moderation tools, ratings ranking |
 
 ### 11.13 Updated roadmap
@@ -681,8 +710,8 @@ COD only. For the founder's own stores the cash is simply the business's revenue
 Phase 0 is complete. Phase 1 is now the **open marketplace MVP**, in five parts:
 
 - **1A Foundations (M).** Supabase project and environments; authentication (admin, customer, seller); migrations 4–7 with rollbacks and tests; the 10 category rows, service areas, delivery zone fees; remove the fabricated demo sellers and trust signals; seed the 10 founder-operated store shells once their identities are confirmed.
-- **1B Structured storefront (M).** New navigation, categories pages with filters and sorting, stores directory and storefronts, homepage restructure with the no-duplicate rule, search, product page updates; read from the database instead of local data.
-- **1C Seller onboarding and seller dashboard (M–L).** Become a Seller flow and status page, evidence upload to private storage, admin review queue and decisions, store creation on submission and publishing on approval, seller dashboard (products, inventory with cost, orders to prepare and hand over, earnings statement).
+- **1B Structured storefront (M).** New navigation, categories pages with filters and sorting, stores directory and storefronts, homepage restructure with the no-duplicate rule, search, product page updates (store, origin, source entry, linked updates); storefront tabs Products, About and sourcing, Updates; read from the database instead of local data.
+- **1C Seller onboarding and seller dashboard (M–L).** Become a Seller flow and status page, evidence upload to private storage, admin review queue and decisions, store creation on submission and publishing on approval, seller dashboard (products, inventory with cost, orders to prepare and hand over, earnings statement, profile sections and photo updates).
 - **1D Orders, delivery and operations (L).** Real cart and checkout (delivery or pickup, zone fee, COD), per-store fulfilment, handover from external sellers, delivery board and status flow, founder console with store switcher, inventory, consolidated orders with seller breakdown, finance (store revenue and cost, delivery fee records, settlement statements).
 - **1E Pilot launch readiness (S).** The 10 founder stores filled with real products, prices, photographs and sourcing notes; seller terms and product policy; first external applications reviewed; end-to-end test orders; a launch checklist covering licences and food-safety obligations the founder confirms.
 
@@ -703,4 +732,7 @@ Exit criteria: a stranger can apply, be approved and sell; a customer in Sylhet 
 | Q7 | **Bottom navigation** | Six items as you listed; Profile stays in the bar |
 | Q8 | **Market Prices and Regional Products pages** | Hide Market Prices; fold Regional Products into category and origin filters |
 | Q9 | **Seller terms and product policy** (prohibited items, food-safety rules, returns) | You or your adviser provide the text; I will draft a plain-language starting point |
+| Q11 | **Video in store updates** | Photos only in the MVP; add short video after the pilot once storage and phone performance are known |
+| Q12 | **Claims policy** for production and sourcing text | Seller's own statement, labelled as such; no organic, chemical-free or similar claims without evidence an admin has seen |
+| Q13 | **No global feed** | Confirm: updates appear only on a store's own page, on linked product pages, and later in a buyer-built "Following" tab |
 | Q10 | **Is the founder one legal business behind all 10 stores?** | Assume yes: stores are trade identities for management reporting, not separate legal sellers |
