@@ -10,12 +10,12 @@ Scope of this document: audit of the current project, new product vision, roles,
 - The current project is a **polished frontend prototype**, not a working product. All 29 routes run on hard-coded demo data in `src/data/`. There is **no Supabase client in the app**, **no real authentication** (the "login" writes a fake user to `localStorage`), **no real orders, no payments, no uploads**. The Supabase schema and security rules exist and pass tests on PostgreSQL 16, but nothing connects to them yet.
 - That is good news for a pivot: very little real business logic is locked in. About **3,300 lines of TypeScript** and **~1,800 lines of SQL** exist.
 - Roughly **half of the code is reusable** (layout shell, UI primitives, filters, cart mechanics, dashboards shell, location picker, schema patterns, RLS patterns). The **brand, visual style, product taxonomy, fee logic, and several whole pillars** conflict with the new concept and should be replaced or removed.
-- The biggest structural gap is the thing the new concept is built on: **sourcing**. Today a "seller" simply lists a product at a price. The new model needs a **supply chain**: producers list supply, student entrepreneurs (resellers) source it into their own stores, customers buy from stores, and the money and stock must flow correctly through all three. The existing schema has no concept of this.
+- The biggest structural gap is the thing the new concept is built on: **sourcing**. Today a "seller" simply lists a product at a price. The new model needs a **supply chain**: producers list supply, youth entrepreneurs (resellers) source it into their own stores, customers buy from stores, and the money and stock must flow correctly through all three. The existing schema has no concept of this.
 - Recommendation: keep the Next.js + Supabase direction, create a **new long-lived branch** for the pivot, tag the current `main` as the old concept, and execute in four phases starting with real authentication, a store/producer split, upazila-level location, and COD orders with seller sub-orders.
 
 ### Assumptions I am making (please correct any that are wrong)
 1. The product name and brand may change. The working brand name is **PosraBazar** (decision D6, now approved).
-2. One person can hold several roles (a student can be a customer **and** a reseller; a producer can also sell retail).
+2. One person can hold several roles (a young person can be a customer **and** a reseller; a producer can also sell retail).
 3. Phase 1 uses **Cash on Delivery** only. Online payment comes after the platform is live with real users.
 4. We are not holding warehouse stock. Every product belongs to a seller's own listing.
 5. Bangla is the primary language; English is secondary.
@@ -29,7 +29,7 @@ The product owner approved the strategy and decided as follows. These are now th
 
 | # | Decision | What it means in practice |
 |---|---|---|
-| D1 | **Both linked and own-stock reseller modes in the MVP** | In *linked* mode the producer stays responsible for stock and fulfilment and the student reseller sets their own selling price (never below the supplier's price). In *own-stock* mode the seller holds and manages stock. Stock is only ever changed through an append-only movement log, and a producer's stock is shared by every reseller linked to it, so nothing can be oversold. Responsibilities are separate: the fulfilling store moves the fulfilment; the selling store owns the customer relationship and price. |
+| D1 | **Both linked and own-stock reseller modes in the MVP** | In *linked* mode the producer stays responsible for stock and fulfilment and the youth reseller sets their own selling price (never below the supplier's price). In *own-stock* mode the seller holds and manages stock. Stock is only ever changed through an append-only movement log, and a producer's stock is shared by every reseller linked to it, so nothing can be oversold. Responsibilities are separate: the fulfilling store moves the fulfilment; the selling store owns the customer relationship and price. |
 | D2 | **Producer/store-managed delivery inside defined zones, plus pickup points** | No platform logistics. Each store declares the zones it serves and its fee. Fulfilments carry a `method` and a `provider` column so a courier integration can be added later without redesign. |
 | D3 | **Commission configurable per transaction type; promotional 0% pilot** | `commission_rules` holds rates as data (basis points, per transaction type, optional per category, with start/end dates). The pilot ships with 0% for *direct*, *reseller* and *wholesale* sales. The financial model treats the three separately. **No wallet and no holding of customer money is implemented**; the ledger only records what each party is owed on delivered orders. Anything that holds or moves money needs legal review first. |
 | D4 | **Fonts: Tiro Bangla (Bengali) + Inter (English)** (revised) | First approved as Noto Sans Bengali; the product owner then chose **Tiro Bangla** for Bengali when the new homepage was built. Tiro Bangla has a single weight (400), so Bengali hierarchy comes from size, colour and spacing (browser faux-bold is disabled); Inter supplies real bold for English text and numerals. Re-check small-text legibility on low-end phones. |
@@ -51,6 +51,10 @@ Additional working rules: preserve the prototype and its history (tag `v0-posrab
 | Sylhet-division upazilas (41) | Done: `src/data/locations.ts`, seeded |
 | Migrations 1–3 with rollbacks and tests | Done: `npm run db:test` |
 | Real authentication, Supabase project, error tracking, photography | **Not started (Phase 1 / needs owner input)** |
+
+### 0.2 Updated MVP direction (supersedes conflicting text below)
+
+The product owner then clarified the MVP: PosraBazar is an **open multi-vendor marketplace from day one** with **10 founder-operated launch stores**, **founder-managed delivery**, **seller registration open to everyone** (with admin approval before publishing) and **structured discovery by seller and category**. The full plan, gap analysis, workflows, permissions, database changes and roadmap are in **section 11**. Where sections 2.3, 2.4, 3, 4.6 or the Phase 1 roadmap differ, section 11 wins.
 
 ---
 
@@ -121,7 +125,7 @@ Additional working rules: preserve the prototype and its history (tag `v0-posrab
 1. Real authentication (phone OTP) and persistent accounts.
 2. **Upazila-level location** and "near me" discovery.
 3. **Producer onboarding** and producer-facing tools (listings, quantities, MOQ, seasons).
-4. **Store creation** for students/resellers with their own storefront URL.
+4. **Store creation** for youth entrepreneurs and other resellers with their own storefront URL.
 5. **Sourcing workflow**: discover producers, request/quote, link a producer's product into a store.
 6. **Retail and wholesale price tiers by quantity** (the current model has exactly two prices).
 7. **Stock ownership and synchronisation** between producer and reseller listings.
@@ -140,24 +144,25 @@ Additional working rules: preserve the prototype and its history (tag `v0-posrab
 ## 2. New product vision and scope
 
 ### 2.1 Vision
-A community-driven, multi-vendor marketplace for Bangladesh's agricultural and regional products, launching in **Sylhet**. It lets farmers and producers sell directly, and lets **students and local entrepreneurs run their own stores** by sourcing from producers in their own upazila, with almost no startup capital. Customers get fresher, more traceable products with transparent origin and price; producers get access to more buyers; students earn.
+A community-driven, multi-vendor marketplace for Bangladesh's agricultural and regional products, launching in **Sylhet**. It lets farmers and producers sell directly, and lets **youth entrepreneurs and other independent sellers run their own stores** by sourcing from producers in their own upazila, with almost no startup capital. Customers get fresher, more traceable products with transparent origin and price; producers get access to more buyers; young people earn.
 
 ### 2.2 What it is, and is not
 - It **is** a hybrid marketplace with three transaction types (producer→customer, producer→reseller→customer, supplier→wholesaler/retailer) and both retail and wholesale pricing.
 - It **is not** a grocery-delivery app, and the platform **does not own warehouse inventory**.
 
 ### 2.3 Launch scope (MVP, Sylhet)
-- Sylhet division, with focus on Sylhet district's 13 upazilas, plus Moulvibazar for tea/regional goods.
-- Starter categories: seasonal fruit, rice and grains, vegetables, fresh fish, shutki, regional specialties.
-- Roles live at launch: customer, reseller (store owner), producer, admin. Business buyers are customers with a wholesale flag.
-- Payments at launch: COD. Online payment after Phase 2.
-- Delivery at launch: producer- or store-arranged delivery inside defined zones plus pickup points. No platform-run logistics yet.
+*Updated; see section 11.*
+- Open marketplace: anyone can register as a customer and apply to become a seller; approved sellers get a storefront and a seller dashboard.
+- Ten founder-operated launch stores run alongside external sellers.
+- Nationwide sourcing, Sylhet-only customers and sales (supported service area enforced at checkout).
+- Structured discovery by category and by store; 10 categories.
+- Payments: cash on delivery. Delivery: founder-managed for all stores, with pickup as a separate option.
 
 ### 2.4 Non-goals for the MVP
-- Platform-owned warehouses or fleet.
-- Nationwide coverage.
-- Knowledge Hub, Business Solutions software, social feed.
-- Customer wallet and stored balances.
+- Platform-owned warehouses or fleet; third-party courier integration; advanced logistics optimisation.
+- Customers outside the Sylhet service area.
+- A social feed, automated seller recruitment, Knowledge Hub, Business Solutions software.
+- Online payments, customer wallet and stored balances, automated payouts.
 - Native mobile apps (a fast PWA first).
 
 ### 2.5 Success measures (suggested)
@@ -167,18 +172,9 @@ Number of active stores and producers per upazila, share of orders that are prod
 
 ## 3. Roles and permissions
 
-One account can hold several **roles**. Roles grant capabilities; **store membership** grants access to a specific store.
+*Superseded by section 11.4, which has the full permission matrix. Summary:* **Customer** (browse, order, apply to sell); **Seller applicant** (customer with an application under review; may draft but not publish); **Seller** (owner, manager, staff within a store, only for approved stores; types: Individual, Farmer/Producer, Youth Entrepreneur, Business); **Admin / founder** (reviews applications, manages every store, delivery, finance and settings; also operates the 10 launch stores); later: **delivery helper** and **regional agent**. One account can hold several roles; store membership grants access to one store.
 
-| Role | Can do | Cannot do |
-|---|---|---|
-| **Customer** | Browse by location; buy retail; compare stores and origins; order, track, review delivered orders; save favourites | Sell; see wholesale tiers unless approved as business buyer |
-| **Business buyer** (customer + flag) | Everything a customer can, plus see and buy wholesale tiers and MOQ; request quotes | Sell without a store |
-| **Reseller** (student entrepreneur) | Create and run a store; find producers; send sourcing requests; list sourced products; set retail/wholesale prices above the supply price; manage orders, inventory, customers, earnings | See other stores' data; change producer's price or stock |
-| **Producer / supplier** | Create a producer profile; list own products with quantity, MOQ, price tiers, harvest date, season; accept sourcing requests; sell direct; fulfil orders; see settlements | Edit a reseller's store listing or retail price |
-| **Admin** | Verify users and stores; moderate products and stores; manage orders, payments, commissions, disputes, settlements; regional dashboards | Edit financial ledger entries directly (adjustments only through logged operations) |
-| **Regional agent** (recommended, later) | Field-verify producers in an upazila; assist onboarding | Access financial settings |
-
-**Verification tiers** (shown as badges): (1) phone verified, (2) identity or trade licence checked, (3) field-visited by an agent. Higher tiers unlock higher order limits and visibility ranking.
+**Verification:** a store is shown as verified only after an admin has reviewed real evidence. Founder-operated stores carry the label "PosraBazar পরিচালিত" instead and make no verification claim.
 
 ---
 
@@ -193,7 +189,7 @@ One account can hold several **roles**. Roles grant capabilities; **store member
 ### 4.2 Producer → Reseller → Customer
 1. **Discover**: reseller browses producers in their upazila (filters: product, quantity, season, verification level).
 2. **Link a product into the store** in one of two modes:
-   - **Linked mode (recommended for MVP).** The store listing references the producer's listing. Stock is the producer's stock (synchronised). The reseller sets only the **retail price** (must be ≥ the producer's supply price). When the customer orders, the producer fulfils; the reseller never holds stock. Good for students with no capital.
+   - **Linked mode (recommended for MVP).** The store listing references the producer's listing. Stock is the producer's stock (synchronised). The reseller sets only the **retail price** (must be ≥ the producer's supply price). When the customer orders, the producer fulfils; the reseller never holds stock. Good for young people with no capital.
    - **Own-stock mode.** The reseller bought goods offline (or through a wholesale order), holds the stock and manages quantity themselves. Needed for resellers who aggregate and repack.
 3. Customer orders from the **store**. The order contains a store sub-order and, for linked items, a **fulfilment line** assigned to the producer.
 4. Money split per line: producer gets supply price; reseller gets margin; platform takes commission; each is a separate ledger entry released after delivery confirmation.
@@ -225,6 +221,8 @@ Each level has its own status, so one customer checkout can contain items from s
 **Compliance warning.** Holding and splitting customer money on behalf of sellers may require a payment-service licence in Bangladesh. The safe route is a licensed gateway/aggregator that supports marketplace settlements, or manual settlement at the start. Legal advice is needed before Phase 3.
 
 ### 4.6 Delivery
+*Superseded for the launch by section 11.5: delivery is platform-managed (founder-delivered) for every store, priced per zone at order level. The text below describes the later seller-managed and zone-fee options, which the design keeps available.*
+
 - Geography drives delivery: **delivery zones** (by upazila groups) with fee tables; **pickup points** (a shop, hub or the reseller's location) to cut cost.
 - Perishables (fresh fish, soft fruit) need **delivery windows** and same-day or next-day limits; dry goods (rice, shutki) can ship further.
 - Every sub-order records fulfilment method: producer delivers, store delivers, pickup, or third-party courier (later).
@@ -394,7 +392,7 @@ Header/footer structure, filter sheet, comparison table (becomes "stores selling
 
 ## 8. Phased implementation roadmap
 
-Effort is expressed in relative size for a small team; exact dates depend on team size.
+Effort is expressed in relative size for a small team; exact dates depend on team size. **Phase 1 below is replaced by sections 11.13 (1A to 1E); read Phases 2 to 4 together with 11.13.**
 
 ### Phase 0 — Decisions and foundation (size S)
 - Resolve decisions D1–D6 below.
@@ -402,16 +400,8 @@ Effort is expressed in relative size for a small team; exact dates depend on tea
 - New design tokens, typography, and photography plan; restyle UI primitives.
 - Seed upazila data; finalise category taxonomy.
 
-### Phase 1 — Real marketplace core, Sylhet (size L)
-- Real phone-OTP authentication and profiles; roles and store membership.
-- Upazila location picker and "near me".
-- Producer onboarding and listings with price tiers, MOQ, harvest date, season, photos.
-- Store creation for resellers; own-stock listings first, then linked listings.
-- Customer browse, product page with stores-selling-this, cart, checkout.
-- **COD orders** with parent order, sub-orders, fulfilments, status flow.
-- Admin: verification queue, product/store moderation, order list.
-- Remove old pillars from navigation and code.
-- Exit criteria: a real producer, a real student store and a real customer can complete a COD order in Sylhet.
+### Phase 1 — Open marketplace MVP, Sylhet (size L)
+*Replaced: see section 11.13 (1A Foundations, 1B Structured storefront, 1C Seller onboarding and seller dashboard, 1D Orders, delivery and operations, 1E Pilot launch readiness).*
 
 ### Phase 2 — Sourcing and reseller economy (size L)
 - Supplier discovery, sourcing requests and quotes, linked-listing stock sync, margin calculator.
@@ -453,4 +443,264 @@ Defaults are my recommendation; reply "go with defaults" or change any.
 ---
 
 ## 10. What happens next
-Nothing will be changed until you approve. After approval, my first move would be Phase 0: tag the current state, create the pivot branch, apply the new design tokens to the UI primitives, and write the new database migrations (upazilas, stores, listings with price tiers, sub-orders) with tests, so the rest of the build rests on the right foundations.
+Nothing will be changed until you approve. Section 11 is the plan to review. After approval, work starts with Phase 1A. The one thing I cannot proceed without is the identity of the 10 launch stores (question Q1 in section 11.14).
+
+---
+
+## 11. Updated MVP plan: an open marketplace with founder-operated launch stores
+
+Status: **proposal for review. No code has been changed for this plan.** It overrides any conflicting assumption elsewhere in this document (sections 2.3, 2.4, 3, 4.6 and the Phase 1 roadmap are superseded where they differ).
+
+### 11.1 The principle
+
+PosraBazar is an **open multi-vendor marketplace from day one**. The founder operates 10 launch stores to test and start the marketplace, and handles customer deliveries personally at first. Those 10 stores are ordinary stores marked as founder-operated. They are not a limit: anyone can register as a customer, apply to become a seller, be verified by an admin, and start selling. Nothing in the data model, permissions or screens may assume a fixed number of sellers.
+
+Decisions recorded:
+
+| # | Decision |
+|---|---|
+| U1 | Wording is **Youth Entrepreneurs / Young Entrepreneurs**, never "student entrepreneurs". Participation is not restricted to students or to any age group: students, young entrepreneurs, farmers and producers, local businesses, independent suppliers and resellers can all apply. |
+| U2 | The founder operates **10 launch stores**: separate identities, categories, listings, prices and inventory records, managed centrally. No invented independent users, no fabricated verification claims, no artificial reviews. |
+| U3 | **Open seller registration**: any customer can apply to become a seller through a clear "Become a Seller" entry; approved sellers get their own storefront and seller dashboard. |
+| U4 | **Admin verification and approval** is required before a seller can publish products. |
+| U5 | Seller types: **Individual, Farmer/Producer, Youth Entrepreneur, Business**. |
+| U6 | **Delivery is founder-managed** at launch for **all** stores, including external sellers, unless a different arrangement is explicitly approved for a store. No third-party courier integration. The design stays ready for seller-managed delivery and third-party logistics. |
+| U7 | **Structured discovery**: by seller and by category, never a random feed. Navigation: Home, Categories, Stores, Cart, Orders, Profile. |
+| U8 | **Geography unchanged**: nationwide sourcing, Sylhet-only customers and sales. Product origin, store location, inventory location and delivery destination are four separate facts. |
+| U9 | The founder gets one **operational dashboard** over every store, with a store switcher; each seller gets a dashboard limited to their own store. |
+
+Not in the MVP: automated seller recruitment, third-party courier integration, advanced logistics optimisation, a social feed.
+
+### 11.2 What Phase 0 already gives us, and what is missing
+
+| Need | Phase 0 state | Verdict |
+|---|---|---|
+| Many stores with separate listings, prices, stock | `stores`, `listings`, `price_tiers`, `stock_movements`, per-store ledger accounts | **Supports it**; no change |
+| One person managing several stores | `store_members` allows one user in many stores; `admin` role sees everything | **Supports it** |
+| Anyone can open a store, nobody self-verifies | A signed-in user can create a store; it starts `pending`; only staff can verify (`guard_store_verification`) | **Good base**; needs the application record, review workflow and a separate "published" switch |
+| Publishing gated by approval | Listing guard forces every new listing to `pending` for non-admins and blocks self-approval. That would make **every** seller wait for per-listing approval | **Change**: once a store is approved, its owner publishes directly; admin can take listings down |
+| Seller types | `store_type` (reseller, producer, wholesaler, retailer) describes a sales model, not who the seller is | **Add** `seller_type` (individual, farmer_producer, youth_entrepreneur, business) |
+| Seller onboarding | A demo form that sends nothing | **Missing**: applications, evidence uploads, review queue, status page |
+| Store identity | name, description, upazila only | **Add** tagline, logo, cover, sourcing note, operation mode |
+| Product must have category, seller, origin, valid inventory | Category and seller are enforced; stock holder exists; origin is optional and limited to Sylhet upazilas | **Change**: origin must be a district anywhere in Bangladesh and required before publishing; add inventory location |
+| Four-way geography split | Origin partial, store location Sylhet-only, inventory location absent, delivery destination not restricted to a service area | **Add** origin district, inventory location, service-area allow-list enforced at checkout |
+| Founder-managed delivery | Delivery is per store and per sub-order, priced from each store's own zones. The settlement credits the delivery fee to the store's payable account | **Change**: delivery becomes an order-level, platform-priced workflow; the fee is platform revenue, never a seller's revenue |
+| Delivery statuses | Order and fulfilment statuses exist, but not Pending, Preparing, Ready for Delivery, Out for Delivery, Delivered at order level | **Add** order-level delivery record and status flow; pickup handled separately |
+| Collecting goods from external sellers | `handed_over` exists on fulfilments | **Reuse**, add a handover method (seller drops at hub / founder collects) |
+| Zone-based fees | `delivery_zones` and `zone_upazilas` exist; fees live per store | **Add** a platform-level fee per zone; keep per-store fees for a future seller-managed mode |
+| Pickup orders | Pickup points per store, pickup per sub-order | **Change**: pickup becomes an order-level choice with its own statuses |
+| Operations dashboard | Demo screens with local state; database functions exist | **Missing**: real dashboards over aggregated views |
+| Store-wise revenue and costs | Revenue snapshots and ledger exist; no costs | **Add** unit cost on stock receipts and a cost snapshot per order line |
+| No fake trust signals | The frontend demo data contains 25 invented sellers with ratings, order counts and "verified" flags, and the UI shows them | **Remove**. Reviews stay empty until real delivered orders produce them |
+| Search | Basic client-side name search | **Replace** with catalogue search across product, category, store, origin and retail/wholesale |
+| Navigation and categories | Bottom nav is Home/Explore/Cart/Orders/Profile; 7 categories | **Change** to the required nav and the 10 categories |
+| Homepage | Built for the earlier design | **Restructure** to the 11-section structure in 11.6 |
+| Wording | UI already says "তরুণ উদ্যোক্তা"; this document said "student" | **Fixed** in this update |
+
+### 11.3 Seller onboarding workflow
+
+**Entry points.** "Become a Seller" in the header menu, the profile page, the Stores page and the homepage. Anyone can first register as a customer, then apply. A seller is a customer with a store.
+
+**Application (one form, a few short steps).**
+1. *Who you are:* seller type (Individual, Farmer/Producer, Youth Entrepreneur, Business), full name, phone, optional email.
+2. *Where you are:* district, upazila, address, plus where your goods are kept.
+3. *What you sell:* store name, short description, categories, product origin and sourcing story (own farm, local producers, other districts).
+4. *Evidence:* by type (see 11.14, question 2): identity document, photos of the farm, shop or products, trade licence for businesses, and for youth entrepreneurs an optional student or institution ID.
+5. *Agreements:* seller terms, product policy, and the delivery arrangement (PosraBazar delivers; goods are handed over to PosraBazar).
+
+**Review states.** `draft` → `submitted` → `in_review` → `needs_info` (applicant fixes and resubmits, back to `in_review`) → `approved` or `rejected`. An approved store can later be `suspended` by an admin, with the reason recorded. Every transition is logged with who, when and why.
+
+**What approval does.** The store becomes publishable, the owner can publish products, the storefront appears in the Stores directory, and the "verified seller" mark is shown **only** because an admin approved real evidence. Before approval the owner can prepare draft products but cannot publish them, and the storefront is not public.
+
+**What the applicant sees.** A status page ("Under review", "We need more information: ...", "Approved", "Not approved: reason"), without any automated message in the first release other than the in-app status; SMS or email notification is a later improvement.
+
+**Founder-operated stores** are created directly by the admin, marked `founder_managed`, and show the label "PosraBazar পরিচালিত". They do not claim to be verified sellers, and they use the same listing, stock, order and finance machinery as everyone else.
+
+**Privacy.** Identity documents go to a private storage bucket readable only by the applicant and admins; they are never shown on a storefront. Collect only what the evidence rules require. Collecting national ID numbers needs a data-protection decision from the founder.
+
+### 11.4 Roles and permissions
+
+Roles are capabilities; store membership is access to one store. One account can be a customer, a seller owner of one or more stores, and (for the founder) an admin.
+
+| Capability | Customer | Seller applicant | Seller owner | Seller manager | Seller staff | Admin (founder) |
+|---|---|---|---|---|---|---|
+| Browse, search, cart, order, track own orders | yes | yes | yes | yes | yes | yes |
+| Apply to become a seller | yes | (applying) | n/a | n/a | n/a | n/a |
+| See own application status | n/a | yes | n/a | n/a | n/a | all |
+| Edit store profile (name, tagline, logo, story) | no | draft only | yes | yes | no | all stores |
+| Create and edit products, prices, stock | no | drafts only, not published | yes | yes | stock only | all stores |
+| Publish products | no | **no** | yes, after approval | yes, after approval | no | all stores |
+| Receive stock and set unit cost | no | no | yes | yes | yes | all stores |
+| See and prepare orders for the store | no | no | yes | yes | yes | all stores |
+| See customer phone and full address | own only | no | **only if the store has approved seller-managed delivery** | same | same | yes |
+| See own store revenue, costs, settlement statement | no | no | yes | read | no | all stores, consolidated |
+| Add or remove store members | no | no | yes | no | no | yes |
+| Approve or reject applications, suspend stores | no | no | no | no | no | yes |
+| Take products down, edit categories, delivery zones and fees | no | no | no | no | no | yes |
+| Change a store's delivery arrangement | no | no | no | no | no | yes (explicit approval) |
+| Edit the ledger directly | no | no | no | no | no | no (logged adjustments only) |
+
+Privacy rule worth stating: because PosraBazar delivers at launch, **sellers do not need customers' phone numbers or full addresses**. They see what to prepare, the delivery zone and the customer's first name. This protects customers and removes a reason for sellers to contact buyers outside the platform.
+
+A later `ops` role (a delivery helper who can see only delivery tasks) and a regional agent role fit into the same model.
+
+### 11.5 Delivery and fulfilment workflow
+
+**Default for every store: platform-managed delivery.** Customers pay one delivery fee per order, set by the **delivery zone** of the address. The fee is PosraBazar's delivery revenue and is recorded separately from every store's product revenue.
+
+**Order-level delivery statuses (delivery orders):** Pending → Preparing → Ready for Delivery → Out for Delivery → Delivered. A failed attempt is recorded with a reason and the order returns to Ready for Delivery.
+**Pickup orders** have their own statuses: Pending → Preparing → Ready for Pickup → Collected, and no delivery fee.
+
+**How a multi-store order moves.** Each store prepares its own lines (the existing line-level statuses: accepted, ready, handed over). Founder-operated stores hand over to the founder instantly; external sellers either drop goods at the hub or the founder collects them (recorded as the handover method). The order becomes Ready for Delivery only when every line has been handed over. The founder then marks Out for Delivery and Delivered; he can do the whole flow from one screen. Customers confirm receipt is optional in the pilot because the founder delivers personally and records it; cash collected on delivery is recorded against the order.
+
+**Flexibility kept.** Each store has a delivery arrangement: `platform_managed` (default), `seller_managed` or `third_party`. Only an admin can change it. The existing per-store zones and fees, the `delivery_method` and `provider` fields, and the handover record are retained so seller-managed delivery and a courier integration can be added later without redesign.
+
+**Configurable per zone:** fee, free-delivery threshold, minimum order, and the allowed delivery days or time slots. Zones are groups of Sylhet upazilas defined by the founder.
+
+### 11.6 Discovery: an organised marketplace
+
+Discovery has two axes only: **by store** and **by category**. There is no mixed feed and no endless scroll.
+
+**Navigation (bottom bar):** Home, Categories, Stores, Cart, Orders, Profile. On a 390 px screen six items are about 65 px each, which works with 11 px labels; the alternative is to move Profile into the header (decision in 11.14).
+
+**Categories (10, flat):** Vegetables, Fruits, Fish, Rice and grains, Pulses, Dairy products, Poultry and eggs, Spices and agricultural products, Regional and processed food, Other approved categories. A product has exactly one. Dried fish sits under Fish and is told apart by a product attribute ("form": fresh, dried, processed), so categories stay simple.
+
+**Category page:** its own page per category with filters (origin: Sylhet or other districts and a district picker, retail or wholesale, availability, price range, store) and sorting (newest, price, freshest). Each result shows the store name and the real origin.
+
+**Stores directory and storefront:** a directory of all approved stores (founder-operated and independent), filterable by category and origin; each storefront shows the store's identity, its sourcing note and its products grouped by category.
+
+**Homepage, in this order:**
+
+| # | Section | Rule |
+|---|---|---|
+| 1 | Header | PosraBazar brand and the Sylhet location |
+| 2 | Search and category navigation | Search bar; a row of the 10 categories linking to category pages |
+| 3 | Featured seasonal campaign | One admin-curated campaign; its products are reserved for it |
+| 4 | Shop by category | Grid of the 10 categories, no products |
+| 5 | Featured sellers / stores | Admin-featured stores, each with identity and up to three of its own products |
+| 6 | Locally produced in Sylhet | Products whose origin district is in Sylhet, grouped by category |
+| 7 | Sourced from other districts | Products from elsewhere in Bangladesh, grouped by origin district |
+| 8 | Fresh products available in Sylhet | Perishable categories with a harvest or catch date in the last few days and stock held in Sylhet, showing the date |
+| 9 | Wholesale and bulk | Products with a wholesale tier, shown as a compact list with minimum quantities |
+| 10 | Recently added | New products, grouped by category |
+| 11 | Bottom navigation | As above |
+
+**No scattering, no duplicates:** the homepage fills sections from top to bottom with a "used" list; a product shown in one section is excluded from the later ones, and an empty section is hidden. Every product shown has one category, one store, an identifiable origin and a valid inventory source; a listing that lacks any of these cannot be published.
+
+**Search** covers product name, category, store name, origin district or upazila, and retail or wholesale availability (Bangla and English, Postgres full-text plus trigram matching).
+
+### 11.7 Geography: four separate facts
+
+| Fact | Meaning | Where it lives | Restriction |
+|---|---|---|---|
+| **Product origin** | Where the product was grown, caught or made | listing: origin district (required) and optional upazila | Anywhere in Bangladesh |
+| **Store location** | Where the seller operates | store: district and upazila | Anywhere in Bangladesh for independent sellers |
+| **Inventory location** | Where the goods physically are now (a hub in Sylhet, or at the seller's place) | listing: inventory location | Drives "available in Sylhet" and handover planning |
+| **Delivery destination** | Where the customer receives the order | order: upazila | Only the supported Sylhet service area, enforced by an allow-list |
+
+Nationwide sourcing, Sylhet-only customers and sales; expanding the service area later means adding rows to the allow-list, not changing code.
+
+### 11.8 Operational dashboards
+
+**Founder / admin console (desktop-first, usable on a phone):**
+- A **store switcher** at the top: "All stores" or one store. The choice persists in the address and filters every page, so the founder can look at one store and return to the whole marketplace in one tap.
+- *Overview:* store cards (founder-operated and independent) with orders, revenue and low-stock counts; today's pending deliveries; overall performance.
+- *Applications:* the review queue for new sellers, with evidence, decision and note.
+- *Stores:* all stores, their products and inventory, and the store-wise view.
+- *Inventory:* store-wise stock, receive stock with unit cost, adjustments, movement history.
+- *Orders:* consolidated orders and a **seller-specific breakdown** of each order.
+- *Deliveries:* a board by status and zone with customer name, phone, address, items and amounts, collection from sellers, assignment, status updates, cash collected.
+- *Finance:* store-wise revenue and product cost, gross margin, delivery fee records, settlement statements.
+- *Settings:* delivery zones and fees, categories, campaigns, featured stores.
+
+**Seller dashboard (mobile-first, own store only):** overview, products (create, edit, pause, publish after approval), inventory with cost, orders to prepare and hand over, earnings and settlement statement, store profile. A seller who owns several stores can switch between them.
+
+### 11.9 Database changes (new migrations, each reversible, each with tests)
+
+*Migration 4, seller onboarding and publishing:*
+- `seller_type` enum; `stores.seller_type`, `operation_mode` (`founder_managed`, `independent`), `delivery_arrangement` (`platform_managed`, `seller_managed`, `third_party`), tagline, logo, cover, sourcing note, `published`, `featured`.
+- `seller_applications` (applicant, store, type, identity and contact, location, business details, categories, agreements, status, review fields) and `application_events` (audit log); `application_documents` pointing at a private storage bucket.
+- Rewrite the listing publish guard: owners of approved stores publish directly; unapproved stores cannot publish; admins can take down.
+- Row-level security so an applicant sees only their own application and a seller only their own store; `is_admin` sees all.
+
+*Migration 5, geography and categories:*
+- The 10-category taxonomy (data migration), `products.form`.
+- `listings.origin_district_id` (required to publish), `inventory_locations` and `listings.inventory_location_id`.
+- `service_areas` (allow-list of upazilas) enforced by `place_order_v2`.
+
+*Migration 6, delivery, pickup and costs:*
+- `fulfilment_type` on orders (delivery or pickup), `delivery_zone_fees` (fee, free-over, minimum order, active), `deliveries` (status, assigned to, scheduled for, timestamps, failure reason, cash to collect and collected), pickup statuses.
+- `delivery_revenue` ledger account: the delivery fee is credited there, not to the store; `store_delivery_zones` stays for a future seller-managed arrangement.
+- Handover method and time on fulfilments.
+- `stock_movements.unit_cost_paisa` on receipts, a weighted average cost on listings, and `line_financials.cost_paisa`.
+- Views for the dashboards: orders with customer and stores, store summary, inventory, deliveries, store profit and loss. Views use the caller's rights, so sellers see only their own rows.
+
+*Migration 7, search:* full-text and trigram indexes and a `search_catalog` function.
+
+*Unchanged and reused:* listings, price tiers, stock movement log, parent order and sub-orders, fulfilments, financial snapshots, commission rules (0% pilot), the append-only ledger, the rollback harness and the test suite. Linked-stock mode stays in the schema but is not used by the launch stores.
+
+*Tests to add:* application state machine and who may do what; approved vs unapproved publishing; service-area enforcement; delivery fee in the delivery-revenue account and not a store's payable; delivery status flow and pickup flow; cost snapshots and store-wise profit; one seller cannot read another's rows or customers' contact details.
+
+### 11.10 Routes and screens
+
+| Route | Change |
+|---|---|
+| `/` | Rebuilt to the 11-section homepage |
+| `/categories`, `/categories/[slug]` | Category grid and category pages with filters and sorting (`/category/[slug]` redirects) |
+| `/stores`, `/stores/[slug]` | Directory and storefronts (`/seller/[slug]` redirects) |
+| `/search` | Upgraded search |
+| `/product/[slug]` | Shows store, origin, inventory location and harvest date |
+| `/become-a-seller`, `/become-a-seller/status` | Application and status (replaces the demo `/seller/register`) |
+| `/seller/*` | Real seller dashboard (products, inventory, orders, earnings, profile) |
+| `/admin/*` | Overview, applications, stores and `stores/[slug]`, inventory, orders and `orders/[id]`, deliveries, finance, settings |
+| `/cart`, `/checkout`, `/account/orders` | Real orders, delivery or pickup choice, zone fee, COD |
+| `/marketplace` feed, `/famous`, `/market-prices`, `/wholesale` | Feed removed; regional and bulk become filters; market prices hidden from navigation for the MVP |
+
+Reused as they are: header, location sheet, product image slot, product and region components, price comparison, cart state, toast system, design tokens. The fabricated seller data and trust badges are removed.
+
+### 11.11 Money, settlement and cash
+
+COD only. For the founder's own stores the cash is simply the business's revenue. For **external sellers**, the founder collects customers' cash on their behalf and settles with them, which is in practice holding their money. The plan therefore keeps this deliberately simple and manual: the ledger shows what each store is owed on delivered orders, an admin issues a **settlement statement** per period and records each manual payment with a reference. There are no automated payouts, wallets or balances. Take legal and accounting advice, and put the terms in writing in the seller agreement, before onboarding the first external seller. Commission stays at 0% for the pilot and configurable afterwards.
+
+### 11.12 Essential for the MVP, and what can wait
+
+| Essential | Later |
+|---|---|
+| Real accounts (customer, seller, admin) | SMS or email notifications |
+| Become a Seller application, evidence upload, admin review queue, status page | Automated recruitment or referral campaigns |
+| Open seller dashboard: products, inventory, orders, earnings statement | Seller analytics, bulk import, promotions |
+| Founder console with store switcher | Delivery helper role and route planning |
+| Structured discovery, 10 categories, stores directory, new homepage, search | Personalised recommendations |
+| Delivery and pickup with zone fees, status flow, COD cash record | Seller-managed delivery, courier integration, delivery slots |
+| Unit costs and store-wise profit | Advanced reporting |
+| Manual settlement statements | Online payments, automated payouts |
+| Real reviews from delivered orders (small) | Review moderation tools, ratings ranking |
+
+### 11.13 Updated roadmap
+
+Phase 0 is complete. Phase 1 is now the **open marketplace MVP**, in five parts:
+
+- **1A Foundations (M).** Supabase project and environments; authentication (admin, customer, seller); migrations 4–7 with rollbacks and tests; the 10 category rows, service areas, delivery zone fees; remove the fabricated demo sellers and trust signals; seed the 10 founder-operated store shells once their identities are confirmed.
+- **1B Structured storefront (M).** New navigation, categories pages with filters and sorting, stores directory and storefronts, homepage restructure with the no-duplicate rule, search, product page updates; read from the database instead of local data.
+- **1C Seller onboarding and seller dashboard (M–L).** Become a Seller flow and status page, evidence upload to private storage, admin review queue and decisions, store creation on submission and publishing on approval, seller dashboard (products, inventory with cost, orders to prepare and hand over, earnings statement).
+- **1D Orders, delivery and operations (L).** Real cart and checkout (delivery or pickup, zone fee, COD), per-store fulfilment, handover from external sellers, delivery board and status flow, founder console with store switcher, inventory, consolidated orders with seller breakdown, finance (store revenue and cost, delivery fee records, settlement statements).
+- **1E Pilot launch readiness (S).** The 10 founder stores filled with real products, prices, photographs and sourcing notes; seller terms and product policy; first external applications reviewed; end-to-end test orders; a launch checklist covering licences and food-safety obligations the founder confirms.
+
+Exit criteria: a stranger can apply, be approved and sell; a customer in Sylhet can order from several stores in one checkout and receive it with one delivery; the founder can see and run everything from one console.
+
+**Phase 2 (M–L):** seller-managed delivery as an approved option, notifications, richer seller tools, youth reseller sourcing from producers (linked stock) at scale, saved addresses, review and dispute tools. **Phase 3 (L):** online payments, automated payouts after legal review, courier integration, expansion beyond Sylhet.
+
+### 11.14 Decisions I need from you (with my recommended defaults)
+
+| # | Question | Default if you just say "go" |
+|---|---|---|
+| Q1 | **The 10 launch stores:** name, category focus and sourcing for each | Cannot be defaulted: needed before 1A seeding and 1E content. Until then the seed creates nothing fictional |
+| Q2 | **Evidence per seller type** and whether to collect national ID numbers | Individual: photo ID. Farmer/Producer: photo ID plus farm or product photos. Youth Entrepreneur: photo ID plus product photos (student or institution ID optional). Business: photo ID plus trade licence where one exists. ID image stored privately; do not store the ID number |
+| Q3 | **Customer login** | Phone number and password for the pilot (no SMS cost); add one-time codes later |
+| Q4 | **Sylhet delivery zones, fees, free-delivery threshold, minimum order, delivery days** | You supply the zones and fees |
+| Q5 | **Collecting goods from external sellers** | Seller drops at your hub, or you collect inside the same zone; recorded per order |
+| Q6 | **Settlement with external sellers** | Weekly manual statement, paid manually, written agreement, legal advice first |
+| Q7 | **Bottom navigation** | Six items as you listed; Profile stays in the bar |
+| Q8 | **Market Prices and Regional Products pages** | Hide Market Prices; fold Regional Products into category and origin filters |
+| Q9 | **Seller terms and product policy** (prohibited items, food-safety rules, returns) | You or your adviser provide the text; I will draft a plain-language starting point |
+| Q10 | **Is the founder one legal business behind all 10 stores?** | Assume yes: stores are trade identities for management reporting, not separate legal sellers |
