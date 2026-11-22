@@ -28,6 +28,7 @@ begin
   -- cannot publish products or posts while pending
   perform t.as_service();
   insert into listings (store_id, product_id, kind, stock_mode) select s, id, 'store_offer', 'own' from products where slug = 'mango' returning id into lst;
+  update listings set origin_district_id = (select district_id from upazilas where id = t.num('u1')) where id = lst;
   perform t.as_user('buyer1');
   perform t.fails(format('update listings set status = %L where id = %L', 'active', lst), 'approved', 'a pending store cannot publish products');
   perform t.fails(format('insert into store_posts (store_id, kind, title) values (%L, %L, %L)', s, 'announcement', 'Hello'), 'row-level security', 'a pending store cannot post');

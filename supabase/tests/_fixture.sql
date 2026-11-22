@@ -14,7 +14,7 @@ begin
   insert into upazilas (district_id, name_bn, name_en) values (d, 'U2', 'U2') returning id into u2;
   insert into upazilas (district_id, name_bn, name_en) values (d, 'U3', 'U3') returning id into u3;
   insert into t.nums values ('u1', u1), ('u2', u2), ('u3', u3);
-  insert into categories (slug, name_bn, name_en) values ('rice-grains', 'চাল', 'Rice') returning id into c1;
+  select id into c1 from categories where slug = 'rice-grains';
   insert into t.nums values ('cat_rice', c1);
   insert into products (slug, category_id, name_bn, unit_bn) values ('rice', c1, 'চাল', 'কেজি') returning id into pr_rice;
   insert into products (slug, category_id, name_bn, unit_bn) values ('mango', c1, 'আম', 'কেজি') returning id into pr_mango;

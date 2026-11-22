@@ -32,6 +32,8 @@ begin
 
   -- listings: new ones are forced to pending; owners cannot approve them
   insert into listings (store_id, product_id, kind, stock_mode, status) select s, id, 'store_offer', 'own', 'active' from products where slug = 'mango' returning id into l;
+  perform t.fails(format('update listings set status = %L where id = %L', 'active', l), 'where this product comes from', 'publishing needs an origin');
+  update listings set origin_district_id = (select district_id from upazilas where id = t.num('u1')) where id = l;
   perform t.eq((select status from listings where id = l)::text, 'pending', 'a new listing is forced to pending');
   update listings set status = 'active' where id = l;
   perform t.eq((select status from listings where id = l)::text, 'active', 'an owner of an approved store publishes directly');
