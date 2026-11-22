@@ -36,7 +36,7 @@ begin
 
   -- 3. the pilot (0%) really charges nothing on a real order
   perform t.as_user('buyer1');
-  o := place_order_v2(jsonb_build_array(t.item('l_p1_rice', 1)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
+  o := place_order_v3(jsonb_build_array(t.item('l_p1_rice', 1)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
   perform t.as_service();
   perform t.eq((select lf.commission_paisa from line_financials lf join order_lines ol on ol.id = lf.order_line_id join sub_orders s on s.id = ol.sub_order_id where s.order_id = o), 0, 'pilot order has zero commission');
   perform t.as_user('buyer1'); perform cancel_sub_order((select id from sub_orders where order_id = o)); perform t.as_service();
@@ -47,7 +47,7 @@ begin
     ('reseller', 500, 'margin', 'test reseller 5% of margin', now()),
     ('wholesale', 100, 'gross', 'test wholesale 1% of gross', now());
   perform t.as_user('buyer1');
-  o := place_order_v2(jsonb_build_array(t.item('l_p1_rice', 2), t.item('l_r1_rice', 3), t.item('l_r1_rice', 50), t.item('l_r1_mango', 1)),
+  o := place_order_v3(jsonb_build_array(t.item('l_p1_rice', 2), t.item('l_r1_rice', 3), t.item('l_r1_rice', 50), t.item('l_r1_mango', 1)),
                       'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
   perform t.as_service();
   select ol.id into a_line from order_lines ol join sub_orders s on s.id = ol.sub_order_id where s.order_id = o and ol.listing_id = t.id('l_p1_rice');
@@ -94,15 +94,15 @@ begin
   clearing := ledger_account('order_clearing'); plat := ledger_account('platform_commission');
   acc_p1 := ledger_account('store_payable', t.id('s_p1')); acc_r1 := ledger_account('store_payable', t.id('s_r1'));
   subs := array[sub_p1, sub_r1];
-  perform t.eq((select coalesce(sum(debit_paisa), 0) from ledger_entries where account_id = clearing and sub_order_id = any(subs))::bigint, 303000::bigint, 'clearing debits = lines (298000) + delivery fees (5000)');
+  perform t.eq((select coalesce(sum(debit_paisa), 0) from ledger_entries where account_id = clearing and sub_order_id = any(subs))::bigint, 298000::bigint, 'clearing debits for sub-orders = lines only (delivery is order-level)');
   perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = plat and sub_order_id = any(subs))::bigint, 3450::bigint, 'platform commission = 200 + 150 + 2600 + 500');
-  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_p1 and sub_order_id = any(subs))::bigint, 252800::bigint, 'producer payable = direct net 9800 + supplier 15000 + 225000 + delivery 3000');
-  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_r1 and sub_order_id = any(subs))::bigint, 46750::bigint, 'reseller payable = nets 2850 + 32400 + 9500 + delivery 2000');
+  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_p1 and sub_order_id = any(subs))::bigint, 249800::bigint, 'producer payable = direct net 9800 + supplier 15000 + 225000');
+  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_r1 and sub_order_id = any(subs))::bigint, 44750::bigint, 'reseller payable = nets 2850 + 32400 + 9500');
   perform t.eq((select sum(credit_paisa) from ledger_entries)::bigint, (select sum(debit_paisa) from ledger_entries)::bigint, 'total credits = total debits');
 
   -- 8. another reseller's sale is kept on that store's own account
   perform t.as_user('buyer2');
-  o2 := place_order_v2(jsonb_build_array(t.item('l_r2_rice', 2)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'));
+  o2 := place_order_v3(jsonb_build_array(t.item('l_r2_rice', 2)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'));
   perform t.as_service();
   select id into sub_r2 from sub_orders where order_id = o2;
   for f in select fu.id from fulfilments fu join order_lines ol on ol.id = fu.order_line_id where ol.sub_order_id = sub_r2 loop
@@ -110,12 +110,13 @@ begin
   end loop;
   perform t.as_user('buyer2'); perform confirm_delivery(sub_r2); perform t.as_service();
   acc_r2 := ledger_account('store_payable', t.id('s_r2'));
+  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = ledger_account('delivery_revenue'))::bigint, 18000::bigint, 'delivery fees (3 delivered orders x 6000) are platform revenue');
   -- R2: gross 11000, supplier 10000, margin 1000, 5% (999 test rule) is capped by margin... recompute with the live rule for this order
   perform t.eq((select seller_net_paisa + commission_paisa from line_financials lf join order_lines ol on ol.id = lf.order_line_id where ol.sub_order_id = sub_r2), 1000, 'R2 margin = net + commission');
   perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_r2 and sub_order_id = sub_r2)::bigint,
-       (select seller_net_paisa::bigint from line_financials lf join order_lines ol on ol.id = lf.order_line_id where ol.sub_order_id = sub_r2) + 5000, 'R2 payable = its own net + its own delivery fee');
-  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_r1 and sub_order_id = any(subs || sub_r2))::bigint, 46750::bigint, 'R1 account is untouched by R2''s sale');
-  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_p1 and sub_order_id = any(subs || sub_r2))::bigint, 252800::bigint + 10000, 'the shared producer is credited its supply price for R2''s sale');
+       (select seller_net_paisa::bigint from line_financials lf join order_lines ol on ol.id = lf.order_line_id where ol.sub_order_id = sub_r2), 'R2 payable = its own net (delivery fees are never a seller''s revenue)');
+  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_r1 and sub_order_id = any(subs || sub_r2))::bigint, 44750::bigint, 'R1 account is untouched by R2''s sale');
+  perform t.eq((select coalesce(sum(credit_paisa), 0) from ledger_entries where account_id = acc_p1 and sub_order_id = any(subs || sub_r2))::bigint, 249800::bigint + 10000, 'the shared producer is credited its supply price for R2''s sale');
 
   -- 9. the ledger cannot be edited, and users cannot write to it
   perform t.fails($q$update ledger_entries set credit_paisa = credit_paisa + 1 where id = (select min(id) from ledger_entries where credit_paisa > 0)$q$, 'append-only', 'ledger entries cannot be edited');

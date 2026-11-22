@@ -40,6 +40,8 @@ begin
   insert into delivery_zones (name_bn, district_id) values ('Z1', d) returning id into z;
   insert into zone_upazilas values (z, u1), (z, u2);
   insert into store_delivery_zones values (s_p1, z, 3000), (s_p2, z, 4000), (s_r1, z, 2000), (s_r2, z, 5000);
+  insert into service_areas (district_id) values (d);
+  insert into delivery_zone_fees (zone_id, fee_paisa, free_over_paisa) values (z, 6000, 500000);
   insert into pickup_points (store_id, name_bn, upazila_id) values (s_r1, 'R1 pickup', u1) returning id into pk;
   insert into t.ids values ('pick_r1', pk);
 

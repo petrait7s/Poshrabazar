@@ -9,7 +9,7 @@ begin
 
   -- R1 sells 10 kg: producer stock is reserved, the sub-order belongs to the reseller
   perform t.as_user('buyer1');
-  o := place_order_v2(jsonb_build_array(t.item('l_r1_rice', 10)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
+  o := place_order_v3(jsonb_build_array(t.item('l_r1_rice', 10)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
   perform t.as_service();
   select ol.id into ln from order_lines ol join sub_orders so on so.id = ol.sub_order_id where so.order_id = o;
   perform t.eq((select reserved_qty from listings where id = t.id('l_p1_rice')), 10::numeric, 'producer stock reserved');
@@ -34,12 +34,12 @@ begin
 
   -- two resellers draw on the SAME producer stock: no overselling across stores
   perform t.as_user('buyer2');
-  perform t.fails($q$select place_order_v2(jsonb_build_array(t.item('l_r2_rice', 91)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'))$q$, 'not enough stock', 'cannot order more than the producer has');
-  o := place_order_v2(jsonb_build_array(t.item('l_r2_rice', 90)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'));
+  perform t.fails($q$select place_order_v3(jsonb_build_array(t.item('l_r2_rice', 91)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'))$q$, 'not enough stock', 'cannot order more than the producer has');
+  o := place_order_v3(jsonb_build_array(t.item('l_r2_rice', 90)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'));
   perform t.as_service();
   perform t.eq(listing_available(t.id('l_r1_rice')), 0::numeric, 'R1 sees the stock gone because R2 reserved it');
   perform t.as_user('buyer1');
-  perform t.fails($q$select place_order_v2(jsonb_build_array(t.item('l_r1_rice', 1)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'))$q$, 'not enough stock', 'R1 cannot oversell what R2 reserved');
+  perform t.fails($q$select place_order_v3(jsonb_build_array(t.item('l_r1_rice', 1)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'))$q$, 'not enough stock', 'R1 cannot oversell what R2 reserved');
   perform t.as_service();
   -- release on cancel makes it available to both again
   perform t.as_user('buyer2');
@@ -53,7 +53,7 @@ begin
   perform t.as_service();
   update price_tiers set unit_price_paisa = 5800 where listing_id = t.id('l_p1_rice') and min_qty = 1;      -- supplier raises its price after R2 listed
   perform t.as_user('buyer2');
-  perform t.fails($q$select place_order_v2(jsonb_build_array(t.item('l_r2_rice', 1)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'))$q$, 'below the supply price', 'order rejected when the reseller price fell below the new supply price');
+  perform t.fails($q$select place_order_v3(jsonb_build_array(t.item('l_r2_rice', 1)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'))$q$, 'below the supply price', 'order rejected when the reseller price fell below the new supply price');
   perform t.as_service();
   update price_tiers set unit_price_paisa = 5000 where listing_id = t.id('l_p1_rice') and min_qty = 1;
 

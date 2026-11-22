@@ -7,7 +7,7 @@ begin
 
   -- order 5: reserved, not yet removed from on-hand
   perform t.as_user('buyer1');
-  o := place_order_v2(jsonb_build_array(t.item('l_r1_mango', 5)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
+  o := place_order_v3(jsonb_build_array(t.item('l_r1_mango', 5)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
   perform t.as_service();
   perform t.eq((select on_hand_qty from listings where id = t.id('l_r1_mango')), 20::numeric, 'on_hand unchanged by reservation');
   perform t.eq((select reserved_qty from listings where id = t.id('l_r1_mango')), 5::numeric, 'reserved = 5');
@@ -19,7 +19,7 @@ begin
 
   -- cannot oversell
   perform t.as_user('buyer2');
-  perform t.fails(format($q$select place_order_v2(jsonb_build_array(t.item('l_r1_mango', 16)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'))$q$), 'not enough stock', 'ordering more than available is rejected');
+  perform t.fails(format($q$select place_order_v3(jsonb_build_array(t.item('l_r1_mango', 16)), 'করিম', '01722222222', '১২ মিরপুর রোড', t.num('u1'))$q$), 'not enough stock', 'ordering more than available is rejected');
 
   -- stock cannot be edited directly, even by the owner
   perform t.as_user('res1');
@@ -60,7 +60,7 @@ begin
 
   -- buyer cancels before handover: reservation released
   perform t.as_user('buyer1');
-  o := place_order_v2(jsonb_build_array(t.item('l_r1_mango', 4)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
+  o := place_order_v3(jsonb_build_array(t.item('l_r1_mango', 4)), 'রহিম উদ্দিন', '01711111111', '১২ মিরপুর রোড', t.num('u1'));
   perform t.as_service();
   perform t.eq((select reserved_qty from listings where id = t.id('l_r1_mango')), 4::numeric, 'reserved 4');
   perform t.as_user('buyer1');
