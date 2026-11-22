@@ -34,7 +34,8 @@ Focus rings use `primary` (2 px, offset 2 px).
 
 ## Typography
 
-- **Bengali:** Noto Sans Bengali. **English and digits:** Inter. Both are loaded with `next/font`; `font-sans` lists Inter first and Noto Sans Bengali second, so each character is drawn by the font that covers it.
+- **Bengali:** Tiro Bangla (owner decision; replaces the earlier Noto Sans Bengali choice). **English and digits:** Inter. Both load with `next/font`; `font-sans` lists Inter first and Tiro Bangla second, so each character is drawn by the font that covers it.
+- Tiro Bangla has **one weight (400)**. Bengali emphasis therefore uses size, colour, spacing and rules, not bold; `font-synthesis-weight: none` prevents browser faux-bold. Use Inter 600/700 where real bold is needed (English labels, prices in Latin digits).
 - Headings are semibold with line-height 1.3; body line-height 1.65 (Bengali needs the extra room).
 - Minimum body size 14 px; touch targets at least 40 px.
 

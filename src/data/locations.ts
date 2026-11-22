@@ -9,10 +9,10 @@ export const divisions: Division[] = [
   { bn: "রংপুর", en: "Rangpur", districts: ["রংপুর", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "ঠাকুরগাঁও"] },
   { bn: "ময়মনসিংহ", en: "Mymensingh", districts: ["ময়মনসিংহ", "জামালপুর", "শেরপুর", "নেত্রকোণা"] },
 ];
-export type Area = { division: string; district: string };
+export type Area = { division: string; district: string; upazila?: string };
 export const noArea: Area = { division: "", district: "" };
 export const divisionOf = (district: string) => divisions.find((d) => d.districts.includes(district))?.bn ?? "";
-export const areaLabel = (a: Area) => (a.district ? `${a.district}, ${a.division}` : a.division ? `${a.division} বিভাগ` : "সারা বাংলাদেশ");
+export const areaLabel = (a: Area) => (a.upazila ? `${a.upazila}, ${a.district}` : a.district ? `${a.district}, ${a.division}` : a.division ? `${a.division} বিভাগ` : "সারা বাংলাদেশ");
 export const inArea = (a: Area, sellerDistrict: string, sellerDivision: string) =>
   a.district ? sellerDistrict === a.district : a.division ? sellerDivision === a.division : true;
 

@@ -17,7 +17,7 @@ const config: Config = {
         tint: "#F5EFE6",                                                                                   // subtle fills, hover, skeleton
       },
       fontFamily: {
-        // Inter covers Latin and digits, Noto Sans Bengali covers Bengali glyphs; the browser picks per character.
+        // Inter covers Latin and digits, Tiro Bangla covers Bengali glyphs; the browser picks per character.
         sans: ["var(--font-inter)", "var(--font-bangla)", "system-ui", "sans-serif"],
         bn: ["var(--font-inter)", "var(--font-bangla)", "system-ui", "sans-serif"],
       },
@@ -27,6 +27,7 @@ const config: Config = {
         lift: "0 2px 4px rgba(41,37,36,.06), 0 12px 28px -8px rgba(41,37,36,.18)",
       },
       keyframes: {
+        fade: { from: { opacity: "0" }, to: { opacity: "1" } },
         shimmer: { "100%": { transform: "translateX(100%)" } },
         rise: { from: { opacity: "0", transform: "translateY(8px)" }, to: { opacity: "1", transform: "none" } },
       },

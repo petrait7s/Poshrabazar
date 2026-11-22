@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Bengali } from "next/font/google";
+import { Inter, Tiro_Bangla } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SocialProvider } from "@/components/social";
@@ -7,7 +7,8 @@ import { Header, BottomNav } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const bangla = Noto_Sans_Bengali({ subsets: ["bengali"], variable: "--font-bangla", display: "swap" });
+// Tiro Bangla ships a single weight (400). Hierarchy for Bengali therefore comes from size, colour and spacing.
+const bangla = Tiro_Bangla({ subsets: ["bengali"], weight: "400", variable: "--font-bangla", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "PosraBazar · পসরাবাজার", template: "%s · PosraBazar" },

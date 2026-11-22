@@ -9,13 +9,14 @@ export function LogoMark({ className, tone = "ink" }: { className?: string; tone
     </svg>
   );
 }
-export function Logo({ tone = "ink", className }: { tone?: "ink" | "white"; className?: string }) {
+export function Logo({ tone = "ink", className, withBangla }: { tone?: "ink" | "white"; className?: string; withBangla?: boolean }) {
+  const c = tone === "white" ? "text-white" : "text-ink";
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LogoMark tone={tone} />
+    <span className={cn("inline-flex items-center gap-2", className)}>
+      <LogoMark tone={tone} className="h-[23px]" />
       <span className="flex flex-col leading-none">
-        <span className={cn("text-[19px] font-extrabold tracking-tight", tone === "white" ? "text-white" : "text-ink")}>PosraBazar</span>
-        <span className={cn("mt-1 font-bn text-[12px]", tone === "white" ? "text-white/70" : "text-primary")}>পসরাবাজার</span>
+        <span className={cn("text-[18px] tracking-[-0.02em]", c)}><b className="font-bold">Posra</b><span className="font-medium">Bazar</span></span>
+        {withBangla && <span className={cn("mt-1 font-bn text-[12px]", tone === "white" ? "text-white/70" : "text-muted")}>পসরাবাজার</span>}
       </span>
     </span>
   );

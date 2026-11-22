@@ -4,7 +4,7 @@
 
 @layer base {
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { @apply bg-cream font-sans text-ink antialiased; line-height: 1.65; }
+  body { @apply bg-cream font-sans text-ink antialiased; line-height: 1.65; font-synthesis-weight: none; }
   h1, h2, h3, h4 { @apply font-sans font-semibold text-ink; line-height: 1.3; letter-spacing: -0.01em; }
   :focus-visible { outline: 2px solid #C2410C; outline-offset: 2px; }
   ::selection { background: #FFEDD5; }

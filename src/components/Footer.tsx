@@ -14,7 +14,7 @@ export function Footer() {
     <footer className="relative mt-12 overflow-hidden bg-ink-800 pb-20 text-white lg:pb-0">
       <div className="container-x relative grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div>
-          <Logo tone="white" />
+          <Logo tone="white" withBangla />
           <p className="mt-4 max-w-xs font-bn text-[14px] leading-relaxed text-white/70">সিলেটের কৃষক, উৎপাদক, শিক্ষার্থী উদ্যোক্তা ও ক্রেতাদের মার্কেটপ্লেস।</p>
         </div>
         {col("Marketplace", [["সব ক্যাটাগরি", "/categories"], ["আঞ্চলিক পণ্য", "/famous"], ["পাইকারি বাজার", "/wholesale"], ["বিক্রেতা নিবন্ধন", "/seller/register"], ...categories.slice(0, 3).map((c) => [c.bn, `/category/${c.slug}`] as [string, string])])}
