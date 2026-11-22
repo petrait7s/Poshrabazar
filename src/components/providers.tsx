@@ -6,14 +6,15 @@ import { CheckCircle2, Info, X, AlertTriangle } from "lucide-react";
 export type Lang = "bn" | "en";
 export type CartLine = { productSlug: string; sellerSlug: string; mode: "retail" | "wholesale"; qty: number };
 export type DemoUser = { name: string; phone: string; role: "buyer" | "seller" | "admin" };
-type Toast = { id: number; msg: string; kind: "ok" | "info" | "err" };
+type ToastAction = { label: string; href: string };
+type Toast = { id: number; msg: string; kind: "ok" | "info" | "err"; action?: ToastAction };
 
 type Ctx = {
   lang: Lang; setLang: (l: Lang) => void;
   cart: CartLine[]; addToCart: (l: CartLine) => void; setQty: (i: number, q: number) => void; removeLine: (i: number) => void; clearCart: () => void;
   wishlist: string[]; toggleWish: (slug: string) => void;
   user: DemoUser | null; login: (u: DemoUser) => void; logout: () => void;
-  toast: (msg: string, kind?: Toast["kind"]) => void;
+  toast: (msg: string, kind?: Toast["kind"], action?: ToastAction) => void;
   area: Area; setArea: (a: Area) => void;
   hydrated: boolean;
 };
@@ -40,9 +41,9 @@ export function Providers({ children }: { children: ReactNode }) {
   useEffect(() => { if (hydrated) save("pb_user", user); }, [user, hydrated]);
   useEffect(() => { document.documentElement.lang = lang === "bn" ? "bn" : "en"; }, [lang]);
 
-  const toast = useCallback((msg: string, kind: Toast["kind"] = "ok") => {
+  const toast = useCallback((msg: string, kind: Toast["kind"] = "ok", action?: ToastAction) => {
     const id = Date.now() + Math.random();
-    setToasts((t) => [...t.slice(-2), { id, msg, kind }]);
+    setToasts((t) => [...t.slice(-2), { id, msg, kind, action }]);
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3200);
   }, []);
 
@@ -68,10 +69,11 @@ export function Providers({ children }: { children: ReactNode }) {
       {children}
       <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-20 z-[100] flex flex-col items-center gap-2 px-4 lg:bottom-6 lg:items-end lg:pr-6">
         {toasts.map((t) => (
-          <div key={t.id} className="pointer-events-auto flex max-w-sm animate-rise items-start gap-2.5 glass rounded-md px-4 py-3 text-sm">
-            {t.kind === "ok" ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal" /> : t.kind === "err" ? <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" /> : <Info className="mt-0.5 h-4 w-4 shrink-0 text-gold-700" />}
+          <div key={t.id} className="pointer-events-auto flex max-w-sm animate-rise items-center gap-2.5 rounded-lg bg-ink px-4 py-3 text-sm text-white shadow-lift">
+            {t.kind === "ok" ? <CheckCircle2 className="h-4 w-4 shrink-0 text-accent" /> : t.kind === "err" ? <AlertTriangle className="h-4 w-4 shrink-0 text-red-300" /> : <Info className="h-4 w-4 shrink-0 text-stone-300" />}
             <span className="font-bn">{t.msg}</span>
-            <button aria-label="Close" onClick={() => setToasts((x) => x.filter((y) => y.id !== t.id))} className="ml-1 text-mist-500 hover:text-navy"><X className="h-4 w-4" /></button>
+            {t.action && <a href={t.action.href} className="ml-1 shrink-0 py-2 font-bn font-semibold text-accent hover:underline">{t.action.label}</a>}
+            <button aria-label="Close" onClick={() => setToasts((x) => x.filter((y) => y.id !== t.id))} className="-mr-2 grid h-9 w-9 shrink-0 place-items-center text-stone-300 hover:text-white"><X className="h-4 w-4" /></button>
           </div>
         ))}
       </div>

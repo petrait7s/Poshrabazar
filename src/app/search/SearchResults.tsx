@@ -12,7 +12,7 @@ export function SearchResults() {
   const matched = q ? sellers.filter((s) => s.bn.includes(q) || s.en.toLowerCase().includes(q.toLowerCase()) || s.location.includes(q)) : sp.get("type") === "sellers" ? sellers : [];
   return (
     <div className="container-x py-8">
-      <h1 className="font-bn text-2xl text-navy sm:text-3xl">{q ? <>“{q}” এর ফলাফল</> : "অনুসন্ধান"}</h1>
+      <h1 className="font-bn text-2xl text-ink sm:text-3xl">{q ? <>“{q}” এর ফলাফল</> : "অনুসন্ধান"}</h1>
       <SearchBar className="mt-4 max-w-2xl" defaultValue={q} />
       {matched.length > 0 && (
         <section className="mt-8"><h2 className="mb-3 font-bn text-lg">বিক্রেতা</h2><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{matched.map((s) => <SellerCard key={s.slug} slug={s.slug} />)}</div></section>

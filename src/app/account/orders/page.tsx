@@ -15,24 +15,24 @@ export default function Page() {
   const [open, setOpen] = useState(orders[0].id);
   return (
     <>
-      <h1 className="font-bn text-3xl font-normal">আমার অর্ডার</h1>
-      <p className="mt-1 font-bn text-sm text-gold-700">নিচের অর্ডারগুলো নমুনা (ডেমো) — প্রকৃত অর্ডার নয়।</p>
+      <h1 className="font-bn text-3xl font-semibold">আমার অর্ডার</h1>
+      <p className="mt-1 font-bn text-sm text-accent-700">নিচের অর্ডারগুলো নমুনা (ডেমো) — প্রকৃত অর্ডার নয়।</p>
       <ul className="mt-5 space-y-3">
         {orders.map((o) => (
-          <li key={o.id} className="glass rounded-md">
+          <li key={o.id} className="surface rounded-md">
             <button onClick={() => setOpen(open === o.id ? "" : o.id)} className="flex w-full items-center justify-between gap-3 p-4 text-left" aria-expanded={open === o.id}>
-              <div><p className="font-semibold text-navy">{o.id}</p><p className="font-bn text-xs text-ink/60">{o.date} · {o.seller}</p></div>
+              <div><p className="font-semibold text-ink">{o.id}</p><p className="font-bn text-xs text-ink/60">{o.date} · {o.seller}</p></div>
               <div className="flex items-center gap-4"><StatusPill s={o.status} /><b className="tabular-nums">{taka(o.total)}</b></div>
             </button>
             {open === o.id && (
-              <div className="border-t border-mist p-4">
+              <div className="border-t border-tint p-4">
                 <p className="font-bn text-sm text-ink/75">{o.items.join(" · ")}</p>
                 {o.status !== "বাতিল" && (
                   <ol className="mt-5 grid grid-cols-4 gap-1">
                     {steps.map((s, i) => (
                       <li key={s} className="text-center">
-                        <div className={cn("relative mx-auto grid h-7 w-7 place-items-center rounded-full", i <= o.step ? "bg-teal text-white" : "bg-mist text-mist-500")}>{i <= o.step ? <Check className="h-4 w-4" /> : <Circle className="h-3 w-3" />}</div>
-                        <p className={cn("mt-1.5 font-bn text-[11px] sm:text-xs", i <= o.step ? "text-navy" : "text-mist-500")}>{s}</p>
+                        <div className={cn("relative mx-auto grid h-7 w-7 place-items-center rounded-full", i <= o.step ? "bg-primary text-white" : "bg-tint text-muted")}>{i <= o.step ? <Check className="h-4 w-4" /> : <Circle className="h-3 w-3" />}</div>
+                        <p className={cn("mt-1.5 font-bn text-[11px] sm:text-xs", i <= o.step ? "text-ink" : "text-muted")}>{s}</p>
                       </li>
                     ))}
                   </ol>

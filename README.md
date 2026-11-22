@@ -1,6 +1,8 @@
 # PosraBazar · পসরাবাজার
 
-Buy. Sell. Learn. Grow. — Next.js (App Router) + TypeScript + Tailwind. Fonts: Montserrat + Tiro Bangla (via `next/font`).
+> **Pivot in progress (branch `pivot/sylhet-marketplace`).** A community marketplace for Sylhet's farmers, producers, young entrepreneurs and buyers. See `docs/PIVOT_STRATEGY.md`. The previous concept is preserved on `main` and in tag `v0-posrabazar-concept`.
+
+Next.js (App Router) + TypeScript + Tailwind. Fonts: Inter + Tiro Bangla (via `next/font`).
 
 ```bash
 npm install
@@ -17,7 +19,12 @@ npm run build && npm start
 Supabase schema, RLS and seed live in `supabase/` — see `supabase/README.md`. The frontend still reads `src/data` until it is wired to Supabase.
 
 ## Demo vs production
-Everything is frontend-only. Prices, sellers, stock, reviews, orders, articles and dashboard numbers are **demo values**.
-Cart, wishlist, language and demo login live in `localStorage`. Checkout, seller registration, price alerts and demo requests
-validate input but **send nothing, place no order and take no payment**. Product imagery is vector illustration — swap in photography.
-Source of truth: *PosraBazar Core Idea v1.0*.
+The website is still a **frontend prototype**: all products, stores, prices and orders come from `src/data` (demo values), and the cart, wishlist, language choice and demo login live in `localStorage`. Checkout, store registration and the seller/admin dashboards validate input but **send nothing, place no order and take no payment**; only cash on delivery is planned for launch. Product imagery is illustration and a placeholder for real photography. Real accounts, orders and money handling arrive with the Supabase integration (Phase 1).
+
+Deferred pages (Knowledge, Community, Wallet, Market Intelligence tools) are kept in `src/_deferred/` and are not routed.
+
+## Tests
+```bash
+npm run db:test   # database logic: linked/own stock, parent/sub-orders, financials, rollbacks (needs PostgreSQL)
+npm run build
+```

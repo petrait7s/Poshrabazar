@@ -1,5 +1,4 @@
 import { getProduct, getSeller, offersFor } from "@/data/catalog";
-import { buyerFee, feeFor, sellerFee } from "@/data/fees";
 import type { CartLine } from "./providers";
 
 export function resolve(l: CartLine) {
@@ -10,15 +9,9 @@ export function resolve(l: CartLine) {
 }
 export const DELIVERY_FEE = 60;
 
-/** Platform fee is worked out per seller (each seller's share of the cart). */
+/** Prototype totals only. Commission is a seller-side accounting matter and is never added to the buyer's total. */
 export function totals(lines: CartLine[]) {
   const sub = lines.reduce((a, l) => a + resolve(l).total, 0);
   const delivery = lines.length ? DELIVERY_FEE : 0;
-  const bySeller = new Map<string, number>();
-  lines.forEach((l) => bySeller.set(l.sellerSlug, (bySeller.get(l.sellerSlug) ?? 0) + resolve(l).total));
-  let fee = 0;
-  bySeller.forEach((v) => { fee += feeFor(v); });
-  fee = Math.round(fee * 100) / 100;
-  const byBuyer = Math.round(buyerFee(fee) * 100) / 100;
-  return { sub, delivery, fee, buyerFee: byBuyer, sellerFee: Math.round(sellerFee(fee) * 100) / 100, total: sub + delivery + byBuyer };
+  return { sub, delivery, total: sub + delivery };
 }

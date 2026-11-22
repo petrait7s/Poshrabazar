@@ -4,67 +4,31 @@
 
 @layer base {
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { @apply bg-paper font-sans text-ink antialiased; line-height: 1.6; }
-  /* Living backdrop: teal dawn, gold harvest, a touch of terracotta — gives glass something to blur */
-  body::before {
-    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background:
-      radial-gradient(900px 620px at 6% -6%, rgba(22,124,120,.20), transparent 62%),
-      radial-gradient(820px 600px at 104% 8%, rgba(198,161,91,.30), transparent 62%),
-      radial-gradient(1000px 760px at 72% 104%, rgba(22,124,120,.15), transparent 62%),
-      radial-gradient(720px 520px at -4% 88%, rgba(185,68,47,.09), transparent 62%);
-  }
-  h1, h2, h3, h4 { @apply font-bn text-navy; line-height: 1.25; letter-spacing: -0.005em; }
-  :focus-visible { outline: 2px solid #167C78; outline-offset: 2px; }
-  ::selection { background: #cde5e3; }
+  body { @apply bg-cream font-sans text-ink antialiased; line-height: 1.65; font-synthesis-weight: none; }
+  h1, h2, h3, h4 { @apply font-sans font-semibold text-ink; line-height: 1.3; letter-spacing: -0.01em; }
+  :focus-visible { outline: 2px solid #C2410C; outline-offset: 2px; }
+  ::selection { background: #FFEDD5; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
 }
 
 @layer components {
   .container-x { @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8; }
-  .eyebrow { @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-teal; }
-  .eyebrow::before { content: ""; width: 14px; height: 14px; background: url(/flower.svg) center / contain no-repeat; flex: none; }
+  .eyebrow { @apply inline-flex items-center text-xs font-semibold uppercase tracking-[0.12em] text-primary; }
   .section { @apply py-12 sm:py-16; }
-  .h-section { @apply font-bn text-2xl font-normal text-navy sm:text-3xl; }
+  .h-section { @apply text-2xl font-semibold text-ink sm:text-3xl; }
 
-  /* ── glass ── */
-  .glass {
-    background: linear-gradient(150deg, rgba(255,255,255,.82), rgba(255,255,255,.50));
-    -webkit-backdrop-filter: blur(16px) saturate(1.5); backdrop-filter: blur(16px) saturate(1.5);
-    border: 1px solid rgba(255,255,255,.8);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(20,43,69,.05), 0 10px 28px -14px rgba(20,43,69,.28), 0 2px 6px rgba(20,43,69,.05);
-  }
-  .glass-dark {
-    background: linear-gradient(150deg, rgba(20,43,69,.82), rgba(10,23,39,.62));
-    -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
-    border: 1px solid rgba(255,255,255,.16);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 18px 40px -18px rgba(0,0,0,.55);
-  }
-  .glass-band {
-    background: linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.38));
-    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-    border-block: 1px solid rgba(255,255,255,.85); box-shadow: 0 1px 0 rgba(20,43,69,.05);
-  }
-  .glass-card { @apply glass relative overflow-hidden rounded-md transition-all duration-300 ease-out; }
-  .glass-card::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2;
-    background: linear-gradient(112deg, transparent 38%, rgba(255,255,255,.55) 50%, transparent 62%);
-    transform: translateX(-130%); transition: transform .9s ease;
-  }
-  .glass-card:hover {
-    transform: translateY(-4px); border-color: rgba(22,124,120,.45);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 4px 10px rgba(20,43,69,.06), 0 26px 44px -20px rgba(22,124,120,.55);
-  }
-  .glass-card:hover::after { transform: translateX(130%); }
+  /* flat, solid surfaces */
+  .surface { @apply border border-line bg-surface shadow-card; }
+  .surface-dark { @apply border border-white/10 bg-ink-800 text-white; }
+  .surface-band { @apply border-y border-line bg-surface; }
+  .surface-card { @apply surface relative overflow-hidden rounded-md transition duration-200 ease-out; }
+  .surface-card:hover { @apply -translate-y-0.5 border-primary/40 shadow-lift; }
 
-  /* ── Bangla ornament ── */
-
-  .skeleton { @apply relative overflow-hidden bg-mist; }
-  .skeleton::after { content: ""; @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent; animation: shimmer 1.4s infinite; }
-  .tbl th { @apply bg-navy/95 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-white; }
-  .tbl td { @apply border-b border-navy/[.07] px-3 py-3 text-sm; }
-  .tbl tbody tr { @apply transition-colors; }
-  .tbl tbody tr:nth-child(even) td { background: rgba(248,247,242,.55); }
-  .tbl tbody tr:hover td { background: rgba(22,124,120,.07); }
+  .skeleton { @apply relative overflow-hidden bg-tint; }
+  .skeleton::after { content: ""; @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent; animation: shimmer 1.4s infinite; }
+  .tbl th { @apply bg-ink px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-white; }
+  .tbl td { @apply border-b border-line px-3 py-3 text-sm; }
+  .tbl tbody tr:nth-child(even) td { @apply bg-cream; }
+  .tbl tbody tr:hover td { @apply bg-primary-50; }
   .no-scrollbar { scrollbar-width: none; } .no-scrollbar::-webkit-scrollbar { display: none; }
 }
